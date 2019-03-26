@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_cts_wizard_form">
+            <field name="name">cts.wizard.form</field>
+            <field name="model">cts.wizard</field>
+            <field name="arch" type="xml">
+                <form string="CTS" version="8.0">
+                    <group>
+                        <group>
+                            <field name="in_charge"/>
+                            <field name="forma"/>
+                            <field name="digital_sgn"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="employee_id" domain="[('id','in',context['employees'])]" attrs="{'invisible':[('forma','=','1')]}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Generar" type="object" name="do_rebuild" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>      
+    </data>
+</openerp>

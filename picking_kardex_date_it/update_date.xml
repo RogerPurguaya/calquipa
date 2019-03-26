@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+        <record model="ir.ui.view" id="view_update_kardex_date_form">
+            <field name="name">update.kardex.date.form</field>
+            <field name="model">update.kardex.date</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="stop_date"/>
+                            <field name="show" invisible="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Regularizar Kardex" attrs="{'invisible':[('show','=',True)]}" name="update" type="object" class="oe_highlight"/>
+                        <button string="Ver Movimientos Afectados" attrs="{'invisible':[('show','!=',True)]}" name="show_pickings" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_affected_picking_form">
+            <field name="name">affected.pickings.tree</field>
+            <field name="model">affected.pickings</field>
+            <field name="arch" type="xml">
+                <tree create="0" delete="0">
+                    <field name="picking_name"/>
+                    <field name="picking_date"/>
+                    <field name="invoice_name"/>
+                    <field name="invoice_date"/>
+                    <field name="use_kardex_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_update_kardex_date" model="ir.actions.act_window">
+            <field name="name">Regularizar Kardex</field>
+            <field name="res_model">update.kardex.date</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context" eval="{'default_show':False}"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_show_pickings" model="ir.actions.act_window">
+            <field name="name">Verificar Movimientos</field>
+            <field name="res_model">update.kardex.date</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context" eval="{'default_show':True}"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Regularizar Kardex"
+            id="menu_update_kardex"
+            parent="kardex.kardex_main_menu"
+        />
+        <menuitem name="Regularizar"
+            action="action_update_kardex_date"
+            id="submenu_update_kardex"
+            parent="menu_update_kardex"
+        />
+        <menuitem name="Verificar Movimientos"
+            action="action_show_pickings"
+            id="submenu_validate_picking"
+            parent="menu_update_kardex"
+        />
+	</data>
+</openerp>

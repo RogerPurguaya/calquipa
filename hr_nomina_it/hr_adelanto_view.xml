@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+
+        <record model="ir.ui.view" id="view_hr_adelanto_form">
+            <field name="name">hr.adelanto.form</field>
+            <field name="model">hr.adelanto</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Adelanto">
+                    <group>
+                        <group>
+                            <field name="codigo_trabajador" readonly="1"/>
+                            <field name="employee" required="1" />
+                            <field name="monto" required="1" />
+                            <field name="adelanto_id" required="1" />
+
+                        </group>
+                        <group>
+                            <field name="fecha" required="1" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--Vista Form-->
+
+
+
+        <!--Vista Tree-->
+        <record model="ir.ui.view" id="view_hr_adelanto_tree">
+            <field name="name">hr.adelanto.tree</field>
+            <field name="model">hr.adelanto</field>
+            <field name="arch" type="xml">
+                <tree string="Adelanto" >
+                    <field name="codigo_trabajador"/>
+                    <field name="employee"/>
+                    <field name="fecha"/>
+                    <field name="monto"/>
+                    <field name="adelanto_id"/>
+                </tree>
+            </field>
+        </record> 
+
+        <record id="view_hr_adelanto_filter" model="ir.ui.view">
+            <field name="name">hr.adelanto.select</field>
+            <field name="model">hr.adelanto</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Adelantos">
+                    <field name="codigo_trabajador"/>
+                    <field name="employee"/>
+                    <field name="fecha"/>
+                    <field name="adelanto_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Código" domain="[]" context="{'group_by':'codigo_trabajador'}"/>
+                        <filter string="Trabajador" domain="[]" context="{'group_by':'employee'}"/>
+                        <filter string="Fecha adelanto" domain="[]" context="{'group_by':'fecha'}"/>
+                        <filter string="Tipo adelanto" domain="[]" context="{'group_by':'adelanto_id'}"/>
+                    </group>
+
+               </search>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="view_hr_quincenales_tree">
+            <field name="name">hr.quincenales.tree</field>
+            <field name="model">hr.quincenales</field>
+            <field name="arch" type="xml">
+                <tree string="Quincena">
+                    <field name="fecha"/>                            
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_hr_quincenales_form">
+            <field name="name">hr.quincenales.form</field>
+            <field name="model">hr.quincenales</field>
+            <field name="arch" type="xml">
+                <form string="Quincena">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                        <button string="Generar Quincena" name="generate" type="object" states="draft"/>
+                        <button string="Crear Adelantos" confirm="¿Desea crear los adelantos?" name="crear_adelantos" type="object" class="oe_highlight" states="draft"/>
+                        <button string="Regresar a Borrador" confirm="¿Desea regresar la quincena a borrador?" name="regresar_borrador" type="object" states="done"/>
+                        <button string="Generar Excel" name="generar_excel" type="object"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="fecha"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="quincenales_lines" nolabel="1">
+                            <tree editable="bottom" create="0">
+                                <field name="employee_id" invisible="1"/>
+                                <field name="state" invisible="1"/>
+                                <field name="codigo_trabajador" readonly="1"/>
+                                <field name="nombres" readonly="1"/>
+                                <field name="fecha_ingreso" readonly="1"/>
+                                <field name="adelanto_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="basico" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="asignacion_familiar" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <button name="ingresos_wizard" type="object" string="Ingresos adicionales" icon="gtk-edit" states="draft"/>
+                                <field name="onp" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="afp_com" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="afp_prima" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="afp_jub" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="quinta_cat" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <button name="descuentos_wizard" type="object" string="Descuentos adicionales" icon="gtk-edit" states="draft"/>
+                                <field name="total"/>
+                                <field name="monto"/>
+                                <button name="ingresos2_wizard" type="object" string="Ingresos quincenales" icon="gtk-edit" states="draft"/>
+                                <field name="adelantos"/>
+                                <field name="quincena"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--Vista F-->
+       
+        <record model="ir.ui.view" id="view_hr_quincenales_lines_ing_form">
+            <field name="name">hr.quincenales.lines.form</field>
+            <field name="model">hr.quincenales.lines</field>
+            <field name="arch" type="xml">
+                <form string="Ingresos">
+                    <group string ="Ingresos Adicionales">
+                        <field name="quincenales_ingresos_lines" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="concepto_id"></field>
+                                <field name="monto"></field>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Registrar" name="save_datai" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_hr_quincenales_lines_desc_form">
+            <field name="name">hr.quincenales.lines.form</field>
+            <field name="model">hr.quincenales.lines</field>
+            <field name="arch" type="xml">
+                <form string="Descuentos">
+                    <group string="Descuentos Adicionales">
+                        <field name="quincenales_descuentos_lines" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="concepto_id"></field>
+                                <field name="monto"></field>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Registrar" name="save_datad" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_hr_quincenales_lines_ing2_form">
+            <field name="name">hr.quincenales.lines.form</field>
+            <field name="model">hr.quincenales.lines</field>
+            <field name="arch" type="xml">
+                <form string="Ingresos">
+                    <group string ="Ingresos Quincenales">
+                        <field name="quincenales_ingresos2_lines" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="concepto_id"></field>
+                                <field name="monto"></field>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Registrar" name="save_datai2" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_quincenales_filter" model="ir.ui.view">
+            <field name="name">hr.quincenales.select</field>
+            <field name="model">hr.quincenales</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Quincenales">
+                    <field name="fecha"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Fecha" domain="[]" context="{'group_by':'fecha'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

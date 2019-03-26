@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_main_parameter_form" model="ir.ui.view">
+            <field name="name">main.parameter.form</field>
+            <field name="model">main.parameter</field>
+            <field name="inherit_id" ref="account_parameter_it.view_main_parameter_form"/>
+            <field name="arch" type="xml">
+				<group string="Exportacion" position="after">
+					<group string="Retenciones">
+						<field name="partner_sunat" />
+						<field name="retention_document_type" />
+						<field name="tax_code_id" />
+					</group>
+				</group>
+            </field>
+        </record>
+	</data>
+</openerp>

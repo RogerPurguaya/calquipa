@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account_move_sunat_it.view_move_form"/>
+            <field name="arch" type="xml">
+				<group string="Comprobante Detracción" position="after">
+					<group string="Retenciones">
+						<group>
+							<field name="com_ret_amount" />
+						</group>
+					</group>
+				</group>
+            </field>
+        </record>
+
+    </data>
+</openerp>

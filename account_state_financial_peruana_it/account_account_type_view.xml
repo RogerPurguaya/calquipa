@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_account_type_form" model="ir.ui.view">
+            <field name="name">account.account.type.form</field>
+            <field name="model">account.account.type</field>
+            <field name="inherit_id" ref="account.view_account_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="after">
+                    <group>
+                        <group>
+                            <field name="tipo_cambio_usar"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+    </data>
+</openerp>

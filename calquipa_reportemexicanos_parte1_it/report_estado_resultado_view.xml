@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        
+
+        <record id="view_rm_er_mexicano_tree" model="ir.ui.view">
+            <field name="name">rm.er.mexicano.tree</field>
+            <field name="model">rm.er.mexicano</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Resultado Mexicano">
+                    <field name="periodo_id" />
+                    <field name="t_cambio_compra" />
+                    <field name="t_cambio_venta" />
+                    <field name="t_cambio_mexicano" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_rm_er_mexicano_form">
+            <field name="name">rm.er.mexicano.form</field>
+            <field name="model">rm.er.mexicano</field>
+            <field name="arch" type="xml">
+                <form string="Resultado Mexicano" version="8.0">
+                    <header>
+                        <button name="traer_datos" string="Traer Plantilla" type="object" class="oe_highlight"/>
+                        <button name="calculate" string="Traer Valores" type="object" class="oe_highlight"/>
+                        <button name="actualizar" string="Actualizar" type="object" class="oe_highlight"/>
+                        <button name="export_excel" string="Reporte Excel" type="object"/>
+                    </header>
+                        <group>
+                            <group>
+                                <field name="periodo_id" />
+                            </group>
+                            <group>
+                                <field name="t_cambio_compra" invisible="1" />
+                                <field name="t_cambio_venta" invisible="1"/>
+                                <field name="t_cambio_mexicano" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Lineas Reporte">
+                                    <field name="lineas" nolabel="1">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="orden" required="1"/>
+                                            <field name="concepto" />
+                                            <field name="tipo_cuenta" invisible="1"/>
+                                            <field name="formula" invisible="1" attrs="{'readonly':[('tipo_cuenta', '!=','3')]}" />
+                                            <field name="total" invisible="1" attrs="{'readonly':[('tipo_cuenta', '=','5')]}" />
+                                            <field name="resaltado" invisible="1" />
+                                            <field name="bordes" invisible="1" />
+                                            <field name="monto" attrs="{'readonly':[('tipo_cuenta', '=','3')]}" />
+                                            <field name="reclasif" readonly="0"/>
+                                            <field name="ref" readonly="0"/>
+                                            <field name="t_monto" readonly="1"/>
+                                            <field name="reclasif_ifrs" readonly="0"/>
+                                            <field name="t_monto_ifrs" readonly="1"/>
+                                            <field name="ajuste" readonly="1"/>
+                                            <field name="tc_usd" readonly="1"/>
+                                            <field name="monto_usd" readonly="1"/>
+                                            <field name="ajuste_usd" readonly="1"/>
+                                            <field name="tc_mxn" readonly="1"/>
+                                            <field name="monto_mxn" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_er_mexicano_print_action" model="ir.actions.act_window">
+            <field name="name">Conversión EST RES</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rm.er.mexicano</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Conversión EST RES"
+            action="reporte_er_mexicano_print_action"
+            id="menu_reporte_er_mexicano_print_action"
+            parent="reportes_mexicanos_reportes_menu"
+            sequence="13"/>
+
+
+
+    </data>
+</openerp>

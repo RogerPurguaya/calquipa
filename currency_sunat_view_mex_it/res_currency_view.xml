@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_res_currency_mex_form" model="ir.ui.view">
+            <field name="name">res.currency.mex.form</field>
+            <field name="model">res.currency.mex</field>
+            <field name="arch" type="xml">
+                <tree string="Moneda Sunat (USD)" editable="bottom">
+                    <field name="fecha"/>
+                    <field name="tipo_cambio" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="tc_mexicano_action" model="ir.actions.act_window">
+            <field name="name">Tipo de Cambio Mexicano</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.currency.mex</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem name="Tipo de Cambio MXN" id="menu_tc_mexicano"  parent="calquipa_reportemexicanos_parte1_it.menu_conf_reporte_mexicano" action="tc_mexicano_action" sequence="1" />
+
+    </data>
+</openerp>

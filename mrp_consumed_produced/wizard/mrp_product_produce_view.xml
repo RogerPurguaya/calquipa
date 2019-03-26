@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_mrp_product_produce_wizard" model="ir.ui.view">
+            <field name="name">MRP Product Produce</field>
+            <field name="model">mrp.product.produce</field>
+            <field name="inherit_id" ref="mrp.view_mrp_product_produce_wizard"/>
+            <field name="arch" type="xml">
+				<field name="mode" position="replace">
+					<field name="mode"/>
+				</field>
+				<field name="product_qty" position="replace">
+					<field name="product_qty" colspan="2" on_change="on_change_qty(product_qty, consume_lines, context)" invisible="1"/>
+				</field>
+				<group string="Produce" position="before">
+					<h2>Realmente desea producir la Orden de Produccion?</h2>
+				</group>
+				<group string="Produce" position="replace">
+					<group string="Produce" invisible="1"/>
+				</group>
+                <group string="To Consume" position="replace">
+					<group string="To Consume" invisible="1"/>
+				</group>
+            </field>
+        </record>
+
+    </data>
+</openerp>   

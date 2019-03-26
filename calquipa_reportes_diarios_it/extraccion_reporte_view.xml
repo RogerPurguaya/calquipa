@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+                                     <!-- EXTRACCION -->
+        <record id="view_extraccion_perforacion_tree" model="ir.ui.view">
+            <field name="name">extraccion.perforacion.tree</field>
+            <field name="model">extraccion.perforacion</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Perforación" create="0" delete="0" editable="bottom">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="check_period" invisible="1"/>
+
+                    <field name="date"            readonly="1"/>
+                    <field name="horas_operacion" attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="metros_lineales" attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="metros_hora"     readonly="1"/>
+                    <field name="consumo_diesel"  attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="consumo_gls"     readonly="1"/>
+                    <field name="pit1_produc"     attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="pit1_desmont"    attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="pit2_tons"       attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="pit3_tons"       attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="pit4_tons"       attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="boster"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="anfo"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="mecha"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="exanel"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="fulminante"      attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="np"              attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="unidireccional"  attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="cons_explosivo"  attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="grs_ton"         readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extraccion_perforacion_search" model="ir.ui.view">
+            <field name="name">extraccion.perforacion.search</field>
+            <field name="model">extraccion.perforacion</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+                                    <!-- CARGA Y ACARREO -->
+        <record id="view_extraccion_carga_acarreo_tree" model="ir.ui.view">
+            <field name="name">extraccion.carga.acarreo.tree</field>
+            <field name="model">extraccion.carga.acarreo</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Perforación" create="0" delete="0" editable="bottom">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="check_period" invisible="1"/>
+
+                    <field name="date"                  readonly="1"/>
+                    <field name="hrs_oper"              attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="consumo_diesel"        attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_excavd2"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_hr_d2"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_martillo"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_hr_martillo"     attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_excavdl"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_hr_dl"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volq01"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volq01"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volq02"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volq02"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volq03"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volq03"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volq04"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volq04"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volq05"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volq05"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volq06"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volq06"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volqv5"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volqv5"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volq07"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volq07"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_d7r"               attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_d7r"             attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_rodillo"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_rodillo"         attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_motoconf"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_motoconf"        attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_cargador"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_cargador"        attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="total_diesel_acarreo"  readonly="1"/>
+                    <field name="total_diesel_exac"     readonly="1"/>
+                    <field name="consumo_h2o"           attrs="{'readonly':[('check_period','=',True)]}"/>                    
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extraccion_carga_acarreo_search" model="ir.ui.view">
+            <field name="name">extraccion.carga.acarreo.search</field>
+            <field name="model">extraccion.carga.acarreo</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+                                     <!-- COMPRA INSUMOS -->
+        <record id="view_extraccion_compra_insumos_tree" model="ir.ui.view">
+            <field name="name">extraccion.compra.insumos.tree</field>
+            <field name="model">extraccion.compra.insumos</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Perforación" create="0" delete="0" editable="0">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="check_period" invisible="1"/>
+
+                    <field name="date"            readonly="1"/>
+                    <field name="boster"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="anfo"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="mecha"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="exanel"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="fulminante"      attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="np"              attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="unidireccional"  attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="vale_perfora"    attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="diesel"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="vale_cargador"   attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="cargador"        attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <!--<field name="agua"            attrs="{'readonly':[('check_period','=',True)]}"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extraccion_compra_insumos_search" model="ir.ui.view">
+            <field name="name">extraccion.compra.insumos.search</field>
+            <field name="model">extraccion.compra.insumos</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+                                      <!-- INVENTARIO INSUMOS -->
+        <record id="view_extraccion_inventario_insumos_tree" model="ir.ui.view">
+            <field name="name">extraccion.inventario.insumos.tree</field>
+            <field name="model">extraccion.inventario.insumos</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Perforación" create="0" delete="0" editable="0">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="check_period" invisible="1"/>
+
+                    <field name="date"              readonly="1"/>
+                    <field name="boster"            readonly="1"/>
+                    <field name="anfo"              readonly="1"/>
+                    <field name="mecha"             readonly="1"/>
+                    <field name="exanel"            readonly="1"/>
+                    <field name="fulminante"        readonly="1"/>
+                    <field name="np"                readonly="1"/>
+                    <field name="unidireccional"    readonly="1"/>
+                    <field name="diesel"            readonly="1"/>
+                    <field name="diesel_carga"      readonly="1"/>
+                    <!--<field name="agua"              readonly="1"/>-->
+
+                    <field name="inv_boster"         invisible="1"/>
+                    <field name="inv_anfo"           invisible="1"/>
+                    <field name="inv_mecha"          invisible="1"/>
+                    <field name="inv_exanel"         invisible="1"/>
+                    <field name="inv_fulminante"     invisible="1"/>
+                    <field name="inv_np"             invisible="1"/>
+                    <field name="inv_unidireccional" invisible="1"/>
+                    <field name="inv_diesel"         invisible="1"/>
+                    <field name="inv_diesel_carg"    invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extraccion_inventario_insumos_search" model="ir.ui.view">
+            <field name="name">extraccion.inventario.insumos.search</field>
+            <field name="model">extraccion.inventario.insumos</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+                                      <!-- INDICADORES OPERACION -->
+        <record id="view_extraccion_indicadores_operacion_tree" model="ir.ui.view">
+            <field name="name">extraccion.indicadores.operacion.tree</field>
+            <field name="model">extraccion.indicadores.operacion</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Perforación" create="0" delete="0" editable="bottom">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="dias_transcurridos" invisible="1"/>
+
+                    <field name="concepto" readonly="1"/>
+                    <field name="cantidad" readonly="1"/>
+                    <field name="unidades" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_extraccion_indicadores_operacion_search" model="ir.ui.view">
+            <field name="name">extraccion.indicadores.operacion.search</field>
+            <field name="model">extraccion.indicadores.operacion</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</openerp>

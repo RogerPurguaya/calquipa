@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_category_product_sunat_tree">
+			<field name="name">category.product.sunat.tree</field>
+			<field name="model">category.product.sunat</field>
+			<field name="arch" type="xml">
+				<tree string="category.product.sunat" >
+					<field name="name"/>
+					<field name="code"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="category_product_sunat_action" model="ir.actions.act_window">
+			<field name="name">Cod. categ. SUNAT</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">category.product.sunat</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="multi">True</field>
+		</record>
+
+
+		<menuitem action="category_product_sunat_action"
+            id="menu_category_product_sunat"
+            parent="kardex.kardex_main_menu"
+            sequence="99"
+        />
+
+
+		<record model="ir.ui.view" id="view_category_uom_sunat_tree">
+			<field name="name">category.uom.sunat.tree</field>
+			<field name="model">category.uom.sunat</field>
+			<field name="arch" type="xml">
+				<tree string="category.uom.sunat">
+					<field name="name"/>
+					<field name="code"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="category_uom_sunat_action" model="ir.actions.act_window">
+			<field name="name">Cod. unidad SUNAT</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">category.uom.sunat</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="multi">True</field>
+		</record>
+
+		<menuitem action="category_uom_sunat_action"
+            id="menu_category_uom_sunat"
+            parent="kardex.kardex_main_menu"
+            sequence="99"
+        />
+	</data>
+</openerp>

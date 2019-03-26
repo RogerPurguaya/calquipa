@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Product Category -->
+
+        <record model="ir.ui.view" id="product_category_form_view">
+            <field name="name">SUNAT product category form</field>
+            <field name="model">product.category</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='parent']" position="before">
+						<group name="sunat" >
+	                        <field name="cod_sunat" />
+						</group>
+                        <newline />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+         <!-- Product UOM -->
+
+        <record model="ir.ui.view" id="product_uom_form_view">
+            <field name="name">SUNAT product uom form</field>
+            <field name="model">product.uom</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_uom_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='active']" position="before">
+                        <field name="cod_sunat" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+
+        <record id="view_location_form" model="ir.ui.view">
+            <field name="name">stock.location.form</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="before">
+                    <field name="cod_sunat"/>
+                </field>
+            </field>
+        </record>
+	</data>
+</openerp>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+        <record id="action_mensajes_adjuntos_it" model="ir.actions.act_window">
+            <field name="name">Mensajes Adjuntos</field>
+            <field name="res_model">mail.message</field>
+            <field name="domain">[('attachment_ids', '!=', False),('subject','like','Boleta')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Mensajes Adjuntos"
+            action="action_mensajes_adjuntos_it"
+            id="menu_hr_mensajes_adjuntos"
+            parent="hr.menu_hr_main"
+        />
+	</data>
+</openerp>

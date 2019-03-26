@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <menuitem action="kardex_saldos.get_kardex_saldos_action"
+            id="kardex_saldos.menu_get_kardex_saldos_wizard"
+            parent="stock.menu_stock_inventory_control"
+            groups="kardex_groups_it.group_visual_kardex_id"
+            sequence="4"
+        />
+		
+		
+		<menuitem action="kardex_saldos.get_kardex_saldos_mrp_action"
+            id="kardex_saldos.menu_get_kardex_saldos_mrp_wizard"
+            parent="mrp.menu_mrp_bom"
+            groups="kardex_groups_it.group_visual_kardex_id"
+            sequence="99"
+        />
+
+        <menuitem name="Kardex valorado" id="kardex.kardex_sunat_val_menu"
+                 parent="kardex.kardex_main_menu" action="kardex.make_kardex_action"
+                 groups="kardex_groups_it.group_visual_kardex_id"
+                 sequence="2" />
+
+
+        <menuitem name="Kardex físico" id="kardex.kardex_sunat_fis_menu"
+                 parent="kardex.kardex_main_menu" action="kardex.make_kardex_fis_action"
+                 groups="kardex_groups_it.group_visual_kardex_id"
+                 sequence="3" />
+
+        <menuitem name="Kardex físico" id="kardex.kardex_warehouse_fis_menu"
+                 parent="stock.menu_stock_inventory_control" action="kardex.make_kardex_fis_action"
+                 groups="kardex_groups_it.group_visual_kardex_id"
+                 sequence="3" />
+				 
+		<menuitem name="Kardex físico" id="kardex.kardex_sunat_fis_mrp_menu"
+                 parent="mrp.menu_mrp_bom" action="kardex.make_kardex_fis_action"
+                 groups="kardex_groups_it.group_visual_kardex_id"
+                 sequence="99" />
+				 
+
+    </data>
+</openerp>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record model="ir.ui.view" id="view_order_form">
+            <field name="name">sale.order.form.code</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="project_id" position="after">
+                    <field name="p_padre"  />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_order_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" string="Order Number" position="before">
+                    <field name="p_padre"  />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_sales_order_search" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/filter[@string='Customer']" position="after">
+                    <filter string="Pedido Padre" domain="[]" context="{'group_by':'p_padre'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_res_partner_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Suppliers" position="after">                    
+                   <filter string="Clientes(no contactos)" name="customernc" domain="[('customer','=',1),('parent_id','=',False)]" />
+                   <filter string="Proveedores(no contactos)" name="suppliernc" domain="[('supplier','=',1),('parent_id','=',False)]"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account_type_doc_it.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="date_invoice" position="attributes">
+                    <attribute name="on_change"></attribute>
+                </field>
+                <field name="payment_term" position="attributes">
+                    <attribute name="on_change">onchange_payment_term_date_invoice_reception(payment_term, date_reception)</attribute>
+                </field>
+                <field name="date_invoice" position="after">
+                    <field name="date_reception" />
+                </field>
+                <xpath expr="//notebook" position="inside">
+                        <page string="Detalle Ventas">
+                            <group>
+                                <field name="detalle_venta_ids" nolabel="1" >
+                                    <tree string="Detalle Ventas" editable="bottom">
+                                        <field name="producto" />
+                                        <field name="monto_venta" />
+                                        <field name="monto_flete" />
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                </xpath> 
+            </field>
+        </record>
+
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account_type_doc_it.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="date_invoice" position="attributes">
+                    <attribute name="on_change"></attribute>
+                </field>
+                <field name="date_invoice" position="after">
+                    <field name="date_reception" />
+                </field>
+                <field name="payment_term" position="attributes">
+                    <attribute name="on_change">onchange_payment_term_date_invoice_reception(payment_term, date_reception)</attribute>
+                </field>
+            </field>
+        </record>
+		
+	</data>
+</openerp>

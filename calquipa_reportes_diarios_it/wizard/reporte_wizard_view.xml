@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="reporte_wizard_form_view">
+			<field name="name">reporte.wizard.form</field>
+			<field name="model">reporte.wizard</field>
+			<field name="arch" type="xml">
+				<form string="perforación">
+
+					<group string="Ingresar:">
+						<group>
+	                        <field name="fiscalyear_id"/> 
+	                        <field name="period_id" domain="[('fiscalyear_id','=',fiscalyear_id)]"/>
+	                    </group>
+	                    <group>
+	                    </group>
+                    </group>
+
+                    <footer>
+                        <button string="Generar" name="do_rebuild" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="reporte_operacion_wizard_form_view">
+			<field name="name">reporte.operacion.wizard.form</field>
+			<field name="model">reporte.operacion.wizard</field>
+			<field name="arch" type="xml">
+				<form string="perforación">
+
+					<group string="Ingresar:">
+						<group>
+	                        <field name="fiscalyear_id"/> 
+	                        <field name="period_id" domain="[('fiscalyear_id','=',fiscalyear_id)]"/>
+	                        <field name="dias"/> 
+	                    </group>
+	                    <group>
+	                    	<field name="obj_mes"/>
+	                    	<field name="obj_hrs"/>
+	                    	<field name="hrs_perf"/>
+	                    </group>
+                    </group>
+
+                    <footer>
+                        <button string="Generar" name="do_rebuild" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="reporte_operacion_trituracion_wizard_form_view">
+			<field name="name">reporte.operacion.trituracion.wizard.form</field>
+			<field name="model">reporte.operacion.trituracion.wizard</field>
+			<field name="arch" type="xml">
+				<form string="perforación">
+
+					<group string="Ingresar:">
+						<group>
+	                        <field name="fiscalyear_id"/> 
+	                        <field name="period_id" domain="[('fiscalyear_id','=',fiscalyear_id)]"/>
+	                        <field name="dias"/> 
+	                    </group>
+	                    <group>
+	                    	<field name="obj_mes"/>
+	                    	<field name="obj_hrs"/>
+	                    	<field name="hrs_perf"/>
+	                    	<field name="hornos"/>
+	                    	<field name="promedio_calidad"/>
+	                    	<field name="promedio_silice"/>
+	                    </group>
+                    </group>
+
+                    <footer>
+                        <button string="Generar" name="do_rebuild" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+
+				</form>
+			</field>
+		</record>
+
+		 <record model="ir.ui.view" id="reporte_operacion_anivi_coke_wizard_form_view">
+			<field name="name">reporte.operacion.anivi.coke.wizard.form</field>
+			<field name="model">reporte.operacion.anivi.coke.wizard</field>
+			<field name="arch" type="xml">
+				<form string="perforación">
+
+					<group string="Ingresar:">
+						<group>
+	                        <field name="fiscalyear_id"/> 
+	                        <field name="period_id" domain="[('fiscalyear_id','=',fiscalyear_id)]"/>
+	                        <field name="dias"/> 
+	                    </group>
+	                    <group>
+	                    	<field name="obj_mes"/>
+	                    	<field name="obj_hrs"/>
+	                    </group>
+                    </group>
+
+                    <footer>
+                        <button string="Generar" name="do_rebuild" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+
+				</form>
+			</field>
+		</record> 
+
+		<record model="ir.ui.view" id="reporte_final_wizard_form_view">
+			<field name="name">reporte.final.wizard.form</field>
+			<field name="model">reporte.final.wizard</field>
+			<field name="arch" type="xml">
+				<form string="perforación">
+
+					<group string="Ingresar:">
+						<group>
+	                        <field name="fiscalyear_id"/> 
+	                        <field name="period_id" domain="[('fiscalyear_id','=',fiscalyear_id)]"/>
+	                        <field name="dias"/> 
+	                    </group>
+	                    <group>
+	                    </group>
+                    </group>
+
+                    <footer>
+                        <button string="Generar" name="do_rebuild" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+
+				</form>
+			</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_make_kardex_tree_val" model="ir.ui.view">
+            <field name="name">make.kardex.tree.val</field>
+            <field name="model">make.kardex.tree</field>
+            <field name="inherit_id" ref="kardex.view_make_kardex_tree_val"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="producto" position="after">
+                    <field name="product_account" string ="Cta. Producto"/>
+                </field>
+
+                <field name="num_doc" position="after">
+                    <field name="account_invoice" string ="Cta. Factura"/>
+                </field>
+                  
+            </field>
+        </record>
+
+
+        <record id="view_kardex_sunat_filter" model="ir.ui.view">
+            <field name="name">make.kardex.tree.search</field>
+            <field name="model">make.kardex.tree</field>
+            <field name="inherit_id" ref="kardex.view_kardex_sunat_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Tipo de documento" icon="terp-go-month" domain="[]" context="{'group_by':'type_doc'}" position="after">
+                    <filter string="Cuenta producto" icon="terp-go-month" domain="[]" context="{'group_by':'product_account'}"/>
+                    <filter string="Cuenta factura" icon="terp-go-month" domain="[]" context="{'group_by':'account_invoice'}"/>
+                </filter>
+            </field>
+        </record>
+	</data>
+</openerp>

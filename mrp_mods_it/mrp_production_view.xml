@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<record id="mrp_production_form_view" model="ir.ui.view">
+            <field name="name">mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp_simple_version.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+				<field name="origin" position="after">
+					<field name="nro_viajes" />
+				</field>
+			</field>
+		</record>
+	
+	</data>
+</openerp>

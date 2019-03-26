@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+        <record id="save_promedios_mex_action" model="ir.actions.server">
+            <field name="name">Actualizar Promedios</field>
+            <field name="model_id" ref='model_tipo_cambio_mexicano'/>
+            <field name="state">code</field>
+            <field name="code">action=self.actualizar_cambios(cr, uid, context.get('active_ids', []), context=context)</field>
+        </record>
+
+        <record model="ir.values" id="save_promedio_mex_item">
+            <field eval="'client_action_multi'" name="key2"/>
+            <field eval="'tipo.cambio.mexicano'" name="model"/>
+            <field name="name">Actualizar Promedios</field>
+            <field name="value" eval="'ir.actions.server,%d'%save_promedios_mex_action" />
+            <field name="object" eval="True"/>
+        </record>
+
+
+     
+        <record id="view_tipo_campo_mexicano_tree" model="ir.ui.view">
+            <field name="name">tipo.cambio.mexicano.tree</field>
+            <field name="model">tipo.cambio.mexicano</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Tipo de Cambio Cierre">
+                    <field name="periodo_id" />
+                    <field name="t_cambio_compra" />
+                    <field name="t_cambio_venta" />
+                    <field name="t_cambio_mexicano" />
+
+
+                    <field name="promedio_compra" />
+                    <field name="promedio_venta" />
+                    <field name="promedio_mexicano" />
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="view_tipo_cambio_mexicano_form">
+            <field name="name">tipo.cambio.mexicano.form</field>
+            <field name="model">tipo.cambio.mexicano</field>
+            <field name="arch" type="xml">
+                <form string="Tipo de Cambio Cierre" version="8.0">
+                        <group>
+                            <group>
+                                <field name="periodo_id" required="1"/>
+
+                                <field name="t_cambio_compra" required="1"/>
+                                <field name="t_cambio_venta" required="1"/>
+                                <field name="t_cambio_mexicano" required="1"/>
+                            </group>
+                            <group>
+
+
+                    <field name="promedio_compra" readonly="1" />
+                    <field name="promedio_venta" readonly="1"/>
+                    <field name="promedio_mexicano" readonly="1"/>
+                            </group>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="tipo_cambio_mexicano_action" model="ir.actions.act_window">
+            <field name="name">Tipo de Cambio Cierre</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tipo.cambio.mexicano</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Tipo de Cambio Cierre"
+            action="tipo_cambio_mexicano_action"
+            id="menu_tipo_cambio_mexicano_action"
+            parent="menu_conf_reporte_mexicano"
+            sequence="13"/>
+
+
+
+
+        <record id="view_rm_es_mexicano_tree" model="ir.ui.view">
+            <field name="name">rm.es.mexicano.tree</field>
+            <field name="model">rm.es.mexicano</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Estado Situación">
+                    <field name="periodo_id" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_rm_es_mexicano_form">
+            <field name="name">rm.es.mexicano.form</field>
+            <field name="model">rm.es.mexicano</field>
+            <field name="arch" type="xml">
+                <form string="Estado Situación" version="8.0">
+                    <header>
+                        <button name="traer_datos" string="Traer Datos" type="object" class="oe_highlight"/>
+                        <button name="calculate" string="Calcular" type="object" class="oe_highlight"/>
+                        <button name="export_excel" string="Reporte Excel" type="object"/>
+                    </header>
+                        <group>
+                            <group>
+                                <field name="periodo_id" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Activo">
+                                        <group>
+                                            <field name="lineas_activo" nolabel="1">
+                                                <tree create="0" delete="0" editable="bottom">
+                                                    <field name="orden" required="1" readonly="1"/>
+                                                    <field name="tipo_cuenta" invisible="1" readonly="1"/>
+                                                    <field name="concepto" widget="report_title_color" readonly="1" />
+                                                    <field name="formula" invisible="1" attrs="{'readonly':[('tipo_cuenta', '!=','3')]}" />
+                                                    <field name="resaltado" invisible="1" />
+                                                    <field name="bordes" invisible="1" />
+                                                    <field name="monto"  widget="mywidget"  attrs="{'readonly':[('tipo_cuenta', '=','3')]}" />
+                                                    <field name="reclasif"  widget="mywidget" readonly="0"/>
+                                                    <field name="ref" readonly="0"/>
+                                                    <field name="t_monto"  widget="mywidget" readonly="1"/>
+                                                    <field name="reclasif_ifrs"  widget="mywidget" readonly="0"/>
+                                                    <field name="t_monto_ifrs"  widget="mywidget" readonly="1"/>
+                                                    <field name="ajuste"  widget="mywidget" readonly="1"/>
+                                                    <field name="tc_usd" readonly="1"/>
+                                                    <field name="monto_usd"  widget="mywidget" readonly="1"/>
+                                                    <field name="ajuste_usd"  widget="mywidget" readonly="1"/>
+                                                    <field name="tc_mxn" readonly="1"/>
+                                                    <field name="monto_mxn"  widget="mywidget" readonly="1"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+
+                                </page>
+                                <page string="Pasivo">
+                                        <group>
+                                            <field name="lineas_pasivo" nolabel="1">
+                                                <tree create="0" delete="0" editable="bottom">
+                                                    <field name="orden" required="1" readonly="1"/>
+                                                    <field name="tipo_cuenta" invisible="1" readonly="1"/>
+                                                    <field name="concepto" widget="report_title_color" readonly="1" />
+                                                    <field name="formula" invisible="1" attrs="{'readonly':[('tipo_cuenta', '!=','3')]}" />
+                                                    <field name="resaltado" invisible="1" />
+                                                    <field name="bordes" invisible="1" />
+                                                    <field name="monto"  widget="mywidget" attrs="{'readonly':[('tipo_cuenta', '=','3')]}" />
+                                                    <field name="reclasif"  widget="mywidget" readonly="0"/>
+                                                    <field name="ref" readonly="0"/>
+                                                    <field name="t_monto"  widget="mywidget" readonly="1"/>
+                                                    <field name="reclasif_ifrs"  widget="mywidget" readonly="0"/>
+                                                    <field name="t_monto_ifrs"  widget="mywidget" readonly="1"/>
+                                                    <field name="ajuste"  widget="mywidget" readonly="1"/>
+                                                    <field name="tc_usd" readonly="1"/>
+                                                    <field name="monto_usd"  widget="mywidget" readonly="1"/>
+                                                    <field name="ajuste_usd"  widget="mywidget" readonly="1"/>
+                                                    <field name="tc_mxn" readonly="1"/>
+                                                    <field name="monto_mxn"  widget="mywidget" readonly="1"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                </page>
+                                <page string="Lineas Reporte"  invisible="1">
+                                    <field name="lineas" nolabel="1">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="orden" required="1" readonly="1"/>
+                                            <field name="uno_tipo_cuenta" invisible="0" readonly="1"/>
+                                            <field name="uno_concepto" readonly="1" />
+                                            <field name="uno_formula" invisible="1" attrs="{'readonly':[('uno_tipo_cuenta', '!=','3')]}" />
+                                            <field name="uno_resaltado" invisible="1" />
+                                            <field name="uno_bordes" invisible="1" />
+                                            <field name="uno_monto" readonly="1" />
+                                                    <field name="uno_reclasif" readonly="1"/>
+                                                    <field name="uno_ref" readonly="1"/>
+                                                    <field name="uno_t_monto" readonly="1"/>
+                                                    <field name="uno_reclasif_ifrs" readonly="1"/>
+                                                    <field name="uno_t_monto_ifrs" readonly="1"/>
+                                                    <field name="uno_ajuste" readonly="1"/>
+                                                    <field name="uno_tc_usd" readonly="1"/>
+                                                    <field name="uno_monto_usd" readonly="1"/>
+                                                    <field name="uno_ajuste_usd" readonly="1"/>
+                                                    <field name="uno_tc_mxn" readonly="1"/>
+                                                    <field name="uno_monto_mxn" readonly="1"/>
+
+                                            <field name="dos_tipo_cuenta" invisible="0"/>
+                                            <field name="dos_concepto" readonly="1"/>
+                                            <field name="dos_formula" invisible="1" attrs="{'readonly':[('dos_tipo_cuenta', '!=','3')]}" />
+                                            <field name="dos_resaltado" invisible="1" />
+                                            <field name="dos_bordes" invisible="1" />
+                                            <field name="dos_monto" attrs="{'readonly':[('dos_tipo_cuenta', '!=','4')]}" />
+                                                    <field name="dos_reclasif" readonly="1"/>
+                                                    <field name="dos_ref" readonly="1"/>
+                                                    <field name="dos_t_monto" readonly="1"/>
+                                                    <field name="dos_reclasif_ifrs" readonly="1"/>
+                                                    <field name="dos_t_monto_ifrs" readonly="1"/>
+                                                    <field name="dos_ajuste" readonly="1"/>
+                                                    <field name="dos_tc_usd" readonly="1"/>
+                                                    <field name="dos_monto_usd" readonly="1"/>
+                                                    <field name="dos_ajuste_usd" readonly="1"/>
+                                                    <field name="dos_tc_mxn" readonly="1"/>
+                                                    <field name="dos_monto_mxn" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_es_mexicano_print_action" model="ir.actions.act_window">
+            <field name="name">Estado Situación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rm.es.mexicano</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Conversión EST ST"
+            action="reporte_es_mexicano_print_action"
+            id="menu_reporte_es_mexicano_print_action"
+            parent="reportes_mexicanos_reportes_menu"
+            sequence="13"/>
+
+
+    </data>
+</openerp>

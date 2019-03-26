@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_account_retention_tree" model="ir.ui.view">
+            <field name="name">account.retention.tree</field>
+            <field name="model">account.retention</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Retentions" create="false" edit="false">
+                    <field name="periodo" />
+                    <field name="ruc_proveedor" />
+                    <field name="razon_social" />
+                    <field name="apellido_paterno" />
+                    <field name="apellido_materno" />
+                    <field name="nombres" />
+                    <field name="serie" />
+                    <field name="numero" />
+                    <field name="fecha_emision" />
+                    <field name="monto_retention" />
+                    <field name="tipo_doc" />
+					<field name="serie_doc" />
+					<field name="numero_doc" />
+					<field name="fecha_doc" />
+					<field name="total_doc" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_retention_search" model="ir.ui.view">
+            <field name="name">account.retention.search</field>
+            <field name="model">account.retention</field>
+            <field name="arch" type="xml">
+                <search string="Retenciones">
+                    <separator/>
+                    <group expand="1" string="Group By...">
+                        <filter string="Periodo" name="periodo" icon="terp-partner" context="{'group_by':'periodo'}"/>
+                        <filter string="Tipo de Documento" name="tipo_doc" icon="terp-partner" context="{'group_by':'tipo_doc'}"/>
+
+                        <filter string="RUC" name="ruc_proveedor" icon="terp-partner" context="{'group_by':'ruc_proveedor'}"/>
+                        <filter string="Fecha Emision" name="fecha_emision" icon="terp-partner" context="{'group_by':'fecha_emision'}"/>
+                        <filter string="Fecha Documento" name="fecha_doc" icon="terp-partner" context="{'group_by':'fecha_doc'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_account_retention" model="ir.actions.act_window">
+            <field name="name">Libro Diario</field>
+            <field name="res_model">account.retention</field>
+            <field name="view_id" ref="view_account_retention_tree"/>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="account_retention_search"/>
+        </record>
+
+    </data>
+</openerp>

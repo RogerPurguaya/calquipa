@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_account_retention_wizard_form">
+			<field name="name">account.retention.wizard.form</field>
+			<field name="model">account.retention.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Retenciones" version="8.0">
+						<group>
+							<group>
+									<field name="period_ini" required="1" />
+									
+							</group>
+							<group>
+									<field name="type_show" />
+							</group>
+						</group>
+
+						<footer>
+							<button string="Mostrar" name="do_rebuild" type="object" class="oe_highlight"/>
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="account_retention_wizard_action" model="ir.actions.act_window">
+			<field name="name">Retenciones</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.retention.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+        <menuitem name="Retenciones"
+            action="account_retention_wizard_action"
+            id="menu_action_retention_report"
+            parent="daot_sunat_it.menu_sunat_daot_it"
+            sequence="13"
+        />
+
+
+	</data>
+</openerp>

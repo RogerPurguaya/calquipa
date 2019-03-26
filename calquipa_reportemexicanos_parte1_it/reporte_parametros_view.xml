@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+
+
+
+        <record id="view_reporte_parametros_tree" model="ir.ui.view">
+            <field name="name">reporte.parametros.tree</field>
+            <field name="model">reporte.parametros</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Parámetros" create="0" delete="0">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="view_reporte_parametros_form">
+            <field name="name">reporte.parametros.form</field>
+            <field name="model">reporte.parametros</field>
+            <field name="arch" type="xml">
+                <form string="Parámetros" version="8.0" create="0" delete="0">
+                        <group>
+                            <notebook>
+                                <page string="Tributos">
+                                    <group>
+                                        <field name="tributos" />
+                                        <field name="impuesto_recuperar" />
+                                        <field name="impuesto_pagar" />
+                                        <field name="saldo_inicial_periodo" invisible="0" />
+                                    </group>
+                                    <group>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="action_reporte_parametros" model="ir.actions.act_window">
+            <field name="name">Parámetros</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.parametros</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Parámetros" id="menu_reporte_parametros" parent="menu_conf_reporte_mexicano" action="action_reporte_parametros" />
+
+
+
+
+
+    </data>
+</openerp>

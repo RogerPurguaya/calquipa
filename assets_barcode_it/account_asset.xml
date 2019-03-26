@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report id="report_asset_label" model="account.asset.asset" name="account.asset.label" string="Imprimir Etiqueta" xml="assets_barcode_it/report/asset_label.xml" xsl="assets_barcode_it/report/asset_label.xsl"/>
+
+        <record model="ir.ui.view" id="view_account_asset_asset_form">
+            <field name="name">account.asset.asset.form</field>
+            <field name="model">account.asset.asset</field>
+            <field name="inherit_id" ref="account_asset_alter_it.view_account_asset_asset_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@string='Set to Draft']" position="after">
+                    <button name="generate_ean13_all" string="Generar todos EAN13" type="object" invisible="1"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook" position="inside">
+                    <page string="Más información">
+                        <group>
+                            <group>
+                                <field name="ean13"/>
+                                <button string="Generar EAN13" name="generate_ean13"
+                                attrs="{'invisible': [('ean13', '!=', False)]}"
+                                type="object" colspan="2"/>
+                                <button string="Borrar EAN13" name="reset_ean13"
+                                attrs="{'invisible': [('ean13', '=', False)]}"
+                                type="object" colspan="2"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record> 
+
+        <record id="action_account_asset_asset_list" model="ir.actions.server">
+                  <field name="name">Exportar Lista Activos</field>
+                  <field name="type">ir.actions.server</field>
+                  <field name="model_id" ref="model_account_asset_asset"/>
+                  <field name="state">code</field>
+                  <field name="code">action = self.get_asset_list(cr,uid,context.get('active_ids'),context=context)</field>
+            </record>
+
+            <record model="ir.values" id="account_asset_asset_more">
+                  <field name="name">Exportar Lista Activos</field>
+                  <field name="key2">client_action_multi</field>
+                  <field name="action_id" ref="action_account_asset_asset_list"/>
+                  <field name="value" eval="'ir.actions.server,' + str(ref('action_account_asset_asset_list'))" />
+                  <field name="model_id" ref="model_account_asset_asset"/>
+                  <field name="key">action</field>
+                  <field name="model">account.asset.asset</field>
+            </record>
+    </data>
+</openerp>
+

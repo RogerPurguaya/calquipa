@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <menuitem name="Reportes Diarios" id="reportes_diarios_menu" sequence="37" groups="calquipa_reportes_diarios_it.group_reportes_diarios"/>
+
+        <menuitem name="Principal" id="principal_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="1"/>
+
+        <record id="principal_action" model="ir.actions.act_window">
+            <field name="name">Principal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">principal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'tipo_rep':'pri'}</field>
+        </record>
+
+        <menuitem name="Principal" id="principal_principal_menu"  parent="calquipa_reportes_diarios_it.principal_menu" sequence="1" action="principal_action"/>
+
+        <!-- EXTRACCION -->
+
+        <menuitem name="Extracción" id="reportes_diarios_extraccion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="2" />
+
+        <record id="extraccion_perforacion_action" model="ir.actions.act_window">
+            <field name="name">Perforación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'expe'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="extraccion_perforacion_action" id="reportes_diarios_extraccion_perforacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_extraccion_menu" sequence="1" />
+
+        <record id="extraccion_carga_acarreo_action" model="ir.actions.act_window">
+            <field name="name">Carga y Acarreo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'excaac'}</field>
+            <field name="target">new</field>
+        </record> 
+
+        <menuitem action="extraccion_carga_acarreo_action" id="reportes_diarios_extraccion_carga_acarreo_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_extraccion_menu" sequence="2" />
+
+        <record id="extraccion_compra_insumos_action" model="ir.actions.act_window">
+            <field name="name">Compra de Insumos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'excoin'}</field>
+            <field name="target">new</field>
+        </record> 
+
+        <menuitem action="extraccion_compra_insumos_action" id="reportes_diarios_extraccion_compra_insunmos_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_extraccion_menu" sequence="3" />
+
+        <record id="extraccion_inventario_insumos_action" model="ir.actions.act_window">
+            <field name="name">Inventario de Insumos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'exinin'}</field>
+            <field name="target">new</field>
+        </record> 
+
+        <menuitem action="extraccion_inventario_insumos_action" id="reportes_diarios_extraccion_inventario_insunmos_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_extraccion_menu" sequence="4" />
+
+        <record id="extraccion_indicadores_operacion_action" model="ir.actions.act_window">
+            <field name="name">Indicadores de Operación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.operacion.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'exinop'}</field>
+            <field name="target">new</field>
+        </record> 
+
+        <menuitem action="extraccion_indicadores_operacion_action" id="reportes_diarios_extraccion_indicadores_operacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_extraccion_menu" sequence="5" />
+
+        <record id="extraccion_reporte_extraccion_action" model="ir.actions.act_window">
+            <field name="name">Reporte de Extracción</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'exreex'}</field>
+            <field name="target">new</field>
+        </record> 
+
+        <menuitem action="extraccion_reporte_extraccion_action" id="reportes_diarios_extraccion_reporte_extraccion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_extraccion_menu" sequence="6" />
+
+         <!-- TRITURACION -->
+         <menuitem name="Trituración" id="reportes_diarios_trituracion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="3" />
+
+         <record id="trituracion_negro_africano_action" model="ir.actions.act_window">
+            <field name="name">Negro Africano</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'trneaf'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="trituracion_negro_africano_action" id="reportes_diarios_trituracion_negro_africano_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_trituracion_menu" sequence="1" />
+
+        <record id="trituracion_horno_maez_action" model="ir.actions.act_window">
+            <field name="name">Horno Maerz</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'trhoma'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="trituracion_horno_maez_action" id="reportes_diarios_trituracion_horno_maez_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_trituracion_menu" sequence="2" />
+
+        <record id="trituracion_compra_diesel_action" model="ir.actions.act_window">
+            <field name="name">Compra de Insumos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'trcodi'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="trituracion_compra_diesel_action" id="reportes_diarios_trituracion_compra_diesel_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_trituracion_menu" sequence="3" />
+
+        <record id="trituracion_inventario_diesel_action" model="ir.actions.act_window">
+            <field name="name">Inventario de Insumos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'trindi'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="trituracion_inventario_diesel_action" id="reportes_diarios_trituracion_inventario_diesel_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_trituracion_menu" sequence="4" />
+
+        <record id="trituracion_indicadores_operacion_action" model="ir.actions.act_window">
+            <field name="name">Indicadores de Operación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.operacion.trituracion.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'trinop'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="trituracion_indicadores_operacion_action" id="reportes_diarios_trituracion_indicardores_operacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_trituracion_menu" sequence="5" />
+
+         <record id="trituracion_reporte_trituracion_action" model="ir.actions.act_window">
+            <field name="name">Reporte de Trituración</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'trretr'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="trituracion_reporte_trituracion_action" id="reportes_diarios_trituracion_reporte_trituracion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_trituracion_menu" sequence="6" />
+
+
+        <!-- ANIVI COKE -->
+         <menuitem name="Reporte Combustible Sólido" id="reportes_diarios_anivi_coke_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="4" />
+
+         <record id="anivi_coke_pulverizado_combustible_solido_action" model="ir.actions.act_window">
+            <field name="name">Pulverizado de Combustible Sólido</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'ancopucoso'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="anivi_coke_pulverizado_combustible_solido_action" id="reportes_diarios_anivi_coke_pulverizado_combustible_solido_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_anivi_coke_menu" sequence="1" />
+
+        <record id="anivi_coke_compra_insumos_action" model="ir.actions.act_window">
+            <field name="name">Compra de Insumos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'ancocoin'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="anivi_coke_compra_insumos_action" id="reportes_diarios_anivi_coke_compra_insumos_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_anivi_coke_menu" sequence="1" />
+
+        <record id="anivi_coke_inventario_insumos_action" model="ir.actions.act_window">
+            <field name="name">Inventario de Insumos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'ancoinin'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="anivi_coke_inventario_insumos_action" id="reportes_diarios_anivi_coke_inventario_insumos_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_anivi_coke_menu" sequence="1" />
+
+        <record id="anivi_coke_indicadores_operacion_action" model="ir.actions.act_window">
+            <field name="name">Indicadores de Operación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.operacion.anivi.coke.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'ancoinop'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="anivi_coke_indicadores_operacion_action" id="reportes_diarios_anivi_coke_indicardores_operacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_anivi_coke_menu" sequence="2" />
+
+        <record id="anivi_coke_reporte_action" model="ir.actions.act_window">
+            <field name="name">Reporte Combustible Sólido</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'ancoreanco'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="anivi_coke_reporte_action" id="reportes_anivi_coke_reporte_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_anivi_coke_menu" sequence="3" />
+
+        <!-- CPONTROL ANTRACITA -->
+         <menuitem name="Control Antracita" id="reportes_diarios_control_antracita_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="5" />
+
+         <record id="control_antracita_pulverizado_combustible_solido_action" model="ir.actions.act_window">
+            <field name="name">Pulverizado de Combustible Sólido</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'coanpucoso'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="control_antracita_pulverizado_combustible_solido_action" id="reportes_diarios_control_antracita_pulverizado_combustible_solido_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_control_antracita_menu" sequence="1" />
+
+        <record id="control_antracita_compra_insumos_action" model="ir.actions.act_window">
+            <field name="name">Compra de Insumos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'coancoin'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="control_antracita_compra_insumos_action" id="reportes_diarios_control_antracita_compra_insumos_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_control_antracita_menu" sequence="1" />
+
+        <record id="control_antracita_inventario_insumos_action" model="ir.actions.act_window">
+            <field name="name">Inventario de Insumos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'coaninin'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="control_antracita_inventario_insumos_action" id="reportes_diarios_control_antracita_inventario_insumos_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_control_antracita_menu" sequence="1" />
+
+        <record id="control_antracita_indicadores_operacion_action" model="ir.actions.act_window">
+            <field name="name">Indicadores de Operación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.operacion.anivi.coke.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'coaninop'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="control_antracita_indicadores_operacion_action" id="reportes_diarios_control_antracita_indicardores_operacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_control_antracita_menu" sequence="2" />
+
+        <record id="control_antracita_reporte_action" model="ir.actions.act_window">
+            <field name="name">Reporte de Control Antracita</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'coanreanco'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="control_antracita_reporte_action" id="reportes_control_antracita_reporte_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_control_antracita_menu" sequence="3" />
+
+        <!-- MAERZ -->
+         <menuitem name="Maerz" id="reportes_diarios_maerz_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="6" />
+
+        <record id="maerz_calcinacion_action" model="ir.actions.act_window">
+            <field name="name">Calcinación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'maca'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="maerz_calcinacion_action" id="reportes_diarios_maerz_calcinacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_maerz_menu" sequence="1" />
+
+        <record id="maerz_compra_diesel_action" model="ir.actions.act_window">
+            <field name="name">Compra Diesel y GSL</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'macomdi'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="maerz_compra_diesel_action" id="reportes_diarios_maerz_compra_diesel_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_maerz_menu" sequence="2" />
+
+        <record id="maerz_consumo_diesel_action" model="ir.actions.act_window">
+            <field name="name">Consumo Diesel y GSL</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'macondi'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="maerz_consumo_diesel_action" id="reportes_diarios_maerz_consumo_diesel_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_maerz_menu" sequence="3" />
+
+        <record id="maerz_saldos_diesel_action" model="ir.actions.act_window">
+            <field name="name">Saldos Diesel y GSL</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'masaldi'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="maerz_saldos_diesel_action" id="reportes_diarios_maerz_saldos_diesel_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_maerz_menu" sequence="4" />
+
+        <record id="maerz_indicadores_operacion_action" model="ir.actions.act_window">
+            <field name="name">Indicadores de Operación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.operacion.anivi.coke.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'mainop'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="maerz_indicadores_operacion_action" id="reportes_diarios_maerz_indicardores_operacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_maerz_menu" sequence="5" />
+
+        <record id="maerz_reporte_action" model="ir.actions.act_window">
+            <field name="name">Reporte de Maerz</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'marema'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="maerz_reporte_action" id="reportes_maerz_reporte_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_maerz_menu" sequence="6" />
+
+        <!-- PULV CAO -->
+         <menuitem name="Pulv CaO" id="reportes_diarios_pulv_cao_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="7" />
+
+        <record id="pulv_cao_pulverizado_oxido_action" model="ir.actions.act_window">
+            <field name="name">Pulverizado Oxido</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'pucapuox'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="pulv_cao_pulverizado_oxido_action" id="reportes_diarios_pulv_cao_pulverizado_oxido_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_pulv_cao_menu" sequence="1" />
+
+        <record id="pulv_cao_indicadores_operacion_action" model="ir.actions.act_window">
+            <field name="name">Indicadores de Operación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.operacion.anivi.coke.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'pucainop'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="pulv_cao_indicadores_operacion_action" id="reportes_diarios_pulv_cao_indicardores_operacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_pulv_cao_menu" sequence="2" />
+
+        <record id="pulv_cao_reporte_action" model="ir.actions.act_window">
+            <field name="name">Reporte de Pulv CaO</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'pucarepuca'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="pulv_cao_reporte_action" id="reportes_pulv_cao_reporte_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_pulv_cao_menu" sequence="3" />
+
+        <!-- SALIDA CAO -->
+         <menuitem name="Entradas y Salidas de Planta" id="reportes_diarios_salida_cao_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="8" />
+
+        <record id="salida_cao_oxido_action" model="ir.actions.act_window">
+            <field name="name">Salida Oxido</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'sacaox'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="salida_cao_oxido_action" id="reportes_diarios_salida_cao_oxido_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_salida_cao_menu" sequence="1" />
+
+        <record id="salida_cao_entrada_piedra_action" model="ir.actions.act_window">
+            <field name="name">Entrada de Piedra</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'sacaenpi'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="salida_cao_entrada_piedra_action" id="reportes_diarios_salida_cao_entrada_piedra_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_salida_cao_menu" sequence="2" />
+
+        <record id="salida_cao_entrada_pet_coke_action" model="ir.actions.act_window">
+            <field name="name">Entrada de Pet Coke</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'sacaenpeco'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="salida_cao_entrada_pet_coke_action" id="reportes_diarios_salida_cao_entrada_pet_coke_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_salida_cao_menu" sequence="3" />
+
+        <record id="salida_cao_salida_grava_action" model="ir.actions.act_window">
+            <field name="name">Salida de Grava</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'sacasagra'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="salida_cao_salida_grava_action" id="reportes_diarios_salida_cao_salida_grava_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_salida_cao_menu" sequence="4" />
+
+        <record id="salida_cao_indicadores_operacion_action" model="ir.actions.act_window">
+            <field name="name">Indicadores de Operación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.operacion.anivi.coke.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'sacainop'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="salida_cao_indicadores_operacion_action" id="reportes_diarios_salida_cao_indicardores_operacion_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_salida_cao_menu" sequence="5" />
+
+        <record id="salida_cao_reporte_action" model="ir.actions.act_window">
+            <field name="name">Reporte de Entradas y Salidas de Planta</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'sacaresaca'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="salida_cao_reporte_action" id="reportes_salida_cao_reporte_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_salida_cao_menu" sequence="6" />
+        
+        <!-- REPORTE DIARIO -->
+        <menuitem name="Reporte Diario" id="reportes_diarios_reporte_final_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_menu" sequence="100" />
+
+        <record id="reporte_final_action" model="ir.actions.act_window">
+            <field name="name">Reporte Diario</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.final.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'tipo_rep':'refi'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="reporte_final_action" id="reporte_final_menu"  parent="calquipa_reportes_diarios_it.reportes_diarios_reporte_final_menu" sequence="1" />
+    </data>
+</openerp>

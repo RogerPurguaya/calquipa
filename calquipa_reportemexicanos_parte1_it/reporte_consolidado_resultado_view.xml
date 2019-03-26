@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        
+
+
+        <record id="view_consolidado_rm_resultado_mexicano_tree" model="ir.ui.view">
+            <field name="name">consolidado.rm.resultado.mexicano.tree</field>
+            <field name="model">consolidado.rm.resultado.mexicano</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Consolidado Resultado Mexicano">
+                    <field name="periodo_ini" />
+                    <field name="tipo_cambio" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_consolidado_rm_resultado_mexicano_form">
+            <field name="name">consolidado.rm.resultado.mexicano.form</field>
+            <field name="model">consolidado.rm.resultado.mexicano</field>
+            <field name="arch" type="xml">
+                <form string="Resultado Mexicano" version="8.0">
+                    <header>
+                        <button name="traer_datos" string="Traer Datos" type="object" class="oe_highlight"/>
+                        <button name="export_excel" string="Reporte Excel" type="object"/>
+                    </header>
+                        <group>
+                            <group>
+                                <field name="fiscal_id" />
+                                <field name="periodo_ini" />
+                                <field name="tipo_cambio" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Lineas Reporte">
+                                    <field name="lineas" nolabel="1" readonly="1">
+                                        <tree create="0" delete="0" editable="bottom">
+                                            <field name="orden" required="1"/>
+                                            <field name="concepto" widget="report_title_color_resaltado"/>
+                                            <field name="tipo_cuenta" invisible="1"/>
+                                            <field name="formula" invisible="1" />
+                                            <field name="total" invisible="1" />
+                                            <field name="resaltado" invisible="1" />
+                                            <field name="bordes" invisible="1" />
+                                            <field name="enero" />
+                                            <field name="porc_enero"/>
+                                            <field name="febrero" />
+                                            <field name="porc_febrero"/>
+                                            <field name="marzo" />
+                                            <field name="porc_marzo"/>
+                                            <field name="abril" />
+                                            <field name="porc_abril"/>
+                                            <field name="mayo" />
+                                            <field name="porc_mayo"/>
+                                            <field name="junio" />
+                                            <field name="porc_junio"/>
+                                            <field name="julio" />
+                                            <field name="porc_julio"/>
+                                            <field name="agosto" />
+                                            <field name="porc_agosto"/>
+                                            <field name="septiembre" />
+                                            <field name="porc_septiembre"/>
+                                            <field name="octubre" />
+                                            <field name="porc_octubre"/>
+                                            <field name="noviembre" />
+                                            <field name="porc_noviembre"/>
+                                            <field name="diciembre" />
+                                            <field name="porc_diciembre"/>
+                                            <field name="acum_anio" />
+                                            <field name="acum_porc"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_consolidado_resultado_mexicano_print_action" model="ir.actions.act_window">
+            <field name="name">Resultado Mexicano</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">consolidado.rm.resultado.mexicano</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Consolidado Resultado Mexicano"
+            action="reporte_consolidado_resultado_mexicano_print_action"
+            id="menu_consolidado_reporte_resultado_mexicano_print_action"
+            parent="reportes_mexicanos_reportes_menu"
+            sequence="12"/>
+
+
+
+
+    </data>
+</openerp>

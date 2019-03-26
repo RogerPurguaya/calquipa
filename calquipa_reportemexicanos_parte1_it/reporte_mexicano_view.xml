@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+        <record id="view_rm_report_extraccion_tree" model="ir.ui.view">
+            <field name="name">rm.report.extraccion.tree</field>
+            <field name="model">rm.report.extraccion</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Reporte Extracción">
+                    <field name="fiscal" />
+                    <field name="sitio" />
+                    <field name="centro_de_costo" />
+                    <field name="fecha_emision_reporte" />
+                    <field name="usuario" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_rm_report_extraccion_form">
+            <field name="name">rm.report.extraccion.form</field>
+            <field name="model">rm.report.extraccion</field>
+            <field name="arch" type="xml">
+                <form string="Reporte Extración" version="8.0">
+                        <group>
+                            <group>
+                                <field name="fiscal" />
+                                <field name="sitio" />
+                                <field name="centro_de_costo" />
+                            </group>
+                            <group>
+                                <field name="fecha_emision_reporte" />
+                                <field name="usuario" />
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Lineas Reporte">
+                                    <field name="conf_line_ids">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="cuenta" />
+                                            <field name="grupo" />
+                                            <field name="enero" readonly="1"/>
+                                            <field name="febrero" readonly="1"/>
+                                            <field name="marzo" readonly="1"/>
+                                            <field name="abril" readonly="1"/>
+                                            <field name="mayo" readonly="1"/>
+                                            <field name="junio" readonly="1"/>
+                                            <field name="julio" readonly="1"/>
+                                            <field name="agosto" readonly="1"/>
+                                            <field name="septiembre" readonly="1"/>
+                                            <field name="octubre" readonly="1"/>
+                                            <field name="noviembre" readonly="1"/>
+                                            <field name="diciembre" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_extraccion_print_action" model="ir.actions.act_window">
+            <field name="name">Costos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rm.report.extraccion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Reportes Mexicanos" id="reportes_mexicanos_print_menu"  parent="account.menu_finance_reports" sequence="7" />
+
+        <menuitem name="Reporte Extracción"
+            action="reporte_extraccion_print_action"
+            id="menu_reporte_extracion_print_action"
+            parent="reportes_mexicanos_print_menu"
+            sequence="13"/>
+
+
+
+
+
+
+
+        <record id="view_grupo_report_extraccion_tree" model="ir.ui.view">
+            <field name="name">grupo.report.extraccion.tree</field>
+            <field name="model">grupo.report.extraccion</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Reporte Extracción">
+                    <field name="titulo" />
+                    <field name="order" />
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="view_grupo_report_extraccion_form">
+            <field name="name">grupo.report.extraccion.form</field>
+            <field name="model">grupo.report.extraccion</field>
+            <field name="arch" type="xml">
+                <form string="Reporte Extracción" version="8.0">
+                        <group>
+                            <group>
+                                <field name="titulo" />
+                            </group>
+                            <group>
+                                <field name="order" />
+                            </group>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="action_crm_rep_extraccion" model="ir.actions.act_window">
+            <field name="name">Reporte Extracción</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">grupo.report.extraccion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Reporte Mexicano"  id="menu_conf_reporte_mexicano" parent="account.menu_configuration_misc"/>
+        <menuitem name="Reporte Extracción" action="action_crm_rep_extraccion" id="menu_conf_reporte_mexicano_rep_extraccion" parent="menu_conf_reporte_mexicano"/>
+
+
+    </data>
+</openerp>

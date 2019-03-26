@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_picking_form">
+			<field name="name">stock.picking.form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form"/>
+			<field name="priority">1</field>
+			<field name="sequence">0</field>
+			<field name="arch" type="xml">
+				<button name="%(stock.act_stock_return_picking)d" position="after">
+                    <button name="maketxtout" string="Imprimir Guía vtas." type="object" class="oe_highlight" states="done" groups="base.group_sale_salesman"/>
+                   <!-- <button name="maketxt_logi" string="Imprimir Guía log." type="object" class="oe_highlight" states="done" groups="purchase.group_purchase_user"/>
+                    <button name="maketxt_sal" string="Imprimir Nota de salida val." type="object" class="oe_highlight" states="done" groups="purchase.group_purchase_user"/>
+					<button name="maketxt" string="Imprimir Nota de ingreso" type="object" class="oe_highlight" states="done" attrs="{'invisible':[('picking_type_code','!=','incoming')]}" />
+                    <button name="maketxtinter" string="Imprimir Nota de salida" type="object" class="oe_highlight" states="done" attrs="{'invisible':[('picking_type_code','!=','outgoing')]}" />
+					<button name="maketxt_prod" string="Nota ingreso Prod." type="object" class="oe_highlight" states="done" attrs="{'invisible':[('picking_type_code','!=','incoming')]}" /> -->
+                </button>
+				
+			</field>
+		</record>
+
+
+
+
+		<record model="ir.ui.view" id="view_calquipa_guiarem_parameters_tree">
+			<field name="name">calquipa.guiarem.parameters.tree</field>
+			<field name="model">calquipa.guiarem.parameters</field>
+			<field name="arch" type="xml">
+				<tree string="Parametros" create="0">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_calquipa_guiarem_parameters_form">
+			<field name="name">calquipa.guiarem.parameters.form</field>
+			<field name="model">calquipa.guiarem.parameters</field>
+			<field name="arch" type="xml">
+				<form string="Parámetros" create="0">
+					<sheet>
+						<group string="Guía de Remisión">
+							<field name="name" invisible="1"/>
+							<field name="maxlines"/>
+						</group>
+					</sheet>				
+				</form>
+			</field>
+		</record>
+
+		<record id="calquipa_guiarem_parameters_menu" model="ir.actions.act_window">
+            <field name="name">Guías de Remisión</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">calquipa.guiarem.parameters</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+        <menuitem id="menu_calquipa_guiarem_parameters" parent="base.menu_ir_property" action="calquipa_guiarem_parameters_menu"/>
+
+	</data>
+</openerp>

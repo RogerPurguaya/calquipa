@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<record model="ir.ui.view" id="view_analisis_entrega_rendir_wizard_form">
+			<field name="name">analisis.entrega.rendir.wizard.form</field>
+			<field name="model">analisis.entrega.rendir.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Análisis de Entrega a Rendir" version="7.0">
+						<group>
+							<field name="partner_id" />
+							<field name="rendicion_id" domain="[('partner_id','=',partner_id)]" />
+						</group>
+						<footer>
+							<button string="Mostrar" name="do_rebuild" type="object" class="oe_highlight"/>
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="analisis_entrega_rendir_wizard_action" model="ir.actions.act_window">
+			<field name="name">Analisis de Entrega a Rendir</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">analisis.entrega.rendir.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+        <menuitem name="Análisis Entregas a Rendir" id="analisis_entrega_rendir2_wizard_menu"  parent="deliveries_to_pay_it.deliveries_to_pay_menu_principal" action="analisis_entrega_rendir_wizard_action" sequence="17" />
+		    
+	</data>
+</openerp>

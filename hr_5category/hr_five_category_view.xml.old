@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data> 
+        <record id="view_hr_five_category_tree" model="ir.ui.view">
+            <field name="name">hr.five.category.tree</field>
+            <field name="model">hr.five.category</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="5ta Categoría">
+                    <field name="fiscalyear"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_five_category_form" model="ir.ui.view">
+            <field name="name">hr.five.category.form</field>
+            <field name="model">hr.five.category</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="5ta Categoría">
+                    <header>
+                        <button string="Procesar" type="object" name="procesar" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group>
+                           <field name="fiscalyear"/> 
+                        </group>
+                        <notebook>
+                            <page string="Trabajadores">
+                                <field name="line_ids" context="{'default_fiscalyear':fiscalyear}">
+                                <tree string="5ta Categoría">
+                                    <field name="employee_id"/>
+                                    <field name="janu_amount" sum="janu_amount" readonly="1"/>
+                                    <field name="febr_amount" sum="febr_amount" readonly="1"/>
+                                    <field name="marc_amount" sum="marc_amount" readonly="1"/>
+                                    <field name="apri_amount" sum="apri_amount" readonly="1"/>
+                                    <field name="mayo_amount" sum="mayo_amount" readonly="1"/>
+                                    <field name="june_amount" sum="june_amount" readonly="1"/>
+                                    <field name="july_amount" sum="july_amount" readonly="1"/>
+                                    <field name="agos_amount" sum="agos_amount" readonly="1"/>
+                                    <field name="sept_amount" sum="sept_amount" readonly="1"/>
+                                    <field name="octo_amount" sum="octo_amount" readonly="1"/>
+                                    <field name="nove_amount" sum="nove_amount" readonly="1"/>
+                                    <field name="dece_amount" sum="dece_amount" readonly="1"/>
+                                </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_hr_five_category" model="ir.actions.act_window">
+            <field name="name">5ta Categoría</field>
+            <field name="res_model">hr.five.category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+         <menuitem action="action_hr_five_category" id="menu_hr_five_category" parent="hr.menu_hr_main"/>
+
+        <record id="view_hr_five_category_lines_form" model="ir.ui.view">
+            <field name="name">hr.five.category.lines.form</field>
+            <field name="model">hr.five.category.lines</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="5ta Categoría - Proyectadas">
+                    <header>
+                        <button string="Generar Excel" name="make_excel" type="object" class="oe_highlight"/>
+                        <button string="Extraer Grat. Dic." name="reward_dec" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="employee_id"/>
+                            </group>
+                        <group></group>
+                        </group>
+                        <notebook>
+                            <page string="Proyecciones"  >
+                                <field name="line_ids" nolabel="1">
+                                    <tree editable="botton">
+                                        <field name="concepto_id" /> 
+                                        <field name="january" sum="january"/> 
+                                        <field name="february" sum="february"/> 
+                                        <field name="march" sum="march"/> 
+                                        <field name="april" sum="april"/> 
+                                        <field name="may" sum="may"/> 
+                                        <field name="june" sum="june"/> 
+                                        <field name="july" sum="july"/> 
+                                        <field name="august" sum="august"/> 
+                                        <field name="september" sum="september"/> 
+                                        <field name="october" sum="october"/> 
+                                        <field name="november" sum="november"/> 
+                                        <field name="december" sum="december"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Conceptos">
+                                <field name="concept_ids" nolabel="1">
+                                    <tree editable="botton">
+                                        <field name="concepto_id" /> 
+                                        <field name="january" /> 
+                                        <field name="february" /> 
+                                        <field name="march" /> 
+                                        <field name="april" /> 
+                                        <field name="may" /> 
+                                        <field name="june" /> 
+                                        <field name="july" /> 
+                                        <field name="august" /> 
+                                        <field name="september" /> 
+                                        <field name="october" /> 
+                                        <field name="november" /> 
+                                        <field name="december" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Cálculos">
+                                <field name="calculo_lines" nolabel="1" readonly="1">
+                                    <tree colors="red:(is_red == True);" fonts="bold:(is_red == True)" create="0" delete="0" editable="bottom">
+                                        <field name="is_red" invisible="1"/> 
+                                        <field name="row_text" /> 
+                                        <field name="january" /> 
+                                        <field name="february" /> 
+                                        <field name="march" /> 
+                                        <field name="april" /> 
+                                        <field name="may" /> 
+                                        <field name="june" /> 
+                                        <field name="july" /> 
+                                        <field name="august" /> 
+                                        <field name="september" /> 
+                                        <field name="october" /> 
+                                        <field name="november" /> 
+                                        <field name="december" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Grati. Jul. y Dic.">
+                                <field name="jul_dic_lines" nolabel="1">
+                                    <tree create="0" delete="0" editable="bottom">
+                                        <field name="row_text" readonly="1"/> 
+                                        <field name="january" /> 
+                                        <field name="february" /> 
+                                        <field name="march" /> 
+                                        <field name="april" /> 
+                                        <field name="may" /> 
+                                        <field name="june" /> 
+                                        <field name="july" /> 
+                                        <field name="august" /> 
+                                        <field name="september" /> 
+                                        <field name="october" /> 
+                                        <field name="november" /> 
+                                        <field name="december" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>                             
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

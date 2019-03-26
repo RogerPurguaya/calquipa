@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>		
+		<!-- Calcular Diferencia --> 
+		<record id="view_make_me_diff" model="ir.ui.view">
+            <field name="name">Corregir Asiento</field>
+            <field name="model">make.me.diff</field>
+            <field name="arch" type="xml">
+                <form string="Generar Asiento de Diferencia" version="7.0">
+                    <separator colspan="4" string="Se procedera a cuadrar el asiento en Moneda Extranjera" />
+                    <group>
+                        <field name="account_id" required="1" />
+                        <field name="account_analytic_id" required="1" domain="[('type', '!=', 'view')]"/>
+                    </group>
+                    <footer>
+                        <button name="make_calculate_differences" string="Generar Asiento" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_make_me_diff" model="ir.actions.act_window">
+            <field name="name">Cuadrar Asiento</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">make.me.diff</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_make_me_diff"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+		
+		<record model="ir.values" id="make_me_diff">
+            <field name="name">Cuadrar Asiento</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_make_me_diff'))" />
+            <field name="key">action</field>
+            <field name="model">vst.square.foreign.currency</field>
+        </record>
+
+		
+	</data>
+</openerp>

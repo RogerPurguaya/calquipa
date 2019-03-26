@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+                                     <!-- SALIDA CAO PULVERIZADO OXIDO -->
+        <record id="view_salida_cao_oxido_tree" model="ir.ui.view">
+            <field name="name">salida.cao.oxido.tree</field>
+            <field name="model">salida.cao.oxido</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="salida Oxido" create="0" delete="0" editable="bottom">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="check_period" invisible="1"/>
+
+                    <field name="date"                  readonly="1"/>
+                    <field name="no_oc_viva"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real_viva"             attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="no_oc2_viva"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real2_viva"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="no_oc_total_viva"      attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real_total_viva"       attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="no_oc_granel"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real_granel"           attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="no_oc2_granel"         attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real2_granel"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="no_oc_total_granel"    attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real_total_granel"     attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="no_oc_envasado"        attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real_envasado"         attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="no_oc2_envasado"       attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real2_envasado"        attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="no_oc_total_envasado"  attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="real_total_envasado"   attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="total_oc"              attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="total_real"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_salida_cao_oxido_search" model="ir.ui.view">
+            <field name="name">salida.cao.oxido.search</field>
+            <field name="model">salida.cao.oxido</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+                                    <!-- SALIDA CAO ENTRADA DE PIEDRA -->
+        <record id="view_salida_cao_entrada_piedra_tree" model="ir.ui.view">
+            <field name="name">salida.cao.entrada.piedra.tree</field>
+            <field name="model">salida.cao.entrada.piedra</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Entrada Piedra" create="1" delete="1" editable="bottom">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="check_period" invisible="1"/>
+
+                    <field name="partner_id"/>
+                    <field name="placa"/>
+                    <field name="date" />
+                    <field name="viajes"/>
+                    <field name="tara" />
+                    <field name="peso_neto"/>
+                    <field name="peso_bruto"/>
+                    <field name="guia"/>
+                    <field name="ticket"/>
+                    <field name="precio_un"/>
+                    <field name="valor_total" readonly="1"/>
+                    <field name="invoice_id"/>
+                    <button type="object" icon="STOCK_CLOSE" name="unlink"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_salida_cao_entrada_piedra_search" model="ir.ui.view">
+            <field name="name">salida.cao.entrada.piedra.search</field>
+            <field name="model">salida.cao.entrada.piedra</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="partner_id"/>
+                    <field name="guia"/>
+                    <field name="invoice_id"/>
+                    <field name="date"/>
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Proveedor" context="{'group_by': 'partner_id'}" />
+                        <filter string="Guía" context="{'group_by': 'guia'}" />
+                        <filter string="Factura" context="{'group_by': 'invoice_id'}" />
+                        <filter string="Fecha" context="{'group_by': 'date'}" />
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+                        <!-- SALIDA CAO ENTRADA DE PET COKE -->
+        <record id="view_salida_cao_entrada_pet_coke_tree" model="ir.ui.view">
+            <field name="name">salida.cao.entrada.pet.coke.tree</field>
+            <field name="model">salida.cao.entrada.pet.coke</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Entrada Pet Coke" create="1" delete="1" editable="bottom">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="check_period" invisible="1"/>
+
+                    <field name="partner_id"/>
+                    <field name="placa"/>
+                    <field name="date"/>
+                    <field name="volquete"/>
+                    <field name="viajes"/>
+                    <field name="tara"/>
+                    <field name="peso_neto"/>
+                    <field name="peso_bruto"/>
+                    <field name="guia"/>
+                    <field name="ticket"/>
+                    <field name="precio_un"/>
+                    <field name="valor_total" readonly="1"/>
+                    <field name="invoice_id"/>
+                    <button type="object" icon="STOCK_CLOSE" name="unlink"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_salida_cao_entrada_pet_coke_search" model="ir.ui.view">
+            <field name="name">salida.cao.entrada.pet.coke.search</field>
+            <field name="model">salida.cao.entrada.pet.coke</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="partner_id"/>
+                    <field name="guia"/>
+                    <field name="invoice_id"/>
+                    <field name="date"/>
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Proveedor" context="{'group_by': 'partner_id'}" />
+                        <filter string="Guía" context="{'group_by': 'guia'}" />
+                        <filter string="Factura" context="{'group_by': 'invoice_id'}" />
+                        <filter string="Fecha" context="{'group_by': 'date'}" />
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+                        <!-- SALIDA CAO SALIDA GRAVA -->
+        <record id="view_salida_cao_salida_grava_tree" model="ir.ui.view">
+            <field name="name">salida.cao.salida.grava.tree</field>
+            <field name="model">salida.cao.salida.grava</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Salida Grava" create="1" delete="1" editable="bottom">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="check_period" invisible="1"/>
+
+                    <field name="date"/>
+                    <field name="sale_id"/>
+                    <field name="saldo_inicial"/>
+                    <field name="precio_un"/>
+                    <field name="invoice_id"/>
+                    <field name="guia"/>
+                    <field name="guia_trans"/>
+                    <field name="placa"/>
+                    <field name="unidad"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="peso_bruto"/>
+                    <field name="tara"/>
+                    <field name="peso_neto"/>
+                    <field name="peso_neto_tn"/>
+                    <field name="saldo_ton"/>
+                    <field name="densidad"/>
+                    <field name="eq_m3"/>
+                    <field name="saldo_m3"/>
+                    <field name="sub_total"/>
+                    <field name="igv"/>
+                    <field name="total"/>
+                    <field name="obs"/>
+                    <button type="object" icon="STOCK_CLOSE" name="unlink"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_salida_cao_salida_grava_search" model="ir.ui.view">
+            <field name="name">salida.cao.salida.grava.search</field>
+            <field name="model">salida.cao.salida.grava</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="partner_id"/>
+                    <field name="guia"/>
+                    <field name="invoice_id"/>
+                    <field name="date"/>
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Proveedor" context="{'group_by': 'partner_id'}" />
+                        <filter string="Guía" context="{'group_by': 'guia'}" />
+                        <filter string="Factura" context="{'group_by': 'invoice_id'}" />
+                        <filter string="Fecha" context="{'group_by': 'date'}" />
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+                                    <!-- SALIDA CAO INDICADORES OPERACION -->
+        <record id="view_salida_cao_indicadores_operacion_tree" model="ir.ui.view">
+            <field name="name">salida.cao.indicadores.operacion.tree</field>
+            <field name="model">salida.cao.indicadores.operacion</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="salida CaO" create="0" delete="0" editable="bottom">
+                    <field name="year_id" invisible="1"/>
+                    <field name="month_id" invisible="1"/>
+                    <field name="dias_transcurridos" invisible="1"/>
+
+                    <field name="concepto" readonly="1"/>
+                    <field name="cantidad" readonly="1"/>
+                    <field name="unidades" readonly="1"/>              
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_salida_cao_pulverizado_oxido_search" model="ir.ui.view">
+            <field name="name">salida.cao.indicadores.operacion.search</field>
+            <field name="model">salida.cao.indicadores.operacion</field>
+            <field name="arch" type="xml">
+                <search string="Buscar">
+                    <field name="year_id"/>
+                    <field name="month_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Año" context="{'group_by': 'year_id'}" />
+                        <filter string="Mes" context="{'group_by': 'month_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</openerp>

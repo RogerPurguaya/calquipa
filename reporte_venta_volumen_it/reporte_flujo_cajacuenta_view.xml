@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_reporte_venta_volumen_wizard_form">
+			<field name="name">reporte.venta.volumen.wizard.form</field>
+			<field name="model">reporte.venta.volumen.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Venta Volumen" >
+						<group>
+							<group>
+	                    		<field name="fiscalyear_id" />
+	                    		<field name="period_id" domain="[('fiscalyear_id','=',fiscalyear_id)]" />
+							</group>
+							<group>
+							</group>
+						</group>
+
+						<footer>
+							<button string="Mostrar" name="do_rebuild" type="object" class="oe_highlight"/>
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="reporte_venta_volumen_format_action" model="ir.actions.act_window">
+			<field name="name">Venta por Volumenes</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">reporte.venta.volumen.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="menu_reporte_vemta_volumen_wizard" name="Venta por Volumenes" parent="calquipa_reportemexicanos_parte1_it.reportes_mexicanos_reportes_menu" sequence="109" action="reporte_venta_volumen_format_action" />
+		
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field eval="7" name="priority"/>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+            	<div name="options" position="inside">
+                    <div>
+                        <field name="is_annulation"/>
+                        <label for="is_annulation"/>
+                    </div>
+                </div> 
+                
+            </field>
+        </record>
+
+
+	</data>
+</openerp>

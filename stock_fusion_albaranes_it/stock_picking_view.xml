@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="action_fusionar" model="ir.actions.server">
+            <field name="name">Juntar Albaranes</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">action = self.fusionar(cr,uid,context.get('active_ids'),context)</field>
+        </record>
+
+        <record model="ir.values" id="fusionar_more">
+            <field name="name">Juntar Albaranes</field>
+            <field name="key2">client_action_multi</field>
+            <field name="action_id" ref="action_fusionar"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_fusionar'))" />
+            <field name="model_id" ref="model_stock_picking"/>
+            <field name="key">action</field>
+            <field name="model">stock.picking</field>
+        </record>
+
+	</data>
+</openerp>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<record id="view_account_contable_period_vencimiento_fila" model="ir.ui.view">
+            <field name="name">account.contable.vencimiento.fila.tree</field>
+            <field name="model">account.contable.vencimiento.fila</field>
+            <field name="arch" type="xml">
+                <tree string="Análisis de Vencimientos" create="false">
+                    <field name="vencimiento" />
+                    <field name="periodo" />
+                    <field name="libro" />
+                    <field name="voucher" />
+                    <field name="cuenta" />
+                    <field name="fecha_emision" />
+                    <field name="fecha_vencimiento" />
+                    <field name="nro_comprobante" />
+                    <field name="empresa" />
+                    <field name="saldo" />
+                </tree>
+
+            </field>
+        </record>
+
+
+		<record id="account_contable_vencimiento_fila_search" model="ir.ui.view">
+	        <field name="name">account.contable.vencimiento.fila.search</field>
+	        <field name="model">account.contable.vencimiento.fila</field>
+	        <field name="arch" type="xml">
+	            <search string="Análisis de Vencimiento">
+	                <separator/>
+	                <group expand="1" string="Group By...">
+	                    <filter string="Vencimiento" name="vencimiento" icon="terp-partner" context="{'group_by':'vencimiento'}"/>
+	                    <filter string="Empresa" name="empresa" icon="terp-partner" context="{'group_by':'empresa'}"/>
+	                </group>
+	            </search>
+	        </field>
+	    </record>
+
+    <record model="ir.ui.view" id="view_account_contable_vencimiento_fila">
+            <field name="name">account.contable.vencimiento.fila.graph</field>
+            <field name="model">account.contable.vencimiento.fila</field>
+            <field name="priority" eval="50"/>
+            <field name="arch" type="xml">
+                <graph string="Análisis de Vencimiento" type="bar">
+                    <field name="vencimiento" />
+                    <field name="periodo" />
+                    <field name="cuenta" />
+                    <field name="libro" />
+                    <field name="voucher" />
+                    <field name="fecha_emision" />
+                    <field name="fecha_vencimiento" />
+                    <field name="nro_comprobante" />
+                    <field name="empresa" />
+                    <field name="saldo" operator="+"/>
+                </graph>
+            </field>
+    </record>
+
+        <record id="view_account_contable_period_vencimiento_columna" model="ir.ui.view">
+            <field name="name">account.contable.vencimiento.columna.tree</field>
+            <field name="model">account.contable.vencimiento.columna</field>
+            <field name="arch" type="xml">
+                <tree string="Análisis de Vencimientos" create="false">
+                    <field name="fecha_emision" />
+                    <field name="nro_comprobante" />
+                    <field name="cuenta" />
+                    <field name="empresa" />
+                    <field name="vencidos" />
+                    <field name="menos16" />
+                    <field name="de16a30" />
+                    <field name="de31a45" />
+                    <field name="de46a60" />
+                    <field name="de61a90" />
+                    <field name="de91a180" />
+                    <field name="mas180" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="account_contable_vencimiento_columna_search" model="ir.ui.view">
+            <field name="name">account.contable.vencimiento.columna.search</field>
+            <field name="model">account.contable.vencimiento.columna</field>
+            <field name="arch" type="xml">
+                <search string="Análisis de Vencimiento">
+                    <separator/>
+                    <group expand="1" string="Group By...">
+                        <filter string="Empresa" name="empresa" icon="terp-partner" context="{'group_by':'empresa'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+    <record model="ir.ui.view" id="view_account_contable_vencimiento_columna">
+            <field name="name">account.contable.vencimiento.columna.graph</field>
+            <field name="model">account.contable.vencimiento.columna</field>
+            <field name="priority" eval="50"/>
+            <field name="arch" type="xml">
+                <graph string="Análisis de Vencimiento" type="bar">
+                    <field name="empresa" />
+                    <field name="de16a30" operator="+"/>
+                </graph>
+            </field>
+    </record>
+
+
+
+
+        <record id="view_account_contable_period_vencimiento_columna_agrupada" model="ir.ui.view">
+            <field name="name">account.contable.vencimiento.columna.agrupada.tree</field>
+            <field name="model">account.contable.vencimiento.columna.agrupada</field>
+            <field name="arch" type="xml">
+                <tree string="Análisis de Vencimientos" create="false">
+                    <field name="empresa" />
+                    <field name="vencidos" />
+                    <field name="menos16" />
+                    <field name="de16a30" />
+                    <field name="de31a45" />
+                    <field name="de46a60" />
+                    <field name="de61a90" />
+                    <field name="de91a180" />
+                    <field name="mas180" />
+                    <field name="totalgeneral" />
+                </tree>
+            </field>
+        </record>
+
+
+    <record model="ir.ui.view" id="view_account_contable_vencimiento_columna_agrupada">
+            <field name="name">account.contable.vencimiento.columna.agrupada.graph</field>
+            <field name="model">account.contable.vencimiento.columna.agrupada</field>
+            <field name="priority" eval="50"/>
+            <field name="arch" type="xml">
+                <graph string="Análisis de Vencimiento" type="bar">
+                    <field name="empresa" />
+                    <field name="totalgeneral" operator="+"/>
+                </graph>
+            </field>
+    </record>
+
+
+    </data>
+</openerp>

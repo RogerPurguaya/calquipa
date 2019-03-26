@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_account_balance_peruano_general_wizard_form">
+			<field name="name">account.balance.general.peruano.wizard.form</field>
+			<field name="model">account.balance.general.peruano.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Situación Financiera" >
+						<group>
+							<group>
+								<field name="periodo_ini" />
+								<field name="periodo_fin" />        
+							</group>
+							<group>
+							</group>
+						</group>
+
+						<footer>
+							<button string="Mostrar" name="do_rebuild" type="object" class="oe_highlight"/>
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="account_balance_peruano_general_format_action" model="ir.actions.act_window">
+			<field name="name">Situación Financiera</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.balance.general.peruano.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+
+		<menuitem id="menu_situaition_financeperuano_contenedor" name="Conversión" parent="account_sheet_work.account_finance_state_it" sequence="100" />
+
+		<menuitem id="menu_situaition_financeperuano" name="Situación Financiera Peruano" parent="account_state_financial_peruana_it.menu_situaition_financeperuano_contenedor" sequence="100" action="account_balance_peruano_general_format_action" />
+		
+
+
+	</data>
+</openerp>

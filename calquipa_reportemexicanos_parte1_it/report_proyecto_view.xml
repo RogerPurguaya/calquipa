@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        
+
+        <record id="view_reporte_proyecto_tree" model="ir.ui.view">
+            <field name="name">reporte.proyecto.tree</field>
+            <field name="model">reporte.proyecto</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Proyecto">
+                    <field name="fiscal_id" />
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_reporte_proyecto_form">
+            <field name="name">reporte.proyecto.form</field>
+            <field name="model">reporte.proyecto</field>
+            <field name="arch" type="xml">
+                <form string="Proyecto" version="8.0">
+                    <header>
+                        <button name="import_csv" string="Importar CSV" type="object" class="oe_highlight"/>
+                        <button name="resumen_generate" string="Generar Resumen" type="object" class="oe_highlight"/>
+                    </header>
+                        <group>
+                            <group>
+                                <field name="fiscal_id" />
+                                <field name="name" />
+                            </group>
+                            <group>
+                                <field name="csv_import" />
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Detalle">
+                                    <field name="line_ids" nolabel="1" readonly="0">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="tipo" readonly="0" />
+                                            <field name="rubro" readonly="0" />
+                                            <field name="fecha" readonly="0" />
+                                            <field name="descripcion" readonly="0" />
+                                            <field name="moi" readonly="0" />
+                                            <field name="tc_ant" readonly="0" />
+                                            <field name="dlls" readonly="0" />
+                                            <field name="conver_dlls" readonly="0" />
+                                            <field name="tc_ant_mex" readonly="0" />
+                                            <field name="valor_mxn" readonly="0" />
+                                            <field name="conver_mxn" readonly="0" />
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Resumen">
+                                    <field name="resumen_ids" nolabel="1" readonly="0">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="rubro" readonly="0" />
+                                            <field name="moi" readonly="0" />
+                                            <field name="tc_ant" readonly="0" />
+                                            <field name="dlls" readonly="0" />
+                                            <field name="conver_dlls" readonly="0" />
+                                            <field name="tc_ant_mex" readonly="0" />
+                                            <field name="valor_mxn" readonly="0" />
+                                            <field name="conver_mxn" readonly="0" />
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="reporte_proyecto_action" model="ir.actions.act_window">
+            <field name="name">Proyecto</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.proyecto</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Proyecto"
+            action="reporte_proyecto_action"
+            id="menu_reporte_proyecto_action"
+            parent="reportes_mexicanos_reportes_menu"
+            sequence="903"/>
+
+
+
+    </data>
+</openerp>

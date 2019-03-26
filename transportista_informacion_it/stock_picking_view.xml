@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_picking_form">
+			<field name="name">stock.picking.form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form/sheet/notebook/page[@string='Additional Info']" position="after">
+					<page string="Información del Transportista">
+						<group>
+							<group>
+								<field name="trans_marca"/>
+								<field name="trans_placa"/>
+								<field name="trans_inscriptor"/>
+								<field name="trans_licencia"/>
+								<field name="trans_name"/>
+								<field name="trans_ruc"/>
+								<field name="trans_tipo_comprobante"/>
+								<field name="trans_nro_comprobante"/>
+							</group>
+							<group>
+							</group>
+						</group>
+					</page>
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>
+

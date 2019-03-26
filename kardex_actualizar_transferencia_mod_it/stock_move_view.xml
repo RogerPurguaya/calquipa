@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@string='Unreserve']" position="after">
+                    <button name="calcular_valor_transferencia" string="Costear Transferencia" states='done' type="object"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_valor_unitario_mod_kardex" model="ir.ui.view">
+            <field name="name">valor.unitario.kardex.mod.form</field>
+            <field name="model">valor.unitario.kardex.mod</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Valorizar Transferencias" version="7.0">
+                    <group>
+                        <field name="fecha_inicio" required="1" />
+                        <field name="fecha_final" required="1"/>
+                        <field name="location_in" required="1"/>
+                        <field name="location_out" required="1"/>
+                    </group>
+                    <footer>
+                        <button name="do_valor" string="Valorizar" type="object" class="oe_highlight"/>                       
+                        or
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                 </form>
+             </field>
+        </record>
+
+
+
+        <record id="valor_unitario_kardex_mod_action" model="ir.actions.act_window">
+            <field name="name">Valorizar Transferencias por Almacen</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">valor.unitario.kardex.mod</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+  <menuitem parent="account.menu_finance_reports" name="Valorizar Transferencias por Almacen" id="valor_unitario_kardex_mod_menu" action="valor_unitario_kardex_mod_action"/>
+      
+
+
+
+
+        <record id="view_valor_unitario_production_mod_kardex" model="ir.ui.view">
+            <field name="name">valor.unitario.produccion.mod.form</field>
+            <field name="model">valor.unitario.produccion.mod</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Actualizar Ordenes de Produccion" version="7.0">
+                    <group>
+                        <field name="fecha_inicio" required="1" />
+                        <field name="fecha_final" required="1"/>
+                    </group>
+                    <footer>
+                        <button name="do_valor" string="Valorizar" type="object" class="oe_highlight"/>                       
+                        or
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                 </form>
+             </field>
+        </record>
+
+
+
+        <record id="valor_unitario_kardex_mod_production_action" model="ir.actions.act_window">
+            <field name="name">Actualizar Ordenes de Produccion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">valor.unitario.produccion.mod</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+  <menuitem parent="account.menu_finance_reports" name="Actualizar Ordenes de Produccion" id="production_valor_unitario_kardex_mod_menu" action="valor_unitario_kardex_mod_production_action"/>
+
+	</data>
+</openerp>

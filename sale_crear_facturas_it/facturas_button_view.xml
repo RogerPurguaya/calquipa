@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="purchase_order_form">
+			<field name="name">purchase.order.form</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form"/>
+			<field name="arch" type="xml">				
+
+				<xpath expr="//header/button[@name='view_picking']" position="after">
+					<button name="create_invoice" string="Generar Factura" type="object" class="oe_highlight"/>
+				</xpath>
+
+				<xpath expr="//notebook/page[@string='Products']/field[@name='order_line']/tree/field[@name='product_qty']" position="after">
+					<field name="cantidad_facturar"/>
+				</xpath>
+
+				<xpath expr="//header/button[@name='view_invoice']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+
+			</field>
+		</record>
+
+	</data>
+</openerp>

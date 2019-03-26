@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+        <record id="view_rm_report_costos_tree" model="ir.ui.view">
+            <field name="name">rm.report.costos.tree</field>
+            <field name="model">rm.report.costos</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Reporte costos">
+                    <field name="fiscal" />
+                    <field name="period_actual" />
+                    <field name="sitio" />
+                    <field name="centro_de_costo" />
+                    <field name="fecha_emision_reporte" />
+                    <field name="usuario" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_rm_report_costos_form">
+            <field name="name">rm.report.costos.form</field>
+            <field name="model">rm.report.costos</field>
+            <field name="arch" type="xml">
+                <form string="Reporte costos" version="8.0">
+                    <header>
+                        <button name="calculate" string="Actualizar" type="object" class="oe_highlight"/>
+                        <!-- <button name="export_pdf" string="Reporte PDF" type="object"/> -->
+                        <button name="export_excel" string="Reporte Excel" type="object"/>
+                    </header>
+                        <group>
+                            <group>
+                                <field name="fiscal" />
+                                <field name="period_actual" />
+                                <field name="sitio" />
+                                <field name="proposito" />
+                            </group>
+                            <group>
+                                <field name="fecha_emision_reporte" />
+                                <field name="usuario" />
+                                <field name="centro_de_costo" />
+                                <field name="tipo_cambio" />
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Lineas Reporte">
+                                    <field name="conf_line_ids">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="codigo_rel" />
+                                            <field name="tipo" />
+                                            <field name="grupo" />
+                                            <field name="concepto" />
+                                            <field name="cuenta" invisible="1"/>
+                                           <!-- <field name="enero" readonly="1" />
+                                            <field name="febrero" readonly="1" />
+                                            <field name="marzo" readonly="1" />
+                                            <field name="abril" readonly="1" />
+                                            <field name="mayo" readonly="1" />
+                                            <field name="junio" readonly="1" />
+                                            <field name="julio" readonly="1" />
+                                            <field name="agosto" readonly="1" />
+                                            <field name="septiembre" readonly="1" />
+                                            <field name="octubre" readonly="1" />
+                                            <field name="noviembre" readonly="1" />
+                                            <field name="diciembre" readonly="1" />
+                                            <field name="acumulado" readonly="1" sum="acumulado"/>
+                                            <field name="acumulado_pciento" readonly="1" sum="acumulado_pciento"/>
+                                            <field name="promedio" readonly="1" sum="promedio"/>
+                                            <field name="promedio_pciento" readonly="1" sum="promedio_pciento"/> -->
+                                            <field name="mes_monto" readonly="1" sum="mes_monto"/>
+                                            <field name="mes_monto_dolares" readonly="1" sum="mes_monto_dolares"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_costos_print_action" model="ir.actions.act_window">
+            <field name="name">Costos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rm.report.costos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Reporte Costos"
+            action="reporte_costos_print_action"
+            id="menu_reporte_costos_print_action"
+            parent="reportes_mexicanos_reportes_menu"
+            sequence="13"/>
+
+
+
+
+
+
+
+        <record id="view_grupo_report_costos_tree" model="ir.ui.view">
+            <field name="name">grupo.report.costos.tree</field>
+            <field name="model">grupo.report.costos</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Grupo Reporte costos">
+                    <field name="titulo" />
+                    <field name="order" />
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="view_grupo_report_costos_form">
+            <field name="name">grupo.report.costos.form</field>
+            <field name="model">grupo.report.costos</field>
+            <field name="arch" type="xml">
+                <form string="Grupo Reporte costos" version="8.0">
+                        <group>
+                            <group>
+                                <field name="titulo" />
+                            </group>
+                            <group>
+                                <field name="order" />
+                            </group>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="action_crm_rep_costos" model="ir.actions.act_window">
+            <field name="name">Grupo Reporte Costos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">grupo.report.costos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Costos" id="menu_conf_reporte_mexicano_rep_costos_contenedor" parent="menu_conf_reporte_mexicano"/>
+        <menuitem name="Grupo Reporte" action="action_crm_rep_costos" id="menu_conf_reporte_mexicano_rep_costos" parent="menu_conf_reporte_mexicano_rep_costos_contenedor"/>
+
+
+
+
+
+
+
+        <record id="view_tipo_report_costos_tree" model="ir.ui.view">
+            <field name="name">tipo.report.costos.tree</field>
+            <field name="model">tipo.report.costos</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Tipo Reporte costos">
+                    <field name="titulo" />
+                    <field name="order" />
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="view_tipo_report_costos_form">
+            <field name="name">tipo.report.costos.form</field>
+            <field name="model">tipo.report.costos</field>
+            <field name="arch" type="xml">
+                <form string="Tipo Reporte costos" version="8.0">
+                        <group>
+                            <group>
+                                <field name="titulo" />
+                            </group>
+                            <group>
+                                <field name="order" />
+                            </group>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="rm_report_costos_search" model = "ir.ui.view">
+            <field name="name">rm.report.costos.search</field>
+            <field name="model">rm.report.costos</field>
+            <field name="arch" type="xml">
+                <search string="buscar">
+                    <field name="fiscal"/>
+
+                    <filter icon="terp-go-year" string="Año Fiscal" name="fiscal"/>
+
+                    <separator/>
+
+                    <group expand="1" string="Group By...">
+                        <filter string="Año Fiscal" name="fiscal" icon="terp-partner" context="{'group_by':'fiscal'}"/>
+
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="action_crm_tipo_rep_costos" model="ir.actions.act_window">
+            <field name="name">Tipo Reporte Costos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tipo.report.costos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Tipo Reporte Costos" action="action_crm_tipo_rep_costos" id="menu_conf_tipo_reporte_mexicano_rep_costos" parent="menu_conf_reporte_mexicano_rep_costos_contenedor"/>
+
+
+    </data>
+</openerp>

@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+
+        <record id="view_main_parameter_form" model="ir.ui.view">
+            <field name="name">main.parameter.form</field>
+            <field name="model">main.parameter</field>
+            <field name="inherit_id" ref="account_parameter_it.view_main_parameter_form"/>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                        <page string="Costos">
+                            <group >
+                                <group string="Diarios">
+                                	<field name="diario_asiento_costo" />                                	
+                                </group>
+                                <group></group>
+
+                                <group string="Productos en Proceso">
+	                                <field name="pproduct_costos_extraccion" />
+	                                <field name="pproduct_costos_trituracion" />
+	                                <field name="pproduct_costos_intermedia" />
+	                                <field name="pproduct_costos_calcinacion" />
+	                                <field name="pproduct_costos_micronizado" />
+                                    <field name="pproduct_costos_pet" />                                	
+                                </group>
+                                <group></group>
+
+                                <group string="Cuentas">                                	
+	                                <field name="product_costos_extraccion" />
+	                                <field name="product_costos_trituracion" />
+	                                <field name="product_costos_intermedia" />
+	                                <field name="product_costos_calcinacion" />
+	                                <field name="product_costos_micronizado" />
+                                    <field name="product_costos_pet" />
+	                                <group></group>
+	                                <group></group>                               
+	                                <field name="aa_variacion_almacenada_extraccion" />
+	                                <field name="aa_variacion_almacenada_trituracion" />
+	                                <field name="aa_variacion_almacenada_intermedia" /> 
+	                                <field name="aa_variacion_almacenada_calcinacion" />
+	                                <field name="aa_variacion_almacenada_micronizado" />
+                                    <field name="aa_variacion_almacenada_pet" />
+                                </group>
+                                <group></group>
+
+
+                                <group string="Almacenes">                                    
+                                    <field name="location_virtual_saldoinicial" />                            
+	                                <field name="location_virtual_produccion" />                            
+	                                <field name="location_existencias_extraccion" />
+	                                <field name="location_existencias_trituracion" />
+	                                <field name="location_existencias_intermedia" />    
+	                                <field name="location_existencias_calcinacion" />
+	                                <field name="location_existencias_micronizado" />
+                                    <field name="location_existencias_pet" />   
+                                    <field name="location_perdidas_mermas" />    
+                                    <field name="location_micro_perdidas_mermas" />                                                    	
+                                </group>
+                                <group></group>
+                            </group>
+                        </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_costos_wizard_tree" model="ir.ui.view">
+            <field name="name">costos.produccion.tree</field>
+            <field name="model">costos.produccion</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Costos">
+                    <field name="fiscal" />
+                    <field name="periodo" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="view_costos_wizard_form">
+            <field name="name">costos.produccion.form</field>
+            <field name="model">costos.produccion</field>
+            <field name="arch" type="xml">
+                <form string="Costos" version="8.0">
+                    <header>
+                        <button string="C.C. Extración" states="draft" name="crear_extraccion" type="object" class="oe_highlight"/>
+                        
+
+
+                        <button string="C.C. Trituración" states="extraccion" name="crear_trituracion" type="object" class="oe_highlight"/>
+                        <button string="Cancelar Extracción" name="cancelar_extraccion" states="extraccion" type="object" />
+
+                        <button string="C.C. Calcinación" states="trituracion" name="crear_calcinacion" type="object" class="oe_highlight"/>
+                        <button string="Cancelar Trituración" name="cancelar_trituracion" states="trituracion" type="object" />
+
+                        <button string="C.C. Micronizado" states="calcinacion" name="crear_micronizado" type="object" class="oe_highlight"/>
+                        <button string="Cancelar Calcinación" name="cancelar_calcinacion" states="calcinacion" type="object" />
+
+                        <button string="Cancelar Micronizado" name="cancelar_micronizado" states="micronizado" type="object" />
+
+                        <button name="exportarpdf" string="Exportar PDF" type="object" class="oe_highlight"/>
+                        <button name="exportarexcel" string="Exportar Excel" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                        <group>
+                            <group>
+                                <field name="fiscal" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                                <field name="periodo" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                            </group>
+                            <group>
+                                <field name="fecha" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Total Gastos">
+                                    <field name="lineas">
+                                        <tree create="0" delete="0" editable="bottom">
+                                            <field name="periodo" readonly="1"/>
+                                            <field name="centro_costo" readonly="1"/>
+                                            <field name="monto" readonly="1"/>
+                                            <field name="libro" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                                <page string="Costo Total" >
+                                	<group>
+                                        <group>
+                                            <group string="Extracción" attrs="{'invisible':[('state', 'in', ('draft') )]}">
+                                                <field name="gass_extra" readonly="1"/>
+                                                <field name="tu_prod_extra" readonly="1"/>
+                                                <group/>
+                                                <group/>
+                                                <field name="c_uni_extra" readonly="1"/>
+                                            </group>
+                                        </group>
+
+
+                                        <group >
+                                            <group string="Calcinación"  attrs="{'invisible':[('state', 'in', ('draft','extraccion','trituracion') )]}">
+
+                                                <field name="prod_proc_anter_cal" readonly="1"/>
+                                                <field name="gass_cal" readonly="1"/>
+                                                <field name="total_costo_cal" readonly="1"/>
+                                                <group/>
+                                                <group/>
+
+                                                <field name="tu_prod_cal" readonly="1"/>
+
+                                                <group/>
+                                                <group/>
+                                                <field name="c_uni_cal" readonly="1"/>
+                                                                                                
+                                            </group>
+                                        </group>
+                                     </group>
+                                     <group>
+
+                                        <group>
+                                            <group string="Trituración" attrs="{'invisible':[('state', 'in', ('draft','extraccion') )]}">
+
+
+                                                <field name="prod_proc_anter_tri" readonly="1"/>
+                                                <field name="gass_tri" readonly="1"/>
+                                                <field name="total_costo_tri" readonly="1"/>
+                                                <group/>
+                                                <group/>
+
+                                                <field name="tu_prod_tri" readonly="1"/>
+
+                                                <group/>
+                                                <group/>
+                                                <field name="c_uni_tri" readonly="1"/>
+                                                
+                                            </group>
+                                        </group>
+
+                                        <group>
+                                            <group string="Micronizado" attrs="{'invisible':[('state', 'in', ('draft','extraccion','trituracion','calcinacion') )]}">
+
+                                                <field name="prod_proc_anter_mic" readonly="1"/>
+                                                <field name="gass_mic" readonly="1"/>
+                                                <field name="total_costo_mic" readonly="1"/>
+                                                <group/>
+                                                <group/>
+
+                                                <field name="tu_prod_mic" readonly="1"/>
+
+                                                <group/>
+                                                <group/>
+                                                <field name="c_uni_mic" readonly="1"/>
+                                                
+
+
+                                                
+                                            </group>
+                                        </group>
+                                    </group>
+                                </page>
+
+                                <page string="Costo Total Detallado">
+                                    <group col="8" colspan="8">
+                                        <group col="4" colspan="4">
+                                            <group string="Extracción" col="4" colspan="4" attrs="{'invisible':[('state', 'in', ('draft') )]}">
+                                                <group col="1" colspan="1"/>
+                                                <label string="Toneladas" col="1" colspan="1"/>
+                                                <label string="Importe" col="1" colspan="1"/>
+                                                <label string="Costo Promedio" col="1" colspan="1"/>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Inventario Inicial" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="extra_ini_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="extra_ini_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="extra_ini_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Producción" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="extra_pro_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="extra_pro_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="extra_pro_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Disponible" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="extra_dis_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="extra_dis_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="extra_dis_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Transpaso a Trituración" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="extra_tt_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="extra_tt_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="extra_tt_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <label string="Inventario Final" col="1" colspan="1"/>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="extra_final_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="extra_final_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="extra_final_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                            </group>
+
+
+
+                                            <group string="Trituración" col="4" colspan="4" attrs="{'invisible':[('state', 'in', ('draft','extraccion') )]}">
+                                                <group col="1" colspan="1"/>
+                                                <label string="Toneladas" col="1" colspan="1"/>
+                                                <label string="Importe" col="1" colspan="1"/>
+                                                <label string="Costo Promedio" col="1" colspan="1"/>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Inventario Inicial" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_ini_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_ini_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_ini_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Producción" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="tritu_pro_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="tritu_pro_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="tritu_pro_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Disponible" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_dis_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_dis_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_dis_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Transpaso a HM" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_tt_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_tt_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="tritu_tt_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Ventas" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="tritu_ven_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="tritu_ven_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="tritu_ven_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <label string="Inventario Final" col="1" colspan="1"/>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="tritu_final_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="tritu_final_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="tritu_final_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                            </group>
+
+
+
+                                            <group string="Almacen de Piedra HM" col="4" colspan="4" attrs="{'invisible':[('state', 'in', ('draft','extraccion') )]}">
+                                                <group col="1" colspan="1"/>
+                                                <label string="Toneladas" col="1" colspan="1"/>
+                                                <label string="Importe" col="1" colspan="1"/>
+                                                <label string="Costo Promedio" col="1" colspan="1"/>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Inventario Inicial" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_ini_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_ini_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_ini_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Producción" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="piedra_pro_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="piedra_pro_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="piedra_pro_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Disponible" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_dis_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_dis_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_dis_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Transpaso a Calcinación" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_tt_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_tt_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="piedra_tt_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Ventas" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="piedra_ven_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="piedra_ven_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="piedra_ven_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <label string="Inventario Final" col="1" colspan="1"/>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="piedra_final_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="piedra_final_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="piedra_final_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                            </group>
+
+
+                                            <group string="Calcinación" col="4" colspan="4" attrs="{'invisible':[('state', 'in', ('draft','extraccion','trituracion') )]}">
+                                                <group col="1" colspan="1"/>
+                                                <label string="Toneladas" col="1" colspan="1"/>
+                                                <label string="Importe" col="1" colspan="1"/>
+                                                <label string="Costo Promedio" col="1" colspan="1"/>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Inventario Inicial" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_ini_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_ini_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_ini_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Producción" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_pro_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_pro_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_pro_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Disponible" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_dis_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_dis_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_dis_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Transpaso a Micronizado" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_tt_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_tt_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="calci_tt_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Ventas" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_ven_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_ven_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_ven_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <label string="Inventario Final" col="1" colspan="1"/>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="calci_final_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="calci_final_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="calci_final_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                            </group>
+
+
+
+                                            <group string="Micronizado" col="4" colspan="4" attrs="{'invisible':[('state', 'in', ('draft','extraccion','trituracion','calcinacion') )]}">
+                                                <group col="1" colspan="1"/>
+                                                <label string="Toneladas" col="1" colspan="1"/>
+                                                <label string="Importe" col="1" colspan="1"/>
+                                                <label string="Costo Promedio" col="1" colspan="1"/>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Inventario Inicial" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="micro_ini_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="micro_ini_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="micro_ini_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Producción" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_pro_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_pro_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_pro_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Disponible" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="micro_dis_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="micro_dis_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
+                                                    <field name="micro_dis_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Ventas" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_ven_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_ven_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_ven_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <label string="Inventario Final" col="1" colspan="1"/>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="micro_final_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="micro_final_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;">                                                    
+                                                    <field name="micro_final_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                            </group>
+
+
+                                        </group>
+                                        <group col="4" colspan="4">
+                                        </group>
+                                    </group>
+                                </page>
+
+                                <page string="Asientos">
+                                    <field name="asiento_ids">
+                                        <tree create="0" delete="0" editable="bottom">
+                                            <field name="number" readonly="1"/>
+                                            <field name="name" readonly="1"/>
+                                            <field name="diario" readonly="1"/>
+                                            <field name="periodo" readonly="1"/>	
+                                            <field name="asiento" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="costos_produccion_wizard_action" model="ir.actions.act_window">
+            <field name="name">Costos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">costos.produccion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Costos"
+            action="costos_produccion_wizard_action"
+            id="menu_action_costos_produccion_wizard_action"
+            parent="mrp.menu_mrp_manufacturing"
+            sequence="13"/>
+
+
+    </data>
+</openerp>
+

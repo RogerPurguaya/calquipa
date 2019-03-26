@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_costos_wizard_form">
+            <field name="name">costos.produccion.form</field>
+            <field name="model">costos.produccion</field>
+            <field name="inherit_id" ref="calquipa_report_costo_it.view_costos_wizard_form" />            
+            <field name="arch" type="xml">
+                <button name="cancelar_micronizado" position="after">
+                        <button name="export_excel_dolares" type="object"
+                                string="Reporte Costeo USD"/>
+                </button>
+            </field>
+        </record>
+
+  </data>
+</openerp>

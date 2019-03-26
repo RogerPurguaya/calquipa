@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_normal_form_view_inherit_ean" model="ir.ui.view">
+            <field name="name">product.form.inherit.ean</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="point_of_sale.product_normal_form_view_inherit_ean"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@string='Set a Custom EAN']" position="attributes">
+                    <attribute name="attrs">{'invisible':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

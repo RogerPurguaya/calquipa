@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<record model="ir.ui.view" id="mrp_production_form_view">
+			<field name="name">mrp.production.form</field>
+			<field name="model">mrp.production</field>
+			<field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+			<field name="arch" type="xml">
+
+				<xpath expr="//header/button[@name='action_assign']" position="after">
+					<button name="disponibilidad_orden_produccion" states="confirmed" string="Disponibilidad" type="object" class="oe_highlight"/>
+				</xpath>
+				<xpath expr="//header/button[@name='action_assign']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+
+			</field>
+		</record>
+
+	</data>
+</openerp>

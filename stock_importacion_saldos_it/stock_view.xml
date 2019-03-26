@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_stock_picking_importador_form" model="ir.ui.view">
+            <field name="name">stock.picking.importador.form</field>
+            <field name="model">stock.picking.importador</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>                        
+                        <button string="Importar" type="object" name="importar" states="draft" class="oe_highlight"/>
+                        <button string="Anular" type="object" name="anular" states="done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                    </header>
+                    <sheet>
+                        <style>
+                        #feedback_imp {
+                            text-shadow: 0.8px 0.8px #CF1717;
+                        }
+                        </style>
+                        <group string="Datos de Importación">
+                            <group>
+                                <field name="csv_file" filename="csv_file_txt"/>
+                                <field name="csv_file_txt" invisible="1"/>
+                                <field name="delimiter"/>
+                                <field name="date"/>
+                            </group>
+                            <group>
+                                <field name="max_lines"/>
+                                <field name="picking_type_id"/>
+                                <field name="errores" filename="errores_txt" readonly="1"/>
+                                <field name="errores_txt" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <h2 id="feedback_imp">
+                                <field name="feedback" readonly="1"/>
+                            </h2>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_picking_importador_tree" model="ir.ui.view">
+            <field name="name">stock.picking.importador.tree</field>
+            <field name="model">stock.picking.importador</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="csv_file_txt"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_stock_picking_importador_view" model="ir.actions.act_window">
+            <field name="name">Importar Saldos Inicial</field>
+            <field name="res_model">stock.picking.importador</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            action="action_stock_picking_importador_view" 
+            id="menu_stock_picking_importador" 
+            parent="stock.menu_stock_configuration"
+        />
+	</data>
+</openerp>

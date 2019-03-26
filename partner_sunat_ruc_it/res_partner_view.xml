@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_partner_form">
+            <field name="name">rest.parnet.form</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+            	<xpath expr="//notebook" position="inside">
+                    <page name='Sunat' string="Sunat">
+                        <group >
+                            <group >
+                                <field name="type_contribuyente" />
+                                <field name="type_documento" />
+                                <field name="type_nombre_comercial" />
+                                <field name="type_fecha_inscripcion" />
+                                <field name="type_estado_contribuyente" />
+                                <field name="type_condicion_contribuyente" />
+                                <field name="type_direccion_domicilio" />
+                                <field name="type_emision_comprobante" />
+                                <field name="type_sistema_contabilidad" />
+                                <field name="type_fecha_baja"/>
+                                
+                            </group>
+                            <group >
+
+                                <field name="type_actividad_economica" />
+                                <field name="type_comprobante_pago_impreso" />
+                                <field name="type_emision_electronica" />
+                                <field name="type_emisor_electronico_desde" />
+                                <field name="type_comprobante_electronico" />
+                                <field name="type_afiliado_ple" />
+                                <field name="type_padrones" />
+
+                                <field name="type_inicio_actividades" />
+                                <field name="type_comercio_exterior" />
+
+                            </group>
+                        </group>
+
+                        <group col="4">
+                            <button name="extraer_sunat" string="Extraer Datos Sunat RUC" type="object" class="oe_highlight"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+	</data>
+</openerp>
+
+
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="partner_name_it.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="type_number" position="after">
+                    <h5 class="oe_edit_only">
+                    <label string="Validar RUC"/>
+                        <button string="Validad RUC" name="verify_ruc" type="object" class="oe_highlight" /> 
+                    </h5>
+                </field>
+
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+
+
+        <record id="view_vendor_receipt_form" model="ir.ui.view">
+            <field name="name">account.voucher.form</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_means_payment_it.view_vendor_receipt_form"/>
+            <field name="arch" type="xml">
+                <field name="means_payment_id" position="after">
+                    <field name="check_verify_card" invisible="1"/>
+                    <label for="credit_card_id" string="Tarjeta de Crédito" attrs="{'invisible':[('check_verify_card','!=',True)]}"/>
+                    <field name="credit_card_id" nolabel="1" attrs="{'invisible':[('check_verify_card','!=',True)]}"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_vendor_receipt_dialog_form" model="ir.ui.view">
+            <field name="name">account.voucher.form</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_means_payment_it.view_vendor_receipt_dialog_form"/>
+            <field name="arch" type="xml">
+                
+                <field name="means_payment_id" position="after">
+                    <field name="check_verify_card" invisible="1"/>
+                    <field name="invoice_type" invisible="1" />
+                    <label for="credit_card_id" string="Tarjeta de Crédito" attrs="{'invisible':['|',('check_verify_card','!=',True), ('invoice_type','in',('in_invoice','in_refund') ) ]}"/>
+                    <field name="credit_card_id" nolabel="1" attrs="{'invisible':['|',('check_verify_card','!=',True) , ('invoice_type','in',('in_invoice','in_refund') )]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

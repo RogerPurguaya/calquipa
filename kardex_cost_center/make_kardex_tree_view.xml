@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_make_kardex_tree_val" model="ir.ui.view">
+            <field name="name">make.kardex.tree.val</field>
+            <field name="model">make.kardex.tree</field>
+            <field name="inherit_id" ref="kardex.view_make_kardex_tree_val"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">      
+                <field name="analitic_id" position="before">
+                    <field name="cost_account" string ="Cuenta costo"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_kardex_sunat_filter" model="ir.ui.view">
+            <field name="name">make.kardex.tree.search</field>
+            <field name="model">make.kardex.tree</field>
+            <field name="inherit_id" ref="kardex.view_kardex_sunat_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Tipo de documento" icon="terp-go-month" domain="[]" context="{'group_by':'type_doc'}" position="after">
+                    <filter string="Cuenta costo" icon="terp-go-month" domain="[]" context="{'group_by':'cost_account'}"/>
+					<filter string="Cuenta analítica" icon="terp-go-month" domain="[]" context="{'group_by':'analitic_id'}"/>
+                </filter>
+            </field>
+        </record>
+	</data>
+</openerp>

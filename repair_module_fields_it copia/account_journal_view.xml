@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+    <record model="ir.ui.view" id="view_account_journal_form_inherit">
+        <field name="name">account.journal.form.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account_analytic_plans.view_account_journal_form_inherit"/>
+        <field name="arch" type="xml">
+            <field name="plan_id" position="replace">
+                <field name="plan_id" groups="analytic.group_analytic_accounting" invisible="1" />
+            </field>
+        </field>
+    </record>
+
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account_type_doc_it.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="is_journal_unic" position="replace">
+                    <field name="is_journal_unic" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="daot_sunat_it.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="check_daot" position="replace">
+                    <field name="check_daot" attrs="{'readonly':[('state','!=','draft')]}" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_list" model="ir.ui.view">
+            <field name="name">account.account.tree</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <field name="debit" position="replace">
+                </field>
+                <field name="credit" position="replace">
+                </field>
+                <field name="balance" position="replace">
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_account_form" model="ir.ui.view">
+            <field name="name">account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <field name="debit" position="replace">
+                </field>
+                <field name="credit" position="replace">
+                </field>
+                <field name="balance" position="replace">
+                </field>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

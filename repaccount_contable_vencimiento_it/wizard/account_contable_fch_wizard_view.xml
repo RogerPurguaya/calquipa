@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_account_contable_vencimiento_wizard_form">
+			<field name="name">account.contable.vencimiento.wizard.form</field>
+			<field name="model">account.contable.vencimiento.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Reporte de Vencimiento" version="7.0">
+						<group>
+							<group>
+								<field name="date" required="1"/>
+								<field name="type_account" required="1"/>
+								<field name="cuenta_id" domain="[('type','in',('payable','receivable'))]"/>
+								<field name="partner_id" />
+							</group>
+							<group>
+								<field name="forma_reporte" required="1"/>
+								<field name="mostrar_en" required="1"/>
+							</group>
+						</group>
+						<footer>
+							<button string="Mostrar" name="do_rebuild" type="object" class="oe_highlight"/>
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<record id="account_contable_vencimiento_wizard_action" model="ir.actions.act_window">
+			<field name="name">Reporte de Vencimiento</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.contable.vencimiento.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+		<menuitem name="Análisis de Vencimiento" id="account_contable_vencimiento_wizard_menu"  parent="account.menu_finance_reports" action="account_contable_vencimiento_wizard_action" sequence="8" />
+
+
+	</data>
+</openerp>

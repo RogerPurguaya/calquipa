@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        
+
+        <record id="view_reporte_activofijo_tree" model="ir.ui.view">
+            <field name="name">reporte.activofijo.tree</field>
+            <field name="model">reporte.activofijo</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Detalle Activo Fijo">
+                    <field name="fiscal_id" />
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_reporte_Activofijo_form">
+            <field name="name">reporte.activofijo.form</field>
+            <field name="model">reporte.activofijo</field>
+            <field name="arch" type="xml">
+                <form string="Detalle Activo Fijo" version="8.0">
+                    <header>
+                        <button name="import_csv" string="Importar CSVs" type="object" class="oe_highlight" invisible="1"/>
+                        <button name="resumen_generate" string="Generar Resumenes" type="object" class="oe_highlight"/>
+                    </header>
+                        <group>
+                            <group>
+                                <field name="fiscal_id" />
+                                <field name="name" />
+                            </group>
+                            <group>
+                                <field name="csv_import_af"  invisible="1"/>
+                                <field name="csv_import_d"  invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Activo Fijo" invisible="1">
+                                    <field name="activo_ids" nolabel="1" readonly="0">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="codigo_activo" readonly="0" />
+                                            <field name="codigo" readonly="0" />
+                                            <field name="fecha_adq" readonly="0" />
+                                            <field name="patrimony_type" readonly="1" />
+                                            <field name="grupo" readonly="0" />
+                                            <field name="descripcion" readonly="0" />
+                                            <field name="valor_soles" readonly="0" />
+                                            <field name="t_c" readonly="0" />
+                                            <field name="monto_usd" readonly="0" />
+                                            <field name="t_c_mex" readonly="0" />
+                                            <field name="pesos" readonly="0" />
+                                            <field name="porc_depre" readonly="0" />
+                                            <field name="md_dolar" readonly="0" />
+                                        </tree>
+                                    </field>
+                                </page>
+
+                                <page string="Depreciación Acumulada"  invisible="1">
+                                    <field name="depre_ids" nolabel="1" readonly="0">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="codigo" readonly="0" />
+                                            <field name="fecha_adq" readonly="0" />
+                                            <field name="patrimony_type" readonly="1" />
+                                            <field name="grupo" readonly="0" />
+                                            <field name="descripcion" readonly="0" />
+                                            <field name="valor_soles" readonly="0" />
+                                            <field name="t_c" readonly="0" />
+                                            <field name="monto_usd" readonly="0" />
+                                            <field name="t_c_mex" readonly="0" />
+                                            <field name="pesos" readonly="0" />
+                                        </tree>
+                                    </field>
+                                </page>
+
+                                <page string="Rubro Peruano"  invisible="1">
+                                    <field name="peruano_ids" nolabel="1" readonly="0">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="grupo" readonly="0" />
+                                            <field name="monto" readonly="0" />
+                                            <field name="monto_usd" readonly="0" />
+                                            <field name="tc" readonly="0" />
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Resumen Activo Fijo">
+                                    <field name="r_activo_ids" nolabel="1" readonly="0">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="grupo" readonly="0" />
+                                            <field name="valor_soles" readonly="0" />
+                                            <field name="monto_usd" readonly="0" />
+                                            <field name="pesos" readonly="0" />
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Resumen Depreciación Acumulada">
+                                    <field name="r_depre_ids" nolabel="1" readonly="0">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="grupo" readonly="0" />
+                                            <field name="valor_soles" readonly="0" />
+                                            <field name="monto_usd" readonly="0" />
+                                            <field name="pesos" readonly="0" />
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Resumen Rubro Peruano"  invisible="0">
+                                    <field name="r_peruano_ids" nolabel="1" readonly="0">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="grupo" readonly="0" />
+                                            <field name="monto" readonly="0" />
+                                            <field name="monto_usd" readonly="0" />
+                                            <field name="tc" readonly="0" />
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_detalleactivofijo_action" model="ir.actions.act_window">
+            <field name="name">Detalle Activo Fijo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporte.activofijo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Detalle Activo Fijo"
+            action="reporte_detalleactivofijo_action"
+            id="menu_reporte_activofijo_action"
+            parent="reportes_mexicanos_reportes_menu"
+            sequence="901"/>
+
+
+
+    </data>
+</openerp>

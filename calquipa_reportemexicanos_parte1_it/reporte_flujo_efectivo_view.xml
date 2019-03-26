@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>       
+
+        <record id="view_consolidado_mes_rm_pre_flujo_efectivo_tree" model="ir.ui.view">
+            <field name="name">consolidado.mes.rm.pre.flujo.efectivo.tree</field>
+            <field name="model">consolidado.mes.rm.pre.flujo.efectivo</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Flujo Efectivo">
+                    <field name="fiscal_id" />
+                                <field name="period_id" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_consolidado_mes_rm_pre_flujo_efectivo_form">
+            <field name="name">consolidado.mes.rm.pre.flujo.efectivo.form</field>
+            <field name="model">consolidado.mes.rm.pre.flujo.efectivo</field>
+            <field name="arch" type="xml">
+                <form string="Flujo Efectivo" version="8.0">
+                    <header>
+                        <button name="traer_datos" string="Traer Datos" type="object" class="oe_highlight"/>
+                        <button name="export_excel" string="Reporte Excel" type="object"/>
+                    </header>
+                        <group>
+                            <group>
+                                <field name="fiscal_id" />
+                                <field name="period_id" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Lineas Reporte">
+                                    <field name="lineas" nolabel="1">
+                                        <tree create="0" delete="0" editable="bottom">
+                                            <field name="orden" readonly="1"/>
+                                            <field name="concepto" widget="report_title_color" readonly="1" />
+                                            <field name="grupo_cuenta" />
+                                            <field name="code_flujo_efec" invisible="1" />
+                                            <field name="tipo_cuenta" invisible="1"/>
+                                            <field name="formula" invisible="1" />
+                                            <field name="resaltado" invisible="1" />
+                                            <field name="bordes" invisible="1" />
+                                            <field name="monto" widget="mywidget" />
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_consolidado_mes_pre_flujo_efectivo_print_action" model="ir.actions.act_window">
+            <field name="name">Flujo Efectivo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">consolidado.mes.rm.pre.flujo.efectivo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Flujo Efectivo"
+            action="reporte_consolidado_mes_pre_flujo_efectivo_print_action"
+            id="menu_reporte_consolidado_mes_pre_flujo_efectivo_print_action"
+            parent="reportes_mexicanos_reportes_menu"
+            sequence="11"/>
+
+
+
+    </data>
+</openerp>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+    <record model="ir.ui.view" id="purchase_order_form_inherit">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_requisition.purchase_order_form_inherit"/>
+        <field name="arch" type="xml">
+
+                <field name="origin" position="attributes">
+                    <attribute name="readonly">True</attribute>
+                </field> 
+
+                <field name="requisition_id" position="attributes">
+                    <attribute name="readonly">True</attribute>
+                </field> 
+
+
+        </field>
+    </record>
+
+
+
+
+        <record id="view_move_form_prod" model="ir.ui.view">
+            <field name="name">stock.move.form</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="mrp_simple_version.view_move_form_prod"/>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <field name="location_id" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                    <attribute name="invisible">True</attribute>
+                </field> 
+
+                <field name="picking_id" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                    <attribute name="invisible">True</attribute>
+                </field> 
+
+
+
+
+                <field name="location_dest_id" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                    <attribute name="invisible">True</attribute>
+                </field> 
+
+                <field name="partner_id" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                    <attribute name="invisible">True</attribute>
+                </field> 
+
+            </field>
+        </record>
+
+
+        <record id="vpicktree" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                        <field name="min_date" string="Fecha Prevista"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_picking_internal_search" model="ir.ui.view">
+            <field name="name">stock.picking.internal.search</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <filter string="Status" position="after">
+                        <filter string="Empresa" domain="[]"  context="{'group_by':'partner_id'}"/>
+                </filter>
+            </field>
+        </record>
+
+
+
+
+        <record id="view_stock_traceability_tree" model="ir.ui.view">
+            <field name="name">stock.traceability.tree</field>
+            <field name="model">stock.traceability</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Trazabilidad" create="0"  delete="0">
+                    <field name="entrada" string="Origen"/>
+                    <field name="salida" string="Destino" />
+                    <field name="usuario"/>
+                    <field name="licitacion_detalle"/>
+                    <field name="licitacion"/>
+                    <field name="fecha_licitacion"/>
+                    <field name="state_licitacion"/>
+                    <field name="pedidocompra"/>
+                    <field name="fechacompra"/>
+                    <field name="state_pedido"/>
+                    <field name="notaingreso"/>
+                    <field name="usuarionotaingreso"/>
+                    <field name="fechanotaingreso"/>
+                    <field name="state_nota"/>
+                    <field name="factura"/>
+                    <field name="fechafactura"/>
+                    <field name="proveedor"/>
+                    <field name="state_factura"/>
+                    <field name="diarios"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_stock_traceability_search" model="ir.ui.view">
+            <field name="name">stock.traceability.search</field>
+            <field name="model">stock.traceability</field>
+            <field name="arch" type="xml">
+                <search string="Trazabilidad">
+                  <group>
+                        <field name="entrada" string="Origen"/>
+                        <field name="salida" string="Destino"/>
+                        <field name="usuario"/>
+                        <field name="licitacion"/>
+                        <field name="pedidocompra"/>
+                        <field name="notaingreso"/>
+                        <field name="usuarionotaingreso"/>
+                        <field name="factura"/>
+                        <field name="proveedor"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                      <filter string="Origen" icon="terp-folder-orange" domain="[]" context="{'group_by':'entrada'}"/>
+                      <filter string="Destino" icon="terp-folder-orange" domain="[]" context="{'group_by':'salida'}"/>
+                      <filter string="Usuario" icon="terp-folder-orange" domain="[]" context="{'group_by':'usuario'}"/>
+                      <filter string="Licitación" icon="terp-folder-orange" domain="[]" context="{'group_by':'licitacion'}"/>
+                      <filter string="Pedido de Compra" icon="terp-folder-orange" domain="[]" context="{'group_by':'pedidocompra'}"/>
+                      <filter string="Nota Ingreso" icon="terp-folder-orange" domain="[]" context="{'group_by':'notaingreso'}"/>
+                      <filter string="Factura" icon="terp-folder-orange" domain="[]" context="{'group_by':'factura'}"/>
+
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_stock_traceability_action" model="ir.actions.act_window">
+            <field name="name">Trazabilidad</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.traceability</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem action="account_stock_traceability_action" id="menu_config_traceability%stock" parent="purchase.menu_procurement_management"/>
+
+    </data>
+</openerp>

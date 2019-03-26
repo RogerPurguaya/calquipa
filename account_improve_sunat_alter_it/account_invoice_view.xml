@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account_improve_sunat_it.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="fecha" position="after">
+                    <field name="tc_auto" readonly="1"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account_improve_sunat_it.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="fecha" position="after">
+                    <field name="tc_auto" readonly="1"/>
+                </field>
+            </field>
+        </record>
+
+
+
+    </data>
+</openerp>

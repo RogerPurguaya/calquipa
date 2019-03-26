@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record id="view_datos_factura_wizard_form" model="ir.ui.view">
+            <field name="name">datos.factura.wizard.form</field>
+            <field name="model">datos.factura.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Datos" version="8.0">
+                        <group>
+                        	<field name="producto_lines" nolabel="1">
+                        		<tree>
+                        			<field name="producto" />
+                        			<field name="cantidad" />
+                        			<field name="cantidad_facturar"/>
+                        		</tree>
+                        	</field>                     
+                        </group>
+
+                        <footer>
+                            <button string="Aceptar" name="do_rebuild" type="object" class="oe_highlight"/>
+                            or
+                            <button string="Cancelar" class="oe_link" special="cancel"/>
+                        </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_datos_factura_lines_wizard_form" model="ir.ui.view">
+            <field name="name">datos.factura.lines.wizard.form</field>
+            <field name="model">datos.factura.lines.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Datos" version="8.0">
+                        <group>
+                            <field name="producto" readonly="1"/>
+                            <field name="cantidad" readonly="1"/>
+                            <field name="cantidad_facturar"/>                
+                        </group>
+                </form>
+            </field>
+        </record>
+
+	</data>
+</openerp>

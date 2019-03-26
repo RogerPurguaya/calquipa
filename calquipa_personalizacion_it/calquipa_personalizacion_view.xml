@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+        <record model="ir.ui.view" id="it_cuenta_mexicana_form">
+            <field name="name">Cuentas Mexicanas</field>
+            <field name="model">it.account.mexicana</field>
+            <field name="arch" type="xml">
+                <form string="Cuentas Mexicanas" version="8.0">
+                    <group>
+                        <field name="code" />
+                        <field name="nomenclatura" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="it_cuentas_mexicanas_view" model="ir.ui.view">
+            <field name="name">Cuentas Mexicanas</field>
+            <field name="model">it.account.mexicana</field>
+            <field name="arch" type="xml">
+                <tree string="Cuentas Mexicanas">
+                    <field name="code" />
+                    <field name="nomenclatura" />
+                </tree>
+
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="cuentas_mexicanas_action">
+            <field name="name">Cuentas Mexicanas</field>
+            <field name="res_model">it.account.mexicana</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="cuentas_mexicanas_action" id="menu_cuentas_mexicanas_form" parent="account.account_account_menu"/>
+
+
+        <record id="view_account_form" model="ir.ui.view">
+            <field name="name">account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+
+                <field name="active" position="after">
+                    <field name="code_mexicana" attrs="{'invisible': [('type','=', 'view')]}" />
+                    <field name="nomenclatura_mexicana" readonly="1" attrs="{'invisible': [('type','=', 'view')]}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+
+                <field name="list_price" position="after">
+                    <field name="is_controlate" />
+                </field>
+
+          
+                <xpath expr="//notebook" position="inside">
+                    <page string="Centro de Costo">
+                        <group>
+                            <group string="PRODUCCION">
+                                <field name="extraccion_acc" />
+                                <field name="trituracion_acc" />
+                                <field name="calcinacion_acc" />
+                                <field name="micronizado_acc" />
+                            </group>
+                            <group string="OPERATIVOS">
+
+                                <field name="administracion_acc" />
+                                <field name="ventas_acc" />
+                                <field name="capacitacion_acc" />
+                                <field name="promocion_acc" />
+                                <field name="gastos_acc" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="product_template_search_view" model="ir.ui.view">
+            <field name="name">product.template.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="inside">
+                    <filter string='Producto Controlado' domain="[]" context="{'group_by' : 'is_controlate'}"/>
+                </xpath>
+
+
+            </field>
+        </record>
+
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="before">
+                    <field name="is_controlate" />
+                </field>
+                <field name="country_id" position="after">
+                    <field name="sector_economic_id" placeholder="Sector Económico" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>                            
+                </field>
+            </field>
+        </record>
+
+       <record id="view_res_partner_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+
+                <filter string="Country" position="after">
+                    
+                    <filter string="Departamento" context="{'group_by': 'state_id'}"/>
+                    <filter string="Provincia" context="{'group_by': 'city'}"/>
+                    <filter string="Sector Económico" context="{'group_by': 'sector_economic_id'}"/>
+                </filter>
+            </field>
+        </record>
+
+
+
+
+
+        <record id="view_sector_economic_form" model="ir.ui.view">
+            <field name="name">sector.economic.form</field>
+            <field name="model">sector.economic</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Sector Económico" version="8.0" >
+                    <group string="Sector Económico">
+                        <field name="name"/>
+                        
+                    </group>                    
+                </form>
+            </field>
+        </record>
+
+        <record id="view_sector_economic_tree" model="ir.ui.view">
+            <field name="name">sector.economic.tree</field>
+            <field name="model">sector.economic</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Sector Economico">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_sector_economic" model="ir.actions.act_window">
+            <field name="name">Sector Económico</field>
+            <field name="res_model">sector.economic</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="sequence" eval="1"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem action="action_sector_economic" id="menu_sector_economic" parent="account.menu_configuration_misc"/>
+
+
+       <record id="purchase_order_form" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+
+                <field name="picking_type_id" position="after">
+                    <field name="is_heredado" invisible="1" />
+                    <field name="user_id_centro_costo" invisible="1" />
+
+                    <field name="type_doc" attrs="{'readonly': ['|',('is_heredado','=',True),('state','!=','draft')] }" />
+                </field>
+
+            <xpath expr="//notebook" position="inside">
+                    <page string="Centro de Costo">
+                        <group>
+                            <group>
+                                <field name="centro_costo_id" domain="[('user_ids_new','=',uid)]" options='{"no_open": True, "no_create": True}' attrs="{'readonly': ['|',('requisition_id','!=',False),('state','!=','draft')] }" />
+                            </group>
+                            <group>
+                                
+                            </group>
+                        </group>
+                    </page>
+            </xpath>
+
+            </field>
+        </record>
+
+
+       <record id="view_purchase_order_filter" model="ir.ui.view">
+            <field name="name">purchase.order.list.select</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//group" position="inside">
+                    <filter string="Solicitante" icon="terp-partner" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Documento Origen" icon="terp-partner" domain="[]" context="{'group_by':'origin'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+       <record id="purchase_order_form_analytic_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.form.analytic.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_analytic_plans.purchase_order_form_analytic_inherit"/>
+            <field name="arch" type="xml">
+
+              <!--  <field name="account_analytic_id" position="replace">
+                        <field name="account_analytic_id" invisible="1" />
+                </field> -->
+                <field name="analytics_id" position="replace">
+                        <field name="analytics_id" invisible="1" />
+                </field>
+
+
+            </field>
+        </record>
+
+
+
+    <record model="ir.ui.view" id="view_purchase_requisition_form">
+        <field name="name">purchase.requisition.form</field>
+        <field name="model">purchase.requisition</field>
+        <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+        <field name="arch" type="xml">
+
+            <field name="name" position="attributes">
+                    <attribute name="invisible">True</attribute>
+            </field>
+
+            <field name="name" position="after">
+                <field name="name_sec" readonly="1"/>
+            </field>
+
+<field name="multiple_rfq_per_supplier" position="replace">
+    <field name="multiple_rfq_per_supplier" />
+</field>
+            <field name="picking_type_id" position="after">
+                <field name="user_id_centro_costo" invisible="1" />
+
+                <field name="type_doc" />
+                <field name="urgente" />
+            </field>
+
+            <xpath expr="//notebook" position="inside">
+                    <page string="Centro de Costo">
+                        <group>
+                            <group>
+                                <field name="centro_costo_id" domain="[('user_ids_new','=',uid)]" options='{"no_open": True, "no_create": True}' />
+                            </group>
+                            <group>
+                                
+                            </group>
+                        </group>
+                    </page>
+            </xpath>
+
+            <field name="user_id" position="attributes">
+                    <attribute name="readonly">True</attribute>
+            </field>
+            <field name="exclusive" position="attributes">
+                    <attribute name="readonly">True</attribute>
+            </field>
+            <field name="account_analytic_id" position="attributes">
+                    <attribute name="invisible">True</attribute>
+            </field>
+
+            <field name="line_ids" position="replace">
+                <field name="line_ids" attrs="{'readonly': [('state','not in',('draft'))]}">
+                    <tree string="Products" editable="bottom">
+                        <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id,parent.account_analytic_id,account_analytic_id,parent.schedule_date,schedule_date)" />
+                        <field name="product_qty"/>
+                        <field name="product_uom_id" groups="product.group_uom"/>
+                        <field name="schedule_date"/>
+                        <field name="account_analytic_id" invisible="1" groups="purchase.group_analytic_accounting"/>
+                        
+                    </tree>
+                    <form string="Products">
+                        <group>
+                            <field name="product_id" />
+                            <field name="product_qty"/>
+                            <field name="product_uom_id" />
+                            <field name="schedule_date"/>
+                            <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                    </form>
+                </field> 
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_purchase_requisition_filter" model="ir.ui.view">
+            <field name="name">purchase.requisition.list.select</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                </field>
+                 <xpath expr="//group" position="inside">
+                        <filter string="Centro de Costo" icon="terp-partner" domain="[]" context="{'group_by':'centro_costo_id'}"/>
+                        <filter string="Tipo" icon="terp-partner" domain="[]" context="{'group_by':'type_doc'}"/>
+                        <filter string="Documento Origen" icon="terp-partner" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Urgente" icon="terp-partner" domain="[]" context="{'group_by':'urgente'}"/>
+
+                </xpath>
+            </field>
+        </record>
+
+<!--
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Centro de Costo">
+                        <group>
+                            <group>
+                                <field name="centro_costo_ids" />
+                            </group>
+                            <group>
+                                
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+-->
+
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="move_id" position="after">
+
+                    <field name="is_heredado" invisible="1" />
+                    <field name="user_id_centro_costo" invisible="1" />
+
+                    <field name="type_doc" attrs="{'readonly': ['|',('is_heredado','=',True),('state','!=','draft')] }" />
+                </field>
+
+            <xpath expr="//notebook" position="inside">
+                    <page string="Centro de Costo">
+                        <group>
+                            <group>
+                                <field name="centro_costo_id" domain="[('user_ids_new','=',uid)]" options='{"no_open": True, "no_create": True}' attrs="{'readonly': ['|',('is_heredado','=',True),('state','!=','draft')] }" />
+                            </group>
+                            <group>
+                                
+                            </group>
+                        </group>
+                    </page>
+            </xpath>
+
+                <field name="invoice_line" position="attributes">
+                    <attribute name="context">{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type,'centro_costo_context':centro_costo_id}</attribute>                    
+                </field>
+            </field>
+        </record>
+
+
+
+
+        <record id="invoice_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                    <field name="user_id" position="before">
+                    </field>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">   
+                    <filter name="group_by_partner_id" position="after">
+                    </filter>
+            </field>
+        </record>
+
+
+    <record model="ir.ui.view" id="invoice_supplier_form_inherit">
+        <field name="name">account.invoice.supplier.form.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="purchase_analytic_plans.invoice_supplier_form_inherit"/>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <field name="analytics_id" position="replace">
+                <field name="analytics_id" invisible="1" domain="[('plan_id','&lt;&gt;',False)]" context="{'journal_id':parent.journal_id}" groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>  
+
+    <menuitem
+        id="purchase_requisition.menu_purchase_requisition_pro_mgt"
+        sequence="-1"
+        parent="purchase.menu_procurement_management"
+        action="purchase_requisition.action_purchase_requisition"/>
+
+
+
+        <record id="view_stock_product_tree" model="ir.ui.view">
+            <field name="name">product.stock.tree.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_stock_product_tree"/>
+            <field name="arch" type="xml">
+                <field name="qty_available" position="replace">
+                    <field name="qty_available" invisible="1" />
+                </field>
+
+                <field name="virtual_available" position="replace">
+                    <field name="virtual_available" invisible="1"/>
+                </field>
+                
+            </field>
+        </record>
+
+        <record id="view_stock_product_template_tree" model="ir.ui.view">
+            <field name="name">product.template.stock.tree.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_stock_product_template_tree"/>
+            <field name="arch" type="xml">
+
+                <field name="qty_available" position="replace">
+                    <field name="qty_available" invisible="1" />
+                </field>
+
+                <field name="virtual_available" position="replace">
+                    <field name="virtual_available" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.stock.property.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@string='Stock and Expected Variations']/label[@for='qty_available']" position="replace">
+                </xpath>
+
+
+                <xpath expr="//group[@string='Stock and Expected Variations']/div/field[@name='qty_available']" position="replace">
+                </xpath>
+
+
+                <xpath expr="//group[@string='Stock and Expected Variations']/div/button[@string='⇒ Update']" position="replace">
+                </xpath>
+
+
+                <xpath expr="//group[@string='Stock and Expected Variations']/div" position="replace">
+                </xpath>
+
+                <field name="virtual_available" position="replace">
+                    <field name="virtual_available" invisible="1"/>
+                </field>
+
+            </field>
+        </record>
+
+
+
+        <record id="view_account_move_line_filter" model="ir.ui.view">
+            <field name="name">Journal Items</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//group" position="inside">
+                        <filter string="Expediente de Importación" icon="terp-partner" domain="[]" context="{'group_by':'expediente_importacion_id'}"/>                    
+                        <filter string="Obras en Curso" icon="terp-partner" domain="[]" context="{'group_by':'obra_curso_id'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <record id="view_centro_costo_form" model="ir.ui.view">
+            <field name="name">centro.costo.form</field>
+            <field name="model">centro.costo</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Centro de Costo" version="8.0" >
+                    <group string="Sector Económico">
+                        <field name="columna"/>
+                        <field name="descripcion"/>
+                        <field name="user_ids_new"/>
+                        
+                    </group>                    
+                </form>
+            </field>
+        </record>
+
+        <record id="view_centro_costo_tree" model="ir.ui.view">
+            <field name="name">centro.costo.tree</field>
+            <field name="model">centro.costo</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Centro de Costo">
+                        <field name="columna"/>
+                        <field name="descripcion"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_centro_costo" model="ir.actions.act_window">
+            <field name="name">Centro de Costo</field>
+            <field name="res_model">centro.costo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem action="action_centro_costo" id="menu_centro_costo" parent="account.menu_configuration_misc"/>
+
+
+        <record id="view_vendor_payment_form" model="ir.ui.view">
+            <field name="name">account.voucher.tree</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_means_payment_it.view_vendor_payment_form"/>
+            <field name="arch" type="xml">
+                    <field name="means_payment_id" position="after">
+                        <field name="move_id" readonly="1" string="Asiento Contable"/>
+                    </field>
+            </field>
+        </record>
+
+        <record id="view_vendor_receipt_form" model="ir.ui.view">
+            <field name="name">account.voucher.tree</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_means_payment_it.view_vendor_receipt_form"/>
+            <field name="arch" type="xml">
+                    <field name="means_payment_id" position="after">
+                        <field name="move_id" readonly="1" string="Asiento Contable"/>
+                    </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

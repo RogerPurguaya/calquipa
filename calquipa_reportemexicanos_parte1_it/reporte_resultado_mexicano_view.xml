@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        
+        <record id="view_account_form" model="ir.ui.view">
+            <field name="name">account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <field name="reconcile" position="after">
+                    <field name="result_type_mex_id" domain="[('tipo_cuenta','in',('1','2'))]" widget='selection'/>
+                    <field name="balance_type_mex_id" domain="[('tipo_cuenta','in',('1','2'))]" widget='selection'/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="view_rm_resultado_mexicano_tree" model="ir.ui.view">
+            <field name="name">rm.resultado.mexicano.tree</field>
+            <field name="model">rm.resultado.mexicano</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Resultado Mexicano">
+                    <field name="periodo_ini" />
+                    <field name="periodo_fin" />
+                    <field name="tipo_cambio" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_rm_resultado_mexicano_form">
+            <field name="name">rm.resultado.mexicano.form</field>
+            <field name="model">rm.resultado.mexicano</field>
+            <field name="arch" type="xml">
+                <form string="Resultado Mexicano" version="8.0">
+                    <header>
+                        <button name="traer_datos" string="Traer Datos" type="object" class="oe_highlight"/>
+                        <button name="calculate" string="Actualizar" type="object" class="oe_highlight"/>
+                        <button name="export_pdf" string="Reporte PDF" type="object"/>
+                        <button name="export_excel" string="Reporte Excel" type="object"/>
+                    </header>
+                        <group>
+                            <group>
+                                <field name="periodo_ini" invisible="1" />
+                                <field name="periodo_fin" />
+                                <field name="tipo_cambio" />
+                            </group>
+                            <group>
+                                <field name="periodo_ini_ant"  invisible="1" />
+                                <field name="periodo_fin_ant"  invisible="1" />
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Lineas Reporte">
+                                    <field name="lineas" nolabel="1">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="orden" required="1"/>
+                                            <field name="concepto" widget="report_title_color_resaltado"/>
+                                            <field name="tipo_cuenta" invisible="1"/>
+                                            <field name="formula" invisible="1" attrs="{'readonly':[('tipo_cuenta', '!=','3')]}" />
+                                            <field name="total" invisible="1" attrs="{'readonly':[('tipo_cuenta', '=','5')]}" />
+                                            <field name="resaltado" invisible="1" />
+                                            <field name="bordes" invisible="1" />
+                                            <field name="monto_mes" attrs="{'readonly':[('tipo_cuenta', '!=','4')]}" />
+                                            <field name="porcentaje_mes" invisible="1" readonly="1" />
+                                            <field name="monto_actual" invisible="1"  attrs="{'readonly':[('tipo_cuenta', '!=','4')]}" />
+                                            <field name="porcentaje_actual"  invisible="1" readonly="1" />
+                                            <field name="monto_anterior"  invisible="1" attrs="{'readonly':[('tipo_cuenta', '!=','4')]}" />
+                                            <field name="porcentaje_anterior"  invisible="1" readonly="1" />
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_resultado_mexicano_print_action" model="ir.actions.act_window">
+            <field name="name">Resultado Mexicano</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rm.resultado.mexicano</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="Resultado Mexicano"
+            action="reporte_resultado_mexicano_print_action"
+            id="menu_reporte_resultado_mexicano_print_action"
+            parent="reportes_mexicanos_reportes_menu"
+            sequence="12"/>
+
+
+
+
+
+
+
+        <record id="view_account_result_type_mex_tree" model="ir.ui.view">
+            <field name="name">rm.resultado.config.mexicano.line.tree</field>
+            <field name="model">rm.resultado.config.mexicano.line</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Concepto Resultado Mexicano" editable="bottom">
+                    <field name="orden" />
+                    <field name="concepto" />
+                    <field name="tipo_cuenta" />
+                    <field name="tipo_cambio" />
+                    <field name="formula" />
+                    <field name="total" />
+                    <field name="resaltado" />
+                    <field name="bordes" />
+                    <field name="check_change_value" />
+                </tree>
+            </field>
+        </record>
+
+
+
+
+        <record model="ir.ui.view" id="view_account_result_type_mex_form">
+            <field name="name">rm.resultado.config.mexicano.line.form</field>
+            <field name="model">rm.resultado.config.mexicano.line</field>
+            <field name="arch" type="xml">
+                <form string="Concepto Resultado Mexicano" version="8.0">
+                        <group>
+                            <group>
+                    <field name="orden" required="1"/>
+                    <field name="concepto" required="1"/>
+                    <field name="tipo_cuenta" required="1"/>
+                    <field name="formula" attrs="{'required': [('tipo_cuenta','=','3')]}"/>
+                            </group>
+                            <group>
+                            
+                    <field name="total" required="1"/>
+                    <field name="resaltado" />
+                    <field name="bordes" />                    
+                    <field name="check_change_value" />
+                            </group>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="action_account_result_type_mex" model="ir.actions.act_window">
+            <field name="name">Concepto Resultado Mexicano</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rm.resultado.config.mexicano.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Resultado Mexicano" id="menu_conf_account_result_type_mex_contenedor" parent="menu_conf_reporte_mexicano"/>
+        <menuitem name="Concepto" action="action_account_result_type_mex" id="menu_conf_account_result_type_mex" parent="menu_conf_account_result_type_mex_contenedor"/>
+
+
+
+<!--
+
+        <record id="view_rm_resultado_config_mexicano_tree" model="ir.ui.view">
+            <field name="name">rm.resultado.config.mexicano.line.tree</field>
+            <field name="model">rm.resultado.config.mexicano.line</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Resultado Config Mexicano">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_rm_resultado_config_mexicano_form">
+            <field name="name">rm.resultado.config.mexicano.line.form</field>
+            <field name="model">rm.resultado.config.mexicano.line</field>
+            <field name="arch" type="xml">
+                <form string="Resultado Config Mexicano" version="8.0">
+                        <group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Lineas Reporte">
+                                    <field name="lineas" nolabel="1">
+                                        <tree create="1" delete="1" editable="bottom">
+                                            <field name="orden" required="1"/>
+                                            <field name="concepto" />
+                                            <field name="tipo_cuenta" />
+                                            <field name="formula" attrs="{'readonly':[('tipo_cuenta', '!=','3')]}" />
+                                            <field name="total" attrs="{'readonly':[('tipo_cuenta', '=','5')]}" />
+                                            <field name="resaltado" />
+                                            <field name="bordes" />
+                                            <field name="monto_mes" invisible="1" attrs="{'readonly':[('tipo_cuenta', '!=','4')]}" />
+                                            <field name="porcentaje_mes" invisible="1" readonly="1" />
+                                            <field name="monto_actual" invisible="1" attrs="{'readonly':[('tipo_cuenta', '!=','4')]}" />
+                                            <field name="porcentaje_actual" invisible="1" readonly="1" />
+                                            <field name="monto_anterior" invisible="1" attrs="{'readonly':[('tipo_cuenta', '!=','4')]}" />
+                                            <field name="porcentaje_anterior" invisible="1" readonly="1" />
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="reporte_resultado_config_mexicano_print_action" model="ir.actions.act_window">
+            <field name="name">Resultado Mexicano</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rm.resultado.config.mexicano.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+  <menuitem name="Plantilla" action="reporte_resultado_reconocible_config_mexicano_print_action" id="menu_conf_configaccount_result_type_mex" parent="menu_conf_account_result_type_mex_contenedor"/>
+
+-->
+    </data>
+</openerp>

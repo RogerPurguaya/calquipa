@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_mail_empleado_wizard_form">
+            <field name="name">mail.empleado.wizard.form</field>
+            <field name="model">mail.empleado.wizard</field>
+            <field name="arch" type="xml">
+                <form string="trabajador">
+                    <group>
+                        <group>
+                            <field name="forma"/>
+                            <field name="employee_id" domain="[('id','in',context['employees'])]" attrs="{'invisible':[('forma','=','1')]}"/>
+                            <field name="digital_sgn"/>
+                        </group>
+                        <group>
+                            <field name="in_charge" attrs="{'invisible':[('reporte','=',False)]}"/>
+                            <field name="date" attrs="{'invisible':[('reporte','=',False)]}"/>
+                        </group>
+                    </group>
+                    <group string="Enviar">
+                        <group>
+                            <field name="reporte"/>
+                            <field name="boleta"/>
+                        </group>
+                        <group></group>
+                    </group>
+                    <footer>
+                        <button string="Generar" name="do_rebuild" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

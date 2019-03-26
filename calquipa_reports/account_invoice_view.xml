@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="invoice_form">
+			<field name="name">account.invoice.form.reptxt</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form"/>
+			<field name="priority">1</field>
+			<field name="sequence">0</field>
+			<field name="arch" type="xml">
+				<button string="Validate" position="after">
+                    <button name="makeprintdoc" string="Imprimir Factura" type="object" class="oe_highlight" states="open,paid,done" invisible="1"/>
+                </button>
+                <button name="invoice_print" string="Print" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user" position="replace">
+                	<button name="invoice_print" string="Print" type="object" class="oe_highlight" groups="base.group_user" invisible="1"/>
+                </button>
+                <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user" position="replace">
+                	<button name="invoice_print" string="Print Invoice" type="object" groups="base.group_user" invisible="1"/>
+                </button>
+			</field>
+		</record>
+
+	</data>
+</openerp>

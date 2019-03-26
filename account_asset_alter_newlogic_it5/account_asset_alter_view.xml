@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+    <record model="ir.ui.view" id="view_account_asset_asset_form">
+        <field name="name">account.asset.asset.form</field>
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset_alter_it.view_account_asset_asset_form"/>
+        <field name="arch" type="xml">
+            <field name="method_end" position="after">
+                <field name="verif_origen" invisible="1"/>
+                <field name="tipo_cambio_d"  />
+                <field name="porce_depreci"  />
+                <field name="deprec_anual"  />
+                <field name="deprec_mensual"  />
+                <field name="bruto_doalres"  />
+                <field name="val_deprec_anual_d"  />
+                <field name="val_deprec_mensual_d"  />
+            </field>
+        </field>
+    </record>
+
+
+        <record model="ir.ui.view" id="view_account_asset_analisis_dolares_wizard_form">
+            <field name="name">vista.activo.detraccion.dolar.form</field>
+            <field name="model">vista.activo.detraccion.dolar</field>
+            <field name="arch" type="xml">
+                <form string="Depreciaciones Dolares" version="7.0">
+                        <group>
+                            <field name="period_id" />
+                        </group>
+                        <footer>
+                            <button string="Mostrar" name="do_rebuild" type="object" class="oe_highlight"/>
+                            or
+                            <button string="Cancel" class="oe_link" special="cancel"/>
+                        </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_asset_analisis_dolares_wizard_action" model="ir.actions.act_window">
+            <field name="name">Depreciaciones Dolares</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">vista.activo.detraccion.dolar</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem parent="account_asset_alter_it.menu_action_account_asset_libro_padre_wizard" id="menu_action_account_asset_analisis_mod_dolares_wizard" action="account_asset_analisis_dolares_wizard_action"/>
+
+
+
+    </data>
+</openerp>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_voucher_credit_card_form" model="ir.ui.view">
+            <field name="name">voucher.credit.card</field>
+            <field name="model">voucher.credit.card</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+				<form string="Cobranza Con Tarjetas de Crédito" >
+                    <group string="Cobranza con Tarjetas de Crédito">
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="entity"  required="1"/>
+                        </group>
+                        <group>
+                            <field name="card"  required="1"/>
+                            <field name="means_payment_id"  required="1"/>
+                        </group>
+                    </group>
+				</form>
+            </field>
+        </record>
+
+		<record id="view_credit_card_tree" model="ir.ui.view">
+            <field name="name">voucher.credit.card</field>
+            <field name="model">voucher.credit.card</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Tarjetas de Crédito">
+                    <field name="name" />
+                    <field name="entity" />
+                    <field name="card" />
+                    <field name="means_payment_id" />
+                </tree>
+            </field>
+        </record>
+		
+		<record id="action_card_Credit_it" model="ir.actions.act_window">
+            <field name="name">Tarjetas de Crédito</field>
+            <field name="res_model">voucher.credit.card</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		
+        <menuitem id="menu_metodo_cobro_pago_it" parent="account.menu_configuration_misc" name="Metodo de Cobro"/>
+        <menuitem string="Tarjeta de Crédito" id="menu_credit_card_it" parent="menu_metodo_cobro_pago_it" action="action_card_Credit_it"/>
+
+	</data>
+</openerp>

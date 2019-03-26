@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_account_estate_peruanofunction_wizard_form">
+			<field name="name">account.state.function.peruano.wizard.form</field>
+			<field name="model">account.state.function.peruano.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Resultado por Función" >
+						<group>
+							<group>
+								<field name="periodo_ini" />
+								<field name="periodo_fin" />
+							</group>
+							<group>
+							</group>
+						</group>
+						<footer>
+							<button string="Mostrar" name="do_rebuild" type="object" class="oe_highlight"/>
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="account_state_function_peruanoformat_action" model="ir.actions.act_window">
+			<field name="name">Resultado por Función</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.state.function.peruano.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="menu_state_functionperuano" name="R. por Función Peruana" parent="account_state_financial_peruana_it.menu_situaition_financeperuano_contenedor" sequence="101" action="account_state_function_peruanoformat_action" />
+		
+
+	</data>
+</openerp>

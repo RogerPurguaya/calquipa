@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_get_kardex_invoice_notin_form">
+			<field name="name">get.kardex.invoice.notin.form</field>
+			<field name="model">get.kardex.invoice.notin</field>
+			<field name="arch" type="xml">
+				<form string="Saldos" version="8.0">
+						<group>
+							<field name="date" required="1" string="Saldos al"/>
+						</group>
+						<footer>
+							<button string="Exportar a CSV" name="action_procesar_resumen" type="object" class="oe_highlight"/>
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="get_kardex_invoice_notin_action" model="ir.actions.act_window">
+			<field name="name">Facturas vs kardex</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">get.kardex.invoice.notin</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+
+
+        <menuitem action="get_kardex_invoice_notin_action"
+            id="menu_get_kardex_invoice_notin_wizard"
+            parent="kardex.kardex_main_menu"
+            sequence="4"
+        />
+		
+	</data>
+</openerp>

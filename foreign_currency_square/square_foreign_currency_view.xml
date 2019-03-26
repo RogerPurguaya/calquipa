@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_vst_square_foreign_currency_tree">
+			<field name="name">vst.square.foreign.currency.tree</field>
+			<field name="model">vst.square.foreign.currency</field>
+			<field name="arch" type="xml">
+				<tree string="vst_square_foreign_currency" create="false" edit="false" >
+					<field name="move_id" string="Move Id" invisible="1"/>
+					<field name="asiento" invisible="1"/>
+					<field name="periodo" />
+					<field name="libro" />
+					<field name="voucher" />
+					<field name="periodo_orden" invisible="1" />
+					<field name="debit" />
+					<field name="credit" />
+					<field name="debit_me" />
+					<field name="credit_me" />
+					<field name="diff_mn" />
+					<field name="diff_me" />
+				</tree>
+			</field>
+		</record>
+		<!--
+		<record id='view_vst_square_foreign_currency_action' model='ir.actions.act_window'>
+			<field name='name'>Diferencia de Cambio</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name='res_model'>exchange.diff.line</field>
+			<field name='view_type'>form</field>
+			<field name='view_mode'>tree,form</field>
+			<field name="view_id" ref="view_exchange_diff_line_tree"/>
+		</record>
+		-->
+		<record id="view_vst_square_foreign_currency_search" model="ir.ui.view">
+			<field name="name">vst.square.foreign.currency.search</field>
+			<field name="model">vst.square.foreign.currency</field>
+			<field name="arch" type="xml">
+				<search string="Dif. de Cambio">
+					<field name="periodo"/>
+
+					<filter icon="terp-go-year" string="Periodo" name="periodo"/>
+					<separator/>
+					<group expand="1" string="Group By...">
+						<filter string="Periodo" name="periodo" icon="terp-partner" context="{'group_by':'periodo'}"/>
+					</group>
+				</search>
+			</field>
+		</record>	
+		
+		<record id="vst_square_foreign_currency_action" model="ir.actions.act_window">
+			<field name="name">Diferencias de Cambio</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">vst.square.foreign.currency</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+			<field name="context">{'group_by':['periodo'],}</field>
+			<field name="search_view_id" ref="view_vst_square_foreign_currency_search"/>
+		</record>
+		
+		
+	</data>
+</openerp>

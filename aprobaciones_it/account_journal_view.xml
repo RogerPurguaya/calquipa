@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="it_aprobacion_users_wizard_form">
+            <field name="name">Aprobación</field>
+            <field name="model">aprobacion.users</field>
+            <field name="arch" type="xml">
+                <form string="Aprobación" version="8.0">
+                    <group>
+                        <group>
+                            <field name="glosa"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                        <footer>
+                            <button string="Guardar" name="do_rebuild" type="object" class="oe_highlight"/>
+                            or
+                            <button string="Salir" name="do_eliminar" type="object" class="oe_highlight"/>
+                        </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="it_aprobacion_alone_users_wizard_form">
+            <field name="name">Aprobación</field>
+            <field name="model">aprobacion.users</field>
+            <field name="arch" type="xml">
+                <form string="Aprobación" version="8.0">
+                    <group>
+                        <group>
+                            <field name="glosa"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="aprobacion_users_om_action">
+            <field name="name">Aprobación</field>
+            <field name="res_model">aprobacion.users</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+
+
+    <record model="ir.ui.view" id="purchase_order_form">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+                <xpath expr="//button[@name='view_invoice']" position="after">
+                    <button name="agregar_aprobation" string="Agregar Aprobación" type="object" class="oe_highlight" groups="aprobaciones_it.group_aprobacion_user_id"/> 
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Aprobaciones">
+                        <group>
+                            <field name="aprobations" nolabel="1" readonly="1" context="{'form_view_ref':'aprobaciones_it.it_aprobacion_alone_users_wizard_form'}">
+                                <tree string="Aprobación">
+                                    <field name="fecha" readonly="1"/>
+                                    <field name="usuario" readonly="1"/>
+                                    <field name="cargo" readonly="1" invisible="1"/>
+                                    <field name="nombre"  readonly="1" invisible="1"/>
+                                    <field name="glosa" readonly="1"/>
+                                    <button name="do_eliminar" icon="gtk-remove" string="Eliminar" type="object" groups="aprobaciones_it.group_aprobacion_user_id"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+        </field>
+    </record>
+
+
+
+    <record model="ir.ui.view" id="view_vendor_payment_form">
+        <field name="name">account.voucher.form</field>
+        <field name="model">account.voucher</field>
+        <field name="inherit_id" ref="account_voucher.view_vendor_payment_form"/>
+        <field name="arch" type="xml">
+        		<xpath expr="//button[@name='cancel_voucher']" position="after">
+        			<button name="agregar_aprobation" string="Agregar Aprobación" type="object" class="oe_highlight" groups="aprobaciones_it.group_aprobacion_user_id"/> 
+        		</xpath>
+        		<xpath expr="//notebook" position="inside">
+        			<page string="Aprobaciones">
+        				<group>
+        					<field name="aprobations" nolabel="1" readonly="1" context="{'form_view_ref':'aprobaciones_it.it_aprobacion_alone_users_wizard_form'}">
+        						<tree string="Aprobación">
+				                    <field name="fecha" readonly="1"/>
+				                    <field name="usuario" readonly="1"/>
+				                    <field name="cargo" readonly="1"/>
+				                    <field name="nombre"  readonly="1"/>
+				                    <field name="glosa" readonly="1"/>
+				                    <button name="do_eliminar" icon="gtk-remove" string="Eliminar" type="object" groups="aprobaciones_it.group_aprobacion_user_id"/>
+				                </tree>
+        					</field>
+        				</group>
+        			</page>
+                </xpath>
+        </field>
+    </record>
+
+
+
+
+        <record id="purchase_order_tree" model="ir.ui.view">
+            <field name="name">purchase.order.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">  
+                <field name="state" position="before">
+                    <field name="flag_aprobations" />
+                </field>
+            </field>
+        </record>
+
+
+
+
+    <record model="ir.ui.view" id="view_deliveries_to_pay_form">
+        <field name="name">deliveries.to.pay.form</field>
+        <field name="model">deliveries.to.pay</field>
+        <field name="inherit_id" ref="deliveries_to_pay_it.view_deliveries_to_pay_form"/>
+        <field name="arch" type="xml">
+        		<xpath expr="//button[@name='action_cancel']" position="after">
+        			<button name="agregar_aprobation" string="Agregar Aprobación" type="object" class="oe_highlight" groups="aprobaciones_it.group_aprobacion_user_id"/> 
+        		</xpath>
+        		<xpath expr="//notebook" position="inside">
+        			<page string="Aprobaciones">
+        				<group>
+        					<field name="aprobations" nolabel="1" readonly="1" context="{'form_view_ref':'aprobaciones_it.it_aprobacion_alone_users_wizard_form'}">
+        						<tree string="Aprobación">
+				                    <field name="fecha" readonly="1"/>
+				                    <field name="usuario" readonly="1"/>
+				                    <field name="cargo" readonly="1"/>
+				                    <field name="nombre"  readonly="1"/>
+				                    <field name="glosa" readonly="1"/>
+				                    <button name="do_eliminar" icon="gtk-remove" string="Eliminar" type="object" groups="aprobaciones_it.group_aprobacion_user_id"/>
+				                </tree>
+        					</field>
+        				</group>
+        			</page>
+                </xpath>
+        </field>
+    </record>
+
+
+
+
+    <record model="ir.ui.view" id="view_small_cash_form">
+        <field name="name">small.cash.another.form</field>
+        <field name="model">small.cash.another</field>
+        <field name="inherit_id" ref="small_cash_another_it.view_small_cash_form"/>
+        <field name="arch" type="xml">
+        		<xpath expr="//button[@name='action_cancel']" position="after">
+        			<button name="agregar_aprobation" string="Agregar Aprobación" type="object" class="oe_highlight" groups="aprobaciones_it.group_aprobacion_user_id"/> 
+        		</xpath>
+        		<xpath expr="//notebook" position="inside">
+        			<page string="Aprobaciones">
+        				<group>
+        					<field name="aprobations" nolabel="1" readonly="1" context="{'form_view_ref':'aprobaciones_it.it_aprobacion_alone_users_wizard_form'}">
+        						<tree string="Aprobación">
+				                    <field name="fecha" readonly="1"/>
+				                    <field name="usuario" readonly="1"/>
+				                    <field name="cargo" readonly="1"/>
+				                    <field name="nombre"  readonly="1"/>
+				                    <field name="glosa" readonly="1"/>
+				                    <button name="do_eliminar" icon="gtk-remove" string="Eliminar" type="object" groups="aprobaciones_it.group_aprobacion_user_id"/>
+				                </tree>
+        					</field>
+        				</group>
+        			</page>
+                </xpath>
+        </field>
+    </record>
+
+
+
+    <record model="ir.ui.view" id="it_desembolso_personal_form">
+        <field name="name">desembolso.personal.form</field>
+        <field name="model">desembolso.personal</field>
+        <field name="inherit_id" ref="desembolso_personal_it.it_desembolso_personal_form"/>
+        <field name="arch" type="xml">
+        		<xpath expr="//button[@name='borrador_button']" position="after">
+        			<button name="agregar_aprobation" string="Agregar Aprobación" type="object" class="oe_highlight" groups="aprobaciones_it.group_aprobacion_user_id"/> 
+        		</xpath>
+        		<xpath expr="//notebook" position="inside">
+        			<page string="Aprobaciones">
+        				<group>
+        					<field name="aprobations" nolabel="1" readonly="1" context="{'form_view_ref':'aprobaciones_it.it_aprobacion_alone_users_wizard_form'}">
+        						<tree string="Aprobación">
+				                    <field name="fecha" readonly="1"/>
+				                    <field name="usuario" readonly="1"/>
+				                    <field name="cargo" readonly="1"/>
+				                    <field name="nombre"  readonly="1"/>
+				                    <field name="glosa" readonly="1"/>
+				                    <button name="do_eliminar" icon="gtk-remove" string="Eliminar" type="object" groups="aprobaciones_it.group_aprobacion_user_id"/>
+				                </tree>
+        					</field>
+        				</group>
+        			</page>
+                </xpath>
+        </field>
+    </record>
+
+
+
+
+    <record model="ir.ui.view" id="it_anticipo_proveedores_form">
+        <field name="name">anticipo.proveedor.form</field>
+        <field name="model">anticipo.proveedor</field>
+        <field name="inherit_id" ref="anticipo_proveedor_it.it_anticipo_proveedores_form"/>
+        <field name="arch" type="xml">
+        		<xpath expr="//button[@name='cancelar_button']" position="after">
+        			<button name="agregar_aprobation" string="Agregar Aprobación" type="object" class="oe_highlight" groups="aprobaciones_it.group_aprobacion_user_id"/> 
+        		</xpath>
+        		<xpath expr="//notebook" position="inside">
+        			<page string="Aprobaciones">
+        				<group>
+        					<field name="aprobations" nolabel="1" readonly="1" context="{'form_view_ref':'aprobaciones_it.it_aprobacion_alone_users_wizard_form'}">
+        						<tree string="Aprobación">
+				                    <field name="fecha" readonly="1"/>
+				                    <field name="usuario" readonly="1"/>
+				                    <field name="cargo" readonly="1"/>
+				                    <field name="nombre"  readonly="1"/>
+				                    <field name="glosa" readonly="1"/>
+				                    <button name="do_eliminar" icon="gtk-remove" string="Eliminar" type="object" groups="aprobaciones_it.group_aprobacion_user_id"/>
+				                </tree>
+        					</field>
+        				</group>
+        			</page>
+                </xpath>
+        </field>
+    </record>
+
+
+
+
+
+
+
+    <record model="ir.ui.view" id="crossovered_budget_view_form">
+        <field name="name">crossovered.budget.form</field>
+        <field name="model">crossovered.budget</field>
+        <field name="inherit_id" ref="account_budget.crossovered_budget_view_form"/>
+        <field name="arch" type="xml">
+        		<xpath expr="//button[@name='done']" position="after">
+        			<button name="agregar_aprobation" string="Agregar Aprobación" type="object" class="oe_highlight" groups="aprobaciones_it.group_aprobacion_user_id"/> 
+        		</xpath>
+        		<xpath expr="//notebook" position="inside">
+        			<page string="Aprobaciones">
+        				<group>
+        					<field name="aprobations" nolabel="1" readonly="1" context="{'form_view_ref':'aprobaciones_it.it_aprobacion_alone_users_wizard_form'}">
+        						<tree string="Aprobación">
+				                    <field name="fecha" readonly="1"/>
+				                    <field name="usuario" readonly="1"/>
+				                    <field name="cargo" readonly="1"/>
+				                    <field name="nombre"  readonly="1"/>
+				                    <field name="glosa" readonly="1"/>
+				                    <button name="do_eliminar" icon="gtk-remove" string="Eliminar" type="object" groups="aprobaciones_it.group_aprobacion_user_id"/>
+				                </tree>
+        					</field>
+        				</group>
+        			</page>
+                </xpath>
+        </field>
+    </record>
+
+
+
+
+    </data>
+</openerp>

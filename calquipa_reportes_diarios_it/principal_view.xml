@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+                                     <!-- anivi_coke_pulverizado_combustible -->
+        <record id="view_principal_tree" model="ir.ui.view">
+            <field name="name">principal.tree</field>
+            <field name="model">principal</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Principal" create="0" delete="0" editable="0">
+                    <field name="name" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>
