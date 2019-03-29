@@ -113,7 +113,7 @@ class rm_report_extraccion(models.Model):
 			12: "Diciembre",
 		}
 
-		periodos = self.env['account.period'].search([('fiscalyear_id'),'=',self.fiscal.id])
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.fiscal.id)])
 		ex = self.env['tipo.cambio.mexicano'].search([('period_id','in',periodos.ids)])
 
 		#tc_enero,tc_febrero,tc_marzo,tc_abril,tc_mayo,tc_junio,tc_julio,tc_agosto,tc_septiembre,tc_octubre,tc_noviembre,tc_diciembre = 0,0,0,0,0,0,0,0,0,0,0,0
