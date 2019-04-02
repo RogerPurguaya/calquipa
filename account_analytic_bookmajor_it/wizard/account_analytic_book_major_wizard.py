@@ -135,7 +135,7 @@ select periodo,libro,voucher,cuenta,descripcion,debe::numeric,haber::numeric,div
 			result = mod_obj.get_object_reference('account_analytic_bookmajor_it', 'action_account_analytic_book_major_it')
 			
 			id = result and result[1] or False
-			print id
+			#print id
 			return {
 				'domain' : filtro,
 				'type': 'ir.actions.act_window',
@@ -326,7 +326,7 @@ select periodo,libro,voucher,cuenta,descripcion,debe::numeric,haber::numeric,div
 			view_ref = mod_obj.get_object_reference('account_contable_book_it', 'export_file_save_action')
 			view_id = view_ref and view_ref[1] or False
 			result = act_obj.read( [view_id] )
-			print sfs_id
+			#print sfs_id
 
 			#import os
 			#os.system('c:\\eSpeak2\\command_line\\espeak.exe -ves-f1 -s 170 -p 100 "Se Realizo La exportación exitosamente Y A EDWARD NO LE GUSTA XDXDXDXDDDDDDDDDDDD" ')
