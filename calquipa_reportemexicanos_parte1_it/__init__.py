@@ -27,3 +27,8 @@ import reporte_pre_flujo_efectivo
 import reporte_flujo_efectivo
 import reporte_consolidado_flujo_efectivo
 import reporte_mexicano_extraccion_usd
+import reporte_mexicano_calcinacion_usd
+import reporte_mexicano_micronizado_usd
+import reporte_mexicano_trituracion_usd
+import reporte_mexicano_administracion_usd
+import reporte_mexicano_ventas_usd

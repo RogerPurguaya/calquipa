@@ -151,7 +151,7 @@ class rm_report_extraccion(models.Model):
 		self.total_general = 0
 		for i in self.conf_line_ids:
 			self.total_general += i.acumulado
-		print self.total_general
+		#print self.total_general
 	total_general = fields.Float('Total general', compute="get_total_general")
 
 	@api.one	
@@ -159,7 +159,7 @@ class rm_report_extraccion(models.Model):
 		self.total_promedio_general = 0
 		for i in self.conf_line_ids:
 			self.total_promedio_general += i.promedio
-		print self.total_promedio_general
+		#print self.total_promedio_general
 	total_promedio_general = fields.Float('Total general', compute="get_total_promedio_general")
 
 	@api.one
@@ -1647,7 +1647,7 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_extraccion_id = """ + str(sel
 		nombres = ["TRASPASO PROCESO ANTERIOR","PRODUCCION COSTO POR TONELADA","INVENTARIO INICIAL","COMPRAS","DISPONIBLE","ENVIO TR","TRASPASO A TRITURACION","TRASPASO A AGREGADOS","VENTAS","AJUSTE DE INVENTARIO","OTRAS SALIDAS","INVENTARIO FINAL"]
 		
 		data_final_pagina = self.get_pie_pagina()[0]
-		print "esto es lo raro",data_final_pagina
+		#print "esto es lo raro",data_final_pagina
 
 		for i in range(12):
 			worksheet.write(x,0, nombres[i], normal)

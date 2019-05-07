@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, exceptions
+from openerp import models, fields, api
 import base64
 from openerp.osv import osv
+
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -17,17 +18,12 @@ from reportlab.platypus import Paragraph, Table
 from reportlab.lib.units import  cm,mm
 from reportlab.lib.utils import simpleSplit
 from cgi import escape
-
 import decimal
-import calendar
 
-def dig_5(n):
-	return ("%5d" % n).replace(' ','0')
+class rm_report_administracion(models.Model):
+	_inherit= 'rm.report.administracion'
 
-class rm_report_extraccion(models.Model):
-	_inherit= 'rm.report.extraccion'
-
-	""" ----------------------------- REPORTE EXCEL USD----------------------------- """
+	""" ----------------------------- REPORTE EXCEL ----------------------------- """
 
 	@api.multi
 	def export_excel_usd(self):
@@ -46,8 +42,8 @@ class rm_report_extraccion(models.Model):
 		if not direccion:
 			raise osv.except_osv('Alerta!', u"No fue configurado el directorio para los archivos en Configuracion.")
 
-		workbook = Workbook(direccion +'Reporte_Extracción_USD.xlsx')
-		worksheet = workbook.add_worksheet(u"Extracción")
+		workbook = Workbook(direccion +'Reporte_Administración_USD.xlsx')
+		worksheet = workbook.add_worksheet(u"Administración")
 		bold = workbook.add_format({'bold': True})
 		normal = workbook.add_format()
 		boldbord = workbook.add_format({'bold': True})
@@ -62,9 +58,9 @@ class rm_report_extraccion(models.Model):
 		bord = workbook.add_format()
 		bord.set_border(style=1)
 		numberdos.set_border(style=1)
-		numbertres.set_border(style=1)	
+		numbertres.set_border(style=1)
 
-		numberdoscon = workbook.add_format({'num_format':'#,##0.00'})
+		numberdoscon = workbook.add_format({'num_format':'#,##0.00'})	
 
 		boldtotal = workbook.add_format({'bold': True})
 		boldtotal.set_align('right')
@@ -149,7 +145,7 @@ class rm_report_extraccion(models.Model):
 		worksheet.write(14,col, u'%  PROM', boldbord)
 		col+=1
 		
-		elements = self.env['rm.report.extraccion.line'].search([('rm_report_extraccion_id','=',self.id)]).sorted(key=lambda r: dig_5(r.tipo.order)+dig_5(r.grupo.order))
+		elements = self.env['rm.report.administracion.line'].search([('rm_report_administracion_id','=',self.id)]).sorted(key=lambda r: dig_5(r.tipo.order)+dig_5(r.grupo.order))
 		flag = True
 		n_grupo = None
 		n_tipo = None
@@ -475,17 +471,8 @@ class rm_report_extraccion(models.Model):
 		col += 1
 		worksheet.write(x,col, ((sub_tot[-1])), numberdos)
 		x += 1
-		
-		#lugar del error:
-		#correccion temporal:
-		title_tmp = ''
-		try:
-			title_tmp = n_tipo.titulo.upper()
-		except Exception as e:
-			print('Error: ',e)
-		#title_tmp = n_tipo.titulo.upper() if n_tipo.titulo else ''
-		worksheet.write(x,0, u"TOTAL " + title_tmp, boldtotal)
 
+		worksheet.write(x,0, u"TOTAL " + n_tipo.titulo.upper(), boldtotal)
 		col = 1
 		mon = 0
 		while mon+1 <= doce:
@@ -538,181 +525,12 @@ class rm_report_extraccion(models.Model):
 		worksheet.set_column('P:P', t)
 		worksheet.set_column('Q:Q', t)
 
-
-		x += 2
-		worksheet.write(x,0, u'Otros datos Informativos'.format(i.tipo.titulo), bold)
-		x += 1
-
-		nombres = ["TONELADAS PRODUCIDAS","COSTO PROCESO POR TONELADA", "COSTO POR TONELADA SIN EXPLOSIVOS", "COSTO DE EXPLOSIVOS", "COSTO LABORATORIO POR TON.", u"COSTO POR TON. SIN DEPRECIACIÓN"]
-		valores = [[0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0]]
-		valores = self.get_valores()[0]
-		for k in range(12):
-			if valores[0][k] == 0:
-				valores[1][k] = 0
-				valores[2][k] = 0
-				valores[3][k] = 0
-				valores[4][k] = 0
-				valores[5][k] = 0
-			else:
-				explosivo = self.env['rm.report.extraccion.line'].search( [('rm_report_extraccion_id','=',self.id),('pie_pagina','=','explosivo')] )
-				explosivo_val = 0
-				if len(explosivo) >0:
-					explosivo = explosivo[0]
-					if k == 0:
-						explosivo_val = explosivo.enero / exchange[1]
-					elif k== 1:
-						explosivo_val = explosivo.febrero / exchange[2]
-					elif k== 2:
-						explosivo_val = explosivo.marzo / exchange[3]
-					elif k== 3:
-						explosivo_val = explosivo.abril / exchange[4]
-					elif k== 4:
-						explosivo_val = explosivo.mayo / exchange[5]
-					elif k== 5:
-						explosivo_val = explosivo.junio / exchange[6]
-					elif k== 6:
-						explosivo_val = explosivo.julio / exchange[7]
-					elif k== 7:
-						explosivo_val = explosivo.agosto / exchange[8]
-					elif k== 8:
-						explosivo_val = explosivo.septiembre / exchange[9]
-					elif k== 9:
-						explosivo_val = explosivo.octubre / exchange[10]
-					elif k== 10:
-						explosivo_val = explosivo.noviembre / exchange[11]
-					elif k== 11:
-						explosivo_val = explosivo.diciembre / exchange[12]
-
-
-				laboratorio = self.env['rm.report.extraccion.line'].search( [('rm_report_extraccion_id','=',self.id),('pie_pagina','=','laboratorio')] )
-				laboratorio_val = 0
-				if len(laboratorio) >0:
-					laboratorio = laboratorio[0]
-					if k == 0:
-						laboratorio_val = laboratorio.enero / exchange[1]
-					elif k== 1:
-						laboratorio_val = laboratorio.febrero / exchange[2]
-					elif k== 2:
-						laboratorio_val = laboratorio.marzo / exchange[3]
-					elif k== 3:
-						laboratorio_val = laboratorio.abril / exchange[4]
-					elif k== 4:
-						laboratorio_val = laboratorio.mayo / exchange[5]
-					elif k== 5:
-						laboratorio_val = laboratorio.junio / exchange[6]
-					elif k== 6:
-						laboratorio_val = laboratorio.julio / exchange[7]
-					elif k== 7:
-						laboratorio_val = laboratorio.agosto / exchange[8]
-					elif k== 8:
-						laboratorio_val = laboratorio.septiembre / exchange[9]
-					elif k== 9:
-						laboratorio_val = laboratorio.octubre / exchange[10]
-					elif k== 10:
-						laboratorio_val = laboratorio.noviembre / exchange[11]
-					elif k== 11:
-						laboratorio_val = laboratorio.diciembre / exchange[12]
-
-
-				depreciacion = self.env['rm.report.extraccion.line'].search( [('rm_report_extraccion_id','=',self.id),('pie_pagina','=','depreciacion')] )
-				depreciacion_val = 0
-				for dep in depreciacion:
-					if k == 0:
-						depreciacion_val += dep.enero / exchange[1]
-					elif k== 1:
-						depreciacion_val += dep.febrero / exchange[2]
-					elif k== 2:
-						depreciacion_val += dep.marzo / exchange[3]
-					elif k== 3:
-						depreciacion_val += dep.abril / exchange[4]
-					elif k== 4:
-						depreciacion_val += dep.mayo / exchange[5]
-					elif k== 5:
-						depreciacion_val += dep.junio / exchange[6]
-					elif k== 6:
-						depreciacion_val += dep.julio / exchange[7]
-					elif k== 7:
-						depreciacion_val += dep.agosto / exchange[8]
-					elif k== 8:
-						depreciacion_val += dep.septiembre / exchange[9]
-					elif k== 9:
-						depreciacion_val += dep.octubre / exchange[10]
-					elif k== 10:
-						depreciacion_val += dep.noviembre / exchange[11]
-					elif k== 11:
-						depreciacion_val += dep.diciembre / exchange[12]
-
-				valores[1][k] = tot_tot_tot[k] / valores[0][k]
-				valores[2][k] = (tot_tot_tot[k] - explosivo_val )/valores[0][k]
-				valores[3][k] = explosivo_val / valores[0][k]
-				valores[4][k] = laboratorio_val / valores[0][k]
-				valores[5][k] = (tot_tot_tot[k] - (depreciacion_val))/valores[0][k]
-
-		
-		worksheet.write(x,0, u'CONCEPTO', boldbord)
-		col = 1
-		mon = 0
-		while mon+1 <= doce:
-			worksheet.write(x,col, u'{0}'.format(colum[mon+1]), boldbord)
-			col += 1
-			mon += 1
-
-		x += 1
-
-
-		for i in range(0,6):
-			worksheet.write(x,0, u'{0}'.format(nombres[i]), normal)
-			col = 1
-			mon = 0
-			while mon+1 <= doce:
-				worksheet.write(x,col, ((valores[i][mon])), numberdoscon)
-				col += 1
-				mon += 1
-			x += 1
-
-		x += 2
-		worksheet.write(x,0, u'Pie de Página', bold)
-		x += 1
-		worksheet.merge_range(x,0,x+1,0, u'CONCEPTO', merge_format)
-		worksheet.merge_range(x,1,x,3, u'MES ACTUAL', merge_format)
-		worksheet.merge_range(x,4,x,6, u'ACUMULADO', merge_format)
-		worksheet.write(x,7, u'TCVP', boldbord)
-		x += 1
-		worksheet.write(x,1, u'TONS', boldbord)
-		worksheet.write(x,2, u'PROMEDIO', boldbord)
-		worksheet.write(x,3, u'IMPORTE', boldbord)
-		worksheet.write(x,4, u'TONS', boldbord)
-		worksheet.write(x,5, u'PROMEDIO', boldbord)
-		worksheet.write(x,6, u'IMPORTE', boldbord)
-		tcvp =  self.env['tipo.cambio.mexicano'].search([('periodo_id','=',self.period_actual.id)])
-		if len(tcvp) != 1:
-			raise exceptions.Warning('No se ha encontrado el tipo de cambio promedio para el periodo: '
-				+str(self.period_actual.name)+ '\n o el T.C. para dicho periodo esta duplicado')
-		tcvp = tcvp[0].promedio_venta if tcvp[0].promedio_venta > 0 else 1
-		worksheet.write(x,7,tcvp , numberdoscon)
-		x += 1
-
-		nombres = ["TRASPASO PROCESO ANTERIOR","PRODUCCION COSTO POR TONELADA","INVENTARIO INICIAL","COMPRAS","DISPONIBLE","ENVIO TR","TRASPASO A TRITURACION","TRASPASO A AGREGADOS","VENTAS","AJUSTE DE INVENTARIO","OTRAS SALIDAS","INVENTARIO FINAL"]
-		
-		data_final_pagina = self.get_pie_pagina()[0]
-		#print "esto es lo raro",data_final_pagina
-
-		for i in range(12):
-			worksheet.write(x,0, nombres[i], normal)
-			worksheet.write(x,1, (data_final_pagina[i][0]), numberdoscon)
-			worksheet.write(x,2, ((data_final_pagina[i][1]))/tcvp, numberdoscon)
-			worksheet.write(x,3, ((data_final_pagina[i][2]))/tcvp, numberdoscon)
-			worksheet.write(x,4, ((data_final_pagina[i][3]))/tcvp, numberdoscon)
-			worksheet.write(x,5, ((data_final_pagina[i][4]))/tcvp, numberdoscon)
-			worksheet.write(x,6, ((data_final_pagina[i][5]))/tcvp, numberdoscon)
-			x += 1
-
 		workbook.close()
 		
-		f = open(direccion + 'Reporte_Extracción_USD.xlsx', 'rb')
+		f = open(direccion + 'Reporte_Administración_USD.xlsx', 'rb')
 		
 		vals = {
-			'output_name': 'Reportes_Mexicanos_Extrracción_USD.xlsx',
+			'output_name': 'Reporte_Administración_USD.xlsx',
 			'output_file': base64.encodestring(''.join(f.readlines())),		
 		}
 

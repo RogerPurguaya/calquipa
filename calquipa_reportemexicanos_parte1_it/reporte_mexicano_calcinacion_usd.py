@@ -25,276 +25,13 @@ import calendar
 def dig_5(n):
 	return ("%5d" % n).replace(' ','0')
 
-class grupo_report_calcinacion(models.Model):
-	_name = 'grupo.report.calcinacion'
-
-	titulo = fields.Char('Name',required=True)
-	order = fields.Integer('Order',required=True)
-
-	@api.one
-	def get_name_person(self):
-		self.name = str(self.order) + '-' + self.titulo
-
-	name = fields.Char('Name',compute="get_name_person")
-
-
-class tipo_report_calcinacion(models.Model):
-	_name = 'tipo.report.calcinacion'
-
-	titulo = fields.Char('Name',required=True)
-	order = fields.Integer('Order',required=True)
-
-	@api.one
-	def get_name_person(self):
-		self.name = str(self.order) + '-' + self.titulo
-
-	name = fields.Char('Name',compute="get_name_person")
-
-
-class rm_report_calcinacion_line(models.Model):
-	_name = 'rm.report.calcinacion.line'
-
-
-	rm_report_calcinacion_id = fields.Many2one('rm.report.calcinacion','Cabezera')
-
-		
-
-	cuenta = fields.Char('Cuenta',required=False)
-	tipo = fields.Many2one('tipo.report.calcinacion','Tipo',required=True)
-	concepto = fields.Char('Concepto',required=True)
-	grupo = fields.Many2one('grupo.report.calcinacion','Grupo',required=True)
-	pie_pagina = fields.Selection( [('explosivo','Explosivo'),('laboratorio','Laboratorio'),('depreciacion',u'Depreciación')],'Pie de Página' )
-	codigo_rel = fields.Char(u'Código')
-
-	enero = fields.Float('Enero',digits=(12,2),readonly=True,default=0)
-	febrero = fields.Float('Febrero',digits=(12,2),readonly=True,default=0)
-	marzo = fields.Float('Marzo',digits=(12,2),readonly=True,default=0)
-	abril = fields.Float('Abril',digits=(12,2),readonly=True,default=0)
-	mayo = fields.Float('Mayo',digits=(12,2),readonly=True,default=0)
-	junio = fields.Float('Junio',digits=(12,2),readonly=True,default=0)
-	julio = fields.Float('Julio',digits=(12,2),readonly=True,default=0)
-	agosto = fields.Float('Agosto',digits=(12,2),readonly=True,default=0)
-	septiembre = fields.Float('Septiembre',digits=(12,2),readonly=True,default=0)
-	octubre = fields.Float('Octubre',digits=(12,2),readonly=True,default=0)
-	noviembre = fields.Float('Noviembre',digits=(12,2),readonly=True,default=0)
-	diciembre = fields.Float('Diciembre',digits=(12,2),readonly=True,default=0)
-
-	@api.one
-	def get_monto(self):
-		m = str(self.rm_report_calcinacion_id.period_actual.code).split('/')
-		m = int(m[0])
-		mont = 0
-		cant = {
-			1: self.enero,
-			2: self.febrero,
-			3: self.marzo,
-			4: self.abril,
-			5: self.mayo,
-			6: self.junio,
-			7: self.julio,
-			8: self.agosto,
-			9: self.septiembre,
-			10: self.octubre,
-			11: self.noviembre,
-			12: self.diciembre,
-		}
-		mont = cant[int(self.rm_report_calcinacion_id.period_actual.code.split('/')[0])]
-		self.monto = mont
-	monto = fields.Float('Monto', digits=(12,2), readonly=True, default=0, compute="get_monto")
-
-	@api.one
-	def get_acumulado(self):
-		self.acumulado = self.enero + self.febrero + self.marzo + self.abril + self.mayo + self.junio + self.julio + self.agosto + self.septiembre + self.octubre + self.noviembre + self.diciembre
-	acumulado = fields.Float('Acumulado', readonly=True, default=0, compute="get_acumulado")
-
-	@api.one
-	def get_acumulado_pciento(self):
-		if self.acumulado != 0:
-			self.acumulado_pciento = self.acumulado / self.rm_report_calcinacion_id.total_general
-		else:
-			self.acumulado_pciento = 0
-	acumulado_pciento = fields.Float('%  ACUM', readonly=True, compute="get_acumulado_pciento")
-
-	@api.one
-	def get_promedio(self):
-		if self.acumulado != 0:
-			self.promedio = self.acumulado / 1
-		else:
-			self.promedio = 0
-	promedio = fields.Float('Promedio', readonly=True, compute="get_promedio")
-
-	@api.one
-	def get_promedio_pciento(self):
-		if self.acumulado != 0:
-			self.promedio_pciento = self.promedio / self.rm_report_calcinacion_id.total_promedio_general
-		else:
-			self.promedio_pciento = 0
-	promedio_pciento = fields.Float('%  PROM', readonly=True, compute="get_promedio_pciento")
-
-
 class rm_report_calcinacion(models.Model):
-	_name= 'rm.report.calcinacion'
+	_inherit= 'rm.report.calcinacion'
 
-	fiscal = fields.Many2one('account.fiscalyear','Año fiscal',required=True)
-	sitio = fields.Char('Sitio',required=False)
-	centro_de_costo = fields.Char('Centro de Costo',readonly=True,default='Calcinación')
-	proposito = fields.Char('Propósito')
-	fecha_emision_reporte = fields.Date('Fecha de Emisión del Reporte',required=True)
-	usuario = fields.Many2one('res.users','Usuario',readonly=True)
-	conf_line_ids = fields.One2many('rm.report.calcinacion.line','rm_report_calcinacion_id','Lineas de Configuración')
-	period_actual = fields.Many2one('account.period','Periodo Actual Informe',required=True)
-
-	@api.one
-	def get_total_general(self):
-		self.total_general = 0
-		for i in self.conf_line_ids:
-			self.total_general += i.acumulado
-		#print self.total_general
-	total_general = fields.Float('Total general', compute="get_total_general")
-
-	@api.one	
-	def get_total_promedio_general(self):
-		self.total_promedio_general = 0
-		for i in self.conf_line_ids:
-			self.total_promedio_general += i.promedio
-		#print self.total_promedio_general
-	total_promedio_general = fields.Float('Total general', compute="get_total_promedio_general")
-
-	@api.one
-	def unlink(self):
-		if len(self.conf_line_ids) > 0:
-			raise osv.except_osv('Alerta!', "No se puede eliminar un reporte que contenga lineas.")
-		return super(rm_report_calcinacion,self).unlink()
-
-	@api.one
-	def copy(self,default):
-		t= super(rm_report_calcinacion,self).copy(default)
-		for i in self.conf_line_ids:
-			vals_i = {
-				'rm_report_calcinacion_id':t.id,
-				'cuenta':i.cuenta,
-				'tipo':i.tipo.id,
-				'concepto':i.concepto,
-				'grupo':i.grupo.id,
-				'enero':0,
-				'febrero':0,
-				'marzo':0,
-				'abril':0,
-				'mayo':0,
-				'junio':0,
-				'julio':0,
-				'agosto':0,
-				'septiembre':0,
-				'octubre':0,
-				'noviembre':0,
-				'diciembre':0,
-				'pie_pagina':i.pie_pagina,
-			}
-			self.env['rm.report.calcinacion.line'].create(vals_i)
-		return t
-
-	@api.one
-	def get_name_set(self):
-		self.name = self.fiscal.name + '-'+ self.centro_de_costo
-
-	name = fields.Char('Nombre',compute='get_name_set')
-
-
-	@api.model
-	def create(self,vals):
-		vals['usuario']= self.env.uid
-		return super(rm_report_calcinacion,self).create(vals)
-
-
-	@api.one
-	def calculate(self):
-		m = str(self.period_actual.code).split('/')
-		limite = m[1]+ m[0]
-		
-
-		self.env.cr.execute("""
-update rm_report_calcinacion_line opt set
-enero= 0, febrero = 0,
-marzo= 0, abril= 0,
-mayo= 0, junio= 0,
-julio= 0, agosto= 0,
-septiembre= 0, octubre= 0,
-noviembre= 0, diciembre= 0
-where opt.rm_report_calcinacion_id = """ + str(self.id) + """
-""")
-
-
-		self.env.cr.execute("""
-update rm_report_calcinacion_line opt set
-enero= saldos.saldo01, febrero = saldos.saldo02,
-marzo= saldos.saldo03, abril= saldos.saldo04,
-mayo= saldos.saldo05, junio= saldos.saldo06,
-julio= saldos.saldo07, agosto= saldos.saldo08,
-septiembre= saldos.saldo09, octubre= saldos.saldo10,
-noviembre= saldos.saldo11, diciembre= saldos.saldo12
-from (
-select t1.id,left(t1.code,9)as nivel1,left(t1.code,3) as nivel2,left(t1.code,6) as nivel3,t1.code,t1.name,t1.type,
-coalesce(saldo01,0) as saldo01,coalesce(saldo02,0) as saldo02,coalesce(saldo03,0) as saldo03,coalesce(saldo04,0) as saldo04,
-coalesce(saldo05,0) as saldo05,coalesce(saldo06,0) as saldo06,coalesce(saldo07,0) as saldo07,coalesce(saldo08,0) as saldo08,
-coalesce(saldo09,0) as saldo09,coalesce(saldo10,0) as saldo10,coalesce(saldo11,0) as saldo11,coalesce(saldo12,0) as saldo12,
-saldo01+saldo02+saldo03+saldo04+saldo05+saldo06+saldo07+saldo08+saldo09+saldo10+saldo11+saldo12 as total from account_account t1
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo01 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '01/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t2 on t2.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo02 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '02/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t3 on t3.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo03 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '03/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t4 on t4.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo04 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '04/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t5 on t5.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo05 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '05/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t6 on t6.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo06 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '06/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t7 on t7.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo07 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '07/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t8 on t8.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo08 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '08/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t9 on t9.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo09 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '09/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t10 on t10.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo10 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '10/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t11 on t11.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo11 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '11/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t12 on t12.cuenta= left(t1.code,9)
-left join (select left(aa.code,9) as cuenta,sum(debit)-sum(credit) as saldo12 from account_move_line aml inner join account_move am on am.id = aml.move_id inner join account_account aa on aa.id = aml.account_id inner join account_period ap on ap.id = am.period_id and ap.date_stop <= '""" +str(self.period_actual.date_stop)+ """'::date and ap.code = '12/""" +str(self.period_actual.code).split('/')[1]+ """' where am.state != 'draft' group by left(aa.code,9)) t13 on t13.cuenta= left(t1.code,9)
-where t1.type<>'view') saldos
-where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(self.id) + """
-			""")
-
-
-
-
-	@api.one
-	def get_valores(self):
-		rpt = []
-		periodos = []
-		ini = '01/' + self.period_actual.code.split('/')[1]
-		periodos.append( self.env['account.period'].search( [('code','=',ini)] )[0] )
-		pos = 2
-
-		while ini != self.period_actual.code:
-			ini = ('%2d'%pos).replace(' ','0') + '/' + self.period_actual.code.split('/')[1]
-			pos += 1
-			periodos.append( self.env['account.period'].search( [('code','=',ini)] )[0] )
-
-		for i in periodos:
-			cp_obj = self.env['costos.produccion'].search( [('periodo','=',i.id)] )
-			if len(cp_obj) >0:
-				cp_obj = cp_obj[0]		
-				#### la primera linea
-				rpt.append( cp_obj.calci_pro_ton )
-				
-			else:
-				rpt.append( 0 )
-
-		for i in range(pos,13):
-			rpt.append ( 0 )
-
-		rpt = [rpt]
-		rpt.append ([0,0,0,0,0,0,0,0,0,0,0,0] )
-		rpt.append ([0,0,0,0,0,0,0,0,0,0,0,0] )
-		rpt.append ([0,0,0,0,0,0,0,0,0,0,0,0] )
-		rpt.append ([0,0,0,0,0,0,0,0,0,0,0,0] )
-		rpt.append ([0,0,0,0,0,0,0,0,0,0,0,0] )
-
-		return rpt
 	""" ----------------------------- REPORTE EXCEL ----------------------------- """
 
 	@api.multi
-	def export_excel(self):
+	def export_excel_usd(self):
 		import io
 		from xlsxwriter.workbook import Workbook
 
@@ -310,7 +47,7 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 		if not direccion:
 			raise osv.except_osv('Alerta!', u"No fue configurado el directorio para los archivos en Configuracion.")
 
-		workbook = Workbook(direccion +'Reporte_Calcinación.xlsx')
+		workbook = Workbook(direccion +'Reporte_Calcinación_USD.xlsx')
 		worksheet = workbook.add_worksheet("Calcinación")
 		bold = workbook.add_format({'bold': True})
 		normal = workbook.add_format()
@@ -357,29 +94,78 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 		worksheet.write(5,12, self.fecha_emision_reporte if self.fecha_emision_reporte else '', normal)
 		worksheet.write(6,8, 'Usuario:', bold)
 		worksheet.write(6,12, self.usuario.name if self.usuario.name else '', normal)
-
+		worksheet.write(7,8, 'Moneda:', bold)
+		worksheet.write(7,12,u'Dólares', normal)
+		# colum = {
+		# 	1: "TIPO COSTO",
+		# 	2: "Enero",
+		# 	3: "Febrero",
+		# 	4: "Marzo",
+		# 	5: "Abril",
+		# 	6: "Mayo",
+		# 	7: "Junio",
+		# 	8: "Julio",
+		# 	9: "Agosto",
+		# 	10: "Septiembre",
+		# 	11: "Octubre",
+		# 	12: "Noviembre",
+		# 	13: "Diciembre",
+		# 	14: "Acumulado",
+		# 	15: "%  ACUM",
+		# 	16: "Promedio",
+		# 	17: "%  PROM"
+		# }
 		colum = {
-			1: "TIPO COSTO",
-			2: "Enero",
-			3: "Febrero",
-			4: "Marzo",
-			5: "Abril",
-			6: "Mayo",
-			7: "Junio",
-			8: "Julio",
-			9: "Agosto",
-			10: "Septiembre",
-			11: "Octubre",
-			12: "Noviembre",
-			13: "Diciembre",
-			14: "Acumulado",
-			15: "%  ACUM",
-			16: "Promedio",
-			17: "%  PROM"
+			1: "Enero",
+			2: "Febrero",
+			3: "Marzo",
+			4: "Abril",
+			5: "Mayo",
+			6: "Junio",
+			7: "Julio",
+			8: "Agosto",
+			9: "Septiembre",
+			10: "Octubre",
+			11: "Noviembre",
+			12: "Diciembre",
 		}
 
-		for k,v in colum.items():
-			worksheet.write(14,k-1, u'{0}'.format(v), boldbord)
+		# for k,v in colum.items():
+		# 	worksheet.write(14,k-1, u'{0}'.format(v), boldbord)
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+
+		exchange = {
+			1:ex.filtered(lambda x:x.periodo_id.name[:3] == '01/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '01/'))==1 else 1 ,
+			2:ex.filtered(lambda x:x.periodo_id.name[:3] == '02/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '02/'))==1 else 1 ,
+			3:ex.filtered(lambda x:x.periodo_id.name[:3] == '03/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '03/'))==1 else 1 ,
+			4:ex.filtered(lambda x:x.periodo_id.name[:3] == '04/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '04/'))==1 else 1 ,
+			5:ex.filtered(lambda x:x.periodo_id.name[:3] == '05/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '05/'))==1 else 1 ,
+			6:ex.filtered(lambda x:x.periodo_id.name[:3] == '06/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '06/'))==1 else 1 ,
+			7:ex.filtered(lambda x:x.periodo_id.name[:3] == '07/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '07/'))==1 else 1 ,
+			8:ex.filtered(lambda x:x.periodo_id.name[:3] == '08/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '08/'))==1 else 1 ,
+			9:ex.filtered(lambda x:x.periodo_id.name[:3] == '09/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '09/'))==1 else 1 ,
+			10:ex.filtered(lambda x:x.periodo_id.name[:3] == '10/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '10/'))==1 else 1 ,
+			11:ex.filtered(lambda x:x.periodo_id.name[:3] == '11/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '11/'))==1 else 1 ,
+			12:ex.filtered(lambda x:x.periodo_id.name[:3] == '12/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '12/'))==1 else 1 ,
+		}
+
+		worksheet.write(14,0, u'TIPO COSTO', boldbord)
+		col = 1
+		mon = 0
+		while mon+1 <= doce:
+			worksheet.write(13,col, exchange[mon+1] if exchange[mon+1] > 1 else '', numberdoscon)
+			worksheet.write(14,col, u'{0}'.format(colum[mon+1]), boldbord)
+			col += 1
+			mon += 1
+		worksheet.write(14,col, u'Acumulado', boldbord)
+		col+=1
+		worksheet.write(14,col, u'%  ACUM', boldbord)
+		col+=1
+		worksheet.write(14,col, u'Promedio', boldbord)
+		col+=1
+		worksheet.write(14,col, u'%  PROM', boldbord)
+		col+=1
 
 
 		elements = self.env['rm.report.calcinacion.line'].search([('rm_report_calcinacion_id','=',self.id)]).sorted(key=lambda r: dig_5(r.tipo.order)+dig_5(r.grupo.order))
@@ -481,34 +267,34 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 				worksheet.write(x,0, u'{0}'.format(i.grupo.titulo), bold)
 				x += 1
 				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)
-				worksheet.write(x,1, ((i.enero)), numberdoscon)
-				worksheet.write(x,2, ((i.febrero)), numberdoscon)
-				worksheet.write(x,3, ((i.marzo)), numberdoscon)
-				worksheet.write(x,4, ((i.abril)), numberdoscon)
-				worksheet.write(x,5, ((i.mayo)), numberdoscon)
-				worksheet.write(x,6, ((i.junio)), numberdoscon)
-				worksheet.write(x,7, ((i.julio)), numberdoscon)
-				worksheet.write(x,8, ((i.agosto)), numberdoscon)
-				worksheet.write(x,9, ((i.septiembre)), numberdoscon)
-				worksheet.write(x,10, ((i.octubre)), numberdoscon)
-				worksheet.write(x,11, ((i.noviembre)), numberdoscon)
-				worksheet.write(x,12, ((i.diciembre)), numberdoscon)
+				worksheet.write(x,1, ((i.enero)/exchange[1]), numberdoscon)
+				worksheet.write(x,2, ((i.febrero)/exchange[2]), numberdoscon)
+				worksheet.write(x,3, ((i.marzo)/exchange[3]), numberdoscon)
+				worksheet.write(x,4, ((i.abril)/exchange[4]), numberdoscon)
+				worksheet.write(x,5, ((i.mayo)/exchange[5]), numberdoscon)
+				worksheet.write(x,6, ((i.junio)/exchange[6]), numberdoscon)
+				worksheet.write(x,7, ((i.julio)/exchange[7]), numberdoscon)
+				worksheet.write(x,8, ((i.agosto)/exchange[8]), numberdoscon)
+				worksheet.write(x,9, ((i.septiembre)/exchange[9]), numberdoscon)
+				worksheet.write(x,10, ((i.octubre)/exchange[10]), numberdoscon)
+				worksheet.write(x,11, ((i.noviembre)/exchange[11]), numberdoscon)
+				worksheet.write(x,12, ((i.diciembre)/exchange[12]), numberdoscon)
 				worksheet.write(x,13, ((i.acumulado)), numberdoscon)
 				worksheet.write(x,14, ((i.acumulado_pciento)), numberdoscon)
 				worksheet.write(x,15, ((i.promedio)), numberdoscon)
 				worksheet.write(x,16, ((i.promedio_pciento)), numberdoscon)
-				sub_tot[0] += i.enero
-				sub_tot[1] += i.febrero
-				sub_tot[2] += i.marzo
-				sub_tot[3] += i.abril
-				sub_tot[4] += i.mayo
-				sub_tot[5] += i.junio
-				sub_tot[6] += i.julio
-				sub_tot[7] += i.agosto
-				sub_tot[8] += i.septiembre
-				sub_tot[9] += i.octubre
-				sub_tot[10] += i.noviembre
-				sub_tot[11] += i.diciembre
+				sub_tot[0] += i.enero / exchange[1]
+				sub_tot[1] += i.febrero / exchange[2]
+				sub_tot[2] += i.marzo / exchange[3]
+				sub_tot[3] += i.abril / exchange[4]
+				sub_tot[4] += i.mayo / exchange[5]
+				sub_tot[5] += i.junio / exchange[6]
+				sub_tot[6] += i.julio / exchange[7]
+				sub_tot[7] += i.agosto / exchange[8]
+				sub_tot[8] += i.septiembre / exchange[9]
+				sub_tot[9] += i.octubre / exchange[10]
+				sub_tot[10] += i.noviembre / exchange[11]
+				sub_tot[11] += i.diciembre / exchange[12]
 				sub_tot[12] += i.acumulado
 				sub_tot[13] += i.acumulado_pciento
 				sub_tot[14] += i.promedio
@@ -556,34 +342,34 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 				x += 1
 				
 				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)
-				worksheet.write(x,1, ((i.enero)), numberdoscon)
-				worksheet.write(x,2, ((i.febrero)), numberdoscon)
-				worksheet.write(x,3, ((i.marzo)), numberdoscon)
-				worksheet.write(x,4, ((i.abril)), numberdoscon)
-				worksheet.write(x,5, ((i.mayo)), numberdoscon)
-				worksheet.write(x,6, ((i.junio)), numberdoscon)
-				worksheet.write(x,7, ((i.julio)), numberdoscon)
-				worksheet.write(x,8, ((i.agosto)), numberdoscon)
-				worksheet.write(x,9, ((i.septiembre)), numberdoscon)
-				worksheet.write(x,10, ((i.octubre)), numberdoscon)
-				worksheet.write(x,11, ((i.noviembre)), numberdoscon)
-				worksheet.write(x,12, ((i.diciembre)), numberdoscon)
+				worksheet.write(x,1, ((i.enero)/exchange[1]), numberdoscon)
+				worksheet.write(x,2, ((i.febrero)/exchange[2]), numberdoscon)
+				worksheet.write(x,3, ((i.marzo)/exchange[3]), numberdoscon)
+				worksheet.write(x,4, ((i.abril)/exchange[4]), numberdoscon)
+				worksheet.write(x,5, ((i.mayo)/exchange[5]), numberdoscon)
+				worksheet.write(x,6, ((i.junio)/exchange[6]), numberdoscon)
+				worksheet.write(x,7, ((i.julio)/exchange[7]), numberdoscon)
+				worksheet.write(x,8, ((i.agosto)/exchange[8]), numberdoscon)
+				worksheet.write(x,9, ((i.septiembre)/exchange[9]), numberdoscon)
+				worksheet.write(x,10, ((i.octubre)/exchange[10]), numberdoscon)
+				worksheet.write(x,11, ((i.noviembre)/exchange[11]), numberdoscon)
+				worksheet.write(x,12, ((i.diciembre)/exchange[12]), numberdoscon)
 				worksheet.write(x,13, ((i.acumulado)), numberdoscon)
 				worksheet.write(x,14, ((i.acumulado_pciento)), numberdoscon)
 				worksheet.write(x,15, ((i.promedio)), numberdoscon)
 				worksheet.write(x,16, ((i.promedio_pciento)), numberdoscon)
-				sub_tot[0] += i.enero
-				sub_tot[1] += i.febrero
-				sub_tot[2] += i.marzo
-				sub_tot[3] += i.abril
-				sub_tot[4] += i.mayo
-				sub_tot[5] += i.junio
-				sub_tot[6] += i.julio
-				sub_tot[7] += i.agosto
-				sub_tot[8] += i.septiembre
-				sub_tot[9] += i.octubre
-				sub_tot[10] += i.noviembre
-				sub_tot[11] += i.diciembre
+				sub_tot[0] += i.enero / exchange[1]
+				sub_tot[1] += i.febrero / exchange[2]
+				sub_tot[2] += i.marzo / exchange[3]
+				sub_tot[3] += i.abril / exchange[4]
+				sub_tot[4] += i.mayo / exchange[5]
+				sub_tot[5] += i.junio / exchange[6]
+				sub_tot[6] += i.julio / exchange[7]
+				sub_tot[7] += i.agosto / exchange[8]
+				sub_tot[8] += i.septiembre / exchange[9]
+				sub_tot[9] += i.octubre / exchange[10]
+				sub_tot[10] += i.noviembre / exchange[11]
+				sub_tot[11] += i.diciembre / exchange[12]
 				sub_tot[12] += i.acumulado
 				sub_tot[13] += i.acumulado_pciento
 				sub_tot[14] += i.promedio
@@ -593,34 +379,34 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 			else:
 				
 				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)
-				worksheet.write(x,1, ((i.enero)), numberdoscon)
-				worksheet.write(x,2, ((i.febrero)), numberdoscon)
-				worksheet.write(x,3, ((i.marzo)), numberdoscon)
-				worksheet.write(x,4, ((i.abril)), numberdoscon)
-				worksheet.write(x,5, ((i.mayo)), numberdoscon)
-				worksheet.write(x,6, ((i.junio)), numberdoscon)
-				worksheet.write(x,7, ((i.julio)), numberdoscon)
-				worksheet.write(x,8, ((i.agosto)), numberdoscon)
-				worksheet.write(x,9, ((i.septiembre)), numberdoscon)
-				worksheet.write(x,10, ((i.octubre)), numberdoscon)
-				worksheet.write(x,11, ((i.noviembre)), numberdoscon)
-				worksheet.write(x,12, ((i.diciembre)), numberdoscon)
+				worksheet.write(x,1, ((i.enero)/exchange[1]), numberdoscon)
+				worksheet.write(x,2, ((i.febrero)/exchange[2]), numberdoscon)
+				worksheet.write(x,3, ((i.marzo)/exchange[3]), numberdoscon)
+				worksheet.write(x,4, ((i.abril)/exchange[4]), numberdoscon)
+				worksheet.write(x,5, ((i.mayo)/exchange[5]), numberdoscon)
+				worksheet.write(x,6, ((i.junio)/exchange[6]), numberdoscon)
+				worksheet.write(x,7, ((i.julio)/exchange[7]), numberdoscon)
+				worksheet.write(x,8, ((i.agosto)/exchange[8]), numberdoscon)
+				worksheet.write(x,9, ((i.septiembre)/exchange[9]), numberdoscon)
+				worksheet.write(x,10, ((i.octubre)/exchange[10]), numberdoscon)
+				worksheet.write(x,11, ((i.noviembre)/exchange[11]), numberdoscon)
+				worksheet.write(x,12, ((i.diciembre)/exchange[12]), numberdoscon)
 				worksheet.write(x,13, ((i.acumulado)), numberdoscon)
 				worksheet.write(x,14, ((i.acumulado_pciento)), numberdoscon)
 				worksheet.write(x,15, ((i.promedio)), numberdoscon)
 				worksheet.write(x,16, ((i.promedio_pciento)), numberdoscon)
-				sub_tot[0] += i.enero
-				sub_tot[1] += i.febrero
-				sub_tot[2] += i.marzo
-				sub_tot[3] += i.abril
-				sub_tot[4] += i.mayo
-				sub_tot[5] += i.junio
-				sub_tot[6] += i.julio
-				sub_tot[7] += i.agosto
-				sub_tot[8] += i.septiembre
-				sub_tot[9] += i.octubre
-				sub_tot[10] += i.noviembre
-				sub_tot[11] += i.diciembre
+				sub_tot[0] += i.enero / exchange[1]
+				sub_tot[1] += i.febrero / exchange[2]
+				sub_tot[2] += i.marzo / exchange[3]
+				sub_tot[3] += i.abril / exchange[4]
+				sub_tot[4] += i.mayo / exchange[5]
+				sub_tot[5] += i.junio / exchange[6]
+				sub_tot[6] += i.julio / exchange[7]
+				sub_tot[7] += i.agosto / exchange[8]
+				sub_tot[8] += i.septiembre / exchange[9]
+				sub_tot[9] += i.octubre / exchange[10]
+				sub_tot[10] += i.noviembre / exchange[11]
+				sub_tot[11] += i.diciembre / exchange[12]
 				sub_tot[12] += i.acumulado
 				sub_tot[13] += i.acumulado_pciento
 				sub_tot[14] += i.promedio
@@ -760,29 +546,29 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 				if len(explosivo) >0:
 					explosivo = explosivo[0]
 					if k == 0:
-						explosivo_val = explosivo.enero
+						explosivo_val = explosivo.enero / exchange[1]
 					elif k== 1:
-						explosivo_val = explosivo.febrero
+						explosivo_val = explosivo.febrero / exchange[2]
 					elif k== 2:
-						explosivo_val = explosivo.marzo
+						explosivo_val = explosivo.marzo / exchange[3]
 					elif k== 3:
-						explosivo_val = explosivo.abril
+						explosivo_val = explosivo.abril / exchange[4]
 					elif k== 4:
-						explosivo_val = explosivo.mayo
+						explosivo_val = explosivo.mayo / exchange[5]
 					elif k== 5:
-						explosivo_val = explosivo.junio
+						explosivo_val = explosivo.junio / exchange[6]
 					elif k== 6:
-						explosivo_val = explosivo.julio
+						explosivo_val = explosivo.julio / exchange[7]
 					elif k== 7:
-						explosivo_val = explosivo.agosto
+						explosivo_val = explosivo.agosto / exchange[8]
 					elif k== 8:
-						explosivo_val = explosivo.septiembre
+						explosivo_val = explosivo.septiembre / exchange[9]
 					elif k== 9:
-						explosivo_val = explosivo.octubre
+						explosivo_val = explosivo.octubre / exchange[10]
 					elif k== 10:
-						explosivo_val = explosivo.noviembre
+						explosivo_val = explosivo.noviembre / exchange[11]
 					elif k== 11:
-						explosivo_val = explosivo.diciembre
+						explosivo_val = explosivo.diciembre / exchange[12]
 
 
 				laboratorio = self.env['rm.report.calcinacion.line'].search( [('rm_report_calcinacion_id','=',self.id),('pie_pagina','=','laboratorio')] )
@@ -790,58 +576,58 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 				if len(laboratorio) >0:
 					laboratorio = laboratorio[0]
 					if k == 0:
-						laboratorio_val = laboratorio.enero
+						laboratorio_val = laboratorio.enero/exchange[1]
 					elif k== 1:
-						laboratorio_val = laboratorio.febrero
+						laboratorio_val = laboratorio.febrero/exchange[2]
 					elif k== 2:
-						laboratorio_val = laboratorio.marzo
+						laboratorio_val = laboratorio.marzo/exchange[3]
 					elif k== 3:
-						laboratorio_val = laboratorio.abril
+						laboratorio_val = laboratorio.abril/exchange[4]
 					elif k== 4:
-						laboratorio_val = laboratorio.mayo
+						laboratorio_val = laboratorio.mayo/exchange[5]
 					elif k== 5:
-						laboratorio_val = laboratorio.junio
+						laboratorio_val = laboratorio.junio/exchange[6]
 					elif k== 6:
-						laboratorio_val = laboratorio.julio
+						laboratorio_val = laboratorio.julio/exchange[7]
 					elif k== 7:
-						laboratorio_val = laboratorio.agosto
+						laboratorio_val = laboratorio.agosto/exchange[8]
 					elif k== 8:
-						laboratorio_val = laboratorio.septiembre
+						laboratorio_val = laboratorio.septiembre/exchange[9]
 					elif k== 9:
-						laboratorio_val = laboratorio.octubre
+						laboratorio_val = laboratorio.octubre/exchange[10]
 					elif k== 10:
-						laboratorio_val = laboratorio.noviembre
+						laboratorio_val = laboratorio.noviembre/exchange[11]
 					elif k== 11:
-						laboratorio_val = laboratorio.diciembre
+						laboratorio_val = laboratorio.diciembre/exchange[12]
 
 
 				depreciacion = self.env['rm.report.calcinacion.line'].search( [('rm_report_calcinacion_id','=',self.id),('pie_pagina','=','depreciacion')] )
 				depreciacion_val = 0
 				for dep in depreciacion:
 					if k == 0:
-						depreciacion_val += dep.enero
+						depreciacion_val += dep.enero/exchange[1]
 					elif k== 1:
-						depreciacion_val += dep.febrero
+						depreciacion_val += dep.febrero/exchange[2]
 					elif k== 2:
-						depreciacion_val += dep.marzo
+						depreciacion_val += dep.marzo/exchange[3]
 					elif k== 3:
-						depreciacion_val += dep.abril
+						depreciacion_val += dep.abril/exchange[4]
 					elif k== 4:
-						depreciacion_val += dep.mayo
+						depreciacion_val += dep.mayo/exchange[5]
 					elif k== 5:
-						depreciacion_val += dep.junio
+						depreciacion_val += dep.junio/exchange[6]
 					elif k== 6:
-						depreciacion_val += dep.julio
+						depreciacion_val += dep.julio/exchange[7]
 					elif k== 7:
-						depreciacion_val += dep.agosto
+						depreciacion_val += dep.agosto/exchange[8]
 					elif k== 8:
-						depreciacion_val += dep.septiembre
+						depreciacion_val += dep.septiembre/exchange[9]
 					elif k== 9:
-						depreciacion_val += dep.octubre
+						depreciacion_val += dep.octubre/exchange[10]
 					elif k== 10:
-						depreciacion_val += dep.noviembre
+						depreciacion_val += dep.noviembre/exchange[11]
 					elif k== 11:
-						depreciacion_val += dep.diciembre
+						depreciacion_val += dep.diciembre/exchange[12]
 
 				valores[1][k] = tot_tot_tot[k] / valores[0][k]
 				valores[2][k] = (tot_tot_tot[k] - explosivo_val )/valores[0][k]
@@ -886,6 +672,7 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 		worksheet.merge_range(x,0,x+1,0, u'CONCEPTO', merge_format)
 		worksheet.merge_range(x,1,x,3, u'MES ACTUAL', merge_format)
 		worksheet.merge_range(x,4,x,6, u'ACUMULADO', merge_format)
+		worksheet.write(x,7, u'TCVP', boldbord)
 		x += 1
 		worksheet.write(x,1, u'TONS', boldbord)
 		worksheet.write(x,2, u'PROMEDIO', boldbord)
@@ -893,195 +680,33 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 		worksheet.write(x,4, u'TONS', boldbord)
 		worksheet.write(x,5, u'PROMEDIO', boldbord)
 		worksheet.write(x,6, u'IMPORTE', boldbord)
+		tcvp =  self.env['tipo.cambio.mexicano'].search([('periodo_id','=',self.period_actual.id)])
+		if len(tcvp) != 1:
+			raise exceptions.Warning('No se ha encontrado el tipo de cambio promedio para el periodo: '
+				+str(self.period_actual.name)+ '\n o el T.C. para dicho periodo esta duplicado')
+		tcvp = tcvp[0].promedio_venta if tcvp[0].promedio_venta > 0 else 1
+		worksheet.write(x,7,tcvp , numberdoscon)
 		x += 1
 
 		nombres = ["TRASPASO PROCESO ANTERIOR","PRODUCCION COSTO POR TONELADA","INVENTARIO INICIAL","COMPRAS","DISPONIBLE","ENVIO TR","TRASPASO A MICRONIZADO","TRASPASO A AGREGADOS","VENTAS","AJUSTE DE INVENTARIO","OTRAS SALIDAS","INVENTARIO FINAL"]
 		
 		data = self.get_pie_pagina()[0]
+
 		for i in range(12):
 			worksheet.write(x,0, nombres[i], normal)
 			worksheet.write(x,1, ((data[i][0])), numberdoscon)
-			worksheet.write(x,2, ((data[i][1])), numberdoscon)
-			worksheet.write(x,3, ((data[i][2])), numberdoscon)
-			worksheet.write(x,4, ((data[i][3])), numberdoscon)
-			worksheet.write(x,5, ((data[i][4])), numberdoscon)
-			worksheet.write(x,6, ((data[i][5])), numberdoscon)
+			worksheet.write(x,2, ((data[i][1]))/tcvp, numberdoscon)
+			worksheet.write(x,3, ((data[i][2]))/tcvp, numberdoscon)
+			worksheet.write(x,4, ((data[i][3]))/tcvp, numberdoscon)
+			worksheet.write(x,5, ((data[i][4]))/tcvp, numberdoscon)
+			worksheet.write(x,6, ((data[i][5]))/tcvp, numberdoscon)
 			x += 1
-		
-
-		# new code (nuevas funcionalidades que quedan aun pendientes) 
-		# x +=  14
-		# worksheet.merge_range(x,0,x+1,0, u'CONCEPTO', merge_format)
-		# worksheet.merge_range(x,1,x,3, u'MES ACTUAL', merge_format)
-		# worksheet.merge_range(x,4,x,6, u'ACUMULADO', merge_format)
-		# x += 1
-		# worksheet.write(x,1, u'TONS', boldbord)
-		# worksheet.write(x,2, u'PROMEDIO', boldbord)
-		# worksheet.write(x,3, u'IMPORTE', boldbord)
-		# worksheet.write(x,4, u'TONS', boldbord)
-		# worksheet.write(x,5, u'PROMEDIO', boldbord)
-		# worksheet.write(x,6, u'IMPORTE', boldbord)
-
-		# date_ini = str(self.period_actual.date_start)
-		# date_fin = str(self.period_actual.date_stop)
-		# from datetime import datetime
-		# #datetime.strptime(str(self.fiscal.name)+'0101',"%Y%m%d").date()
-		# enero =  datetime.strptime(str(self.fiscal.name)+'0101',"%Y%m%d").date()
-		# conf = self.env['main.parameter'].search([])[0]
-		# self.env.cr.execute("""
-		# select 
-		# distinct sm.location_dest_id
-		# from
-		# stock_move sm 
-		# join stock_picking sp on sp.id = sm.picking_id
-		# join stock_location sl on sl.id = sm.location_dest_id
-		# where sm.product_id = """+str(conf.pproduct_costos_calcinacion.id)+""" 
-		# and sp.state = 'done'
-		# and sp.date::date >= '"""+date_ini+"""' 
-		# and sp.date::date <= '"""+date_fin+"""'
-		# and sl.usage = 'internal'
-		# union 
-		# select 
-		# distinct sm.location_id
-		# from
-		# stock_move sm 
-		# join stock_picking sp on sp.id = sm.picking_id
-		# join stock_location sl on sl.id = sm.location_id
-		# where sm.product_id = """+str(conf.pproduct_costos_calcinacion.id)+""" and sp.state = 'done'
-		# and sp.date::date >= '"""+date_ini+"""'
-		# and sp.date::date <= '"""+date_fin+"""'
-		# and sl.usage = 'internal'
-		# """)
-		# locations = self.env.cr.fetchall()
-		# cp_obj = self.env['costos.produccion'].search( [('periodo','=',self.period_actual.id)])
-		# inv_ini = [0,0,0,0,0,0]
-		# ventas = [0,0,0,0,0,0]
-		# otros = [0,0,0,0,0,0]
-		# ingresos = [0,0,0,0,0,0]
-		# salidas = [0,0,0,0,0,0]
-		# rpt = []	
-		# prod = conf.pproduct_costos_calcinacion.id
-		# for loc in locations:
-		# 	ton_ini,imp_ini = self.get_inv_ini(loc[0],prod,conf)
-		# 	inv_ini[0] += ton_ini
-		# 	inv_ini[1] += imp_ini
-		# 	ton_ini,imp_ini = self.get_inv_ini(loc[0],prod,conf,initial_period=True)
-		# 	inv_ini[3] += ton_ini
-		# 	inv_ini[4] += imp_ini
-
-		# 	ton_ini,imp_ini = self.get_ingre_trans(loc[0],prod,conf,date_ini,date_fin)
-		# 	ingresos[0] += ton_ini
-		# 	ingresos[1] += imp_ini
-		# 	ton_ini,imp_ini = self.get_ingre_trans(loc[0],prod,conf,enero,date_fin)
-		# 	ingresos[3] += ton_ini
-		# 	ingresos[4] += imp_ini
-
-		# 	ton_ini,imp_ini = self.get_costo_ventas(loc[0],prod,conf,date_ini,date_fin)
-		# 	ventas[0] += ton_ini
-		# 	ventas[1] += imp_ini
-		# 	ton_ini,imp_ini = self.get_costo_ventas(loc[0],prod,conf,enero,date_fin)
-		# 	ventas[3] += ton_ini
-		# 	ventas[4] += imp_ini
-
-		# 	ton_ini,imp_ini = self.get_otros(loc[0],prod,conf,date_ini,date_fin)
-		# 	otros[0] += ton_ini
-		# 	otros[1] += imp_ini
-		# 	ton_ini,imp_ini = self.get_otros(loc[0],prod,conf,enero,date_fin)
-		# 	otros[3] += ton_ini
-		# 	otros[4] += imp_ini
-
-		# 	ton_ini,imp_ini = self.get_transf_reali(loc[0],prod,conf,date_ini,date_fin)
-		# 	salidas[0] += ton_ini
-		# 	salidas[1] += imp_ini
-		# 	ton_ini,imp_ini = self.get_transf_reali(loc[0],prod,conf,enero,date_fin)
-		# 	salidas[3] += ton_ini
-		# 	salidas[4] += imp_ini
-
-		# inv_ini[2] = self.get_prom(inv_ini[0],inv_ini[1])
-		# ventas[2] = self.get_prom(ventas[0],ventas[1])
-		# otros[2] = self.get_prom(otros[0],otros[1])
-		# ingresos[2] = self.get_prom(ingresos[0],ingresos[1])
-		# salidas[2] = self.get_prom(salidas[0],salidas[1])
-		
-		# inv_ini[5] = self.get_prom(inv_ini[3],inv_ini[4])
-		# ventas[5] = self.get_prom(ventas[3],ventas[4])
-		# otros[5] = self.get_prom(otros[3],otros[4])
-		# ingresos[5] = self.get_prom(ingresos[3],ingresos[4])
-		# salidas[5] = self.get_prom(salidas[3],salidas[4])
-
-		# data[2] = inv_ini
-		# data[3] = ingresos
-		# ton_dis = data[0][0]+data[1][0]+data[2][0]+data[3][0]
-		# ton_imp = data[0][1]+data[1][1]+data[2][1]+data[3][1]
-		# ton_dis_tot = data[0][3]+data[1][3]+data[2][3]+data[3][3]
-		# ton_imp_tot = data[0][4]+data[1][4]+data[2][4]+data[3][4]
-		# data[4] = [ton_dis,ton_imp,self.get_prom(ton_dis,ton_imp),ton_dis_tot,ton_imp_tot,self.get_prom(ton_dis_tot,ton_imp_tot)]
-		# data[5] = salidas
-		# data[8] = ventas
-		# data[10] = otros
-		# ton_dis = ton_dis-data[5][0]+data[6][0]+data[7][0]+data[8][0]+data[9][0]+data[10][0]
-		# ton_imp = ton_imp-data[5][1]+data[6][1]+data[7][1]+data[8][1]+data[9][1]+data[10][1]
-		# ton_dis_tot = ton_dis_tot-data[5][3]+data[6][3]+data[7][3]+data[8][3]+data[9][3]+data[10][3]
-		# ton_imp_tot = ton_imp_tot-data[5][4]+data[6][4]+data[7][4]+data[8][4]+data[9][4]+data[10][4]
-		# data[11] = [ton_dis,ton_imp,self.get_prom(ton_dis,ton_imp),ton_dis_tot,ton_imp_tot,self.get_prom(ton_dis_tot,ton_imp_tot)]
-
-
-## Imprimir totales:
-		# for i in range(12):
-		# 	worksheet.write(x,0, nombres[i], normal)
-		# 	worksheet.write(x,1, ((data[i][0])), numberdoscon)
-		# 	worksheet.write(x,2, ((data[i][1])), numberdoscon)
-		# 	worksheet.write(x,3, ((data[i][2])), numberdoscon)
-		# 	worksheet.write(x,4, ((data[i][3])), numberdoscon)
-		# 	worksheet.write(x,5, ((data[i][4])), numberdoscon)
-		# 	worksheet.write(x,6, ((data[i][5])), numberdoscon)
-		# 	x += 1
-		
-		
-# Funcionamiento sin totales generales del año
-		# if len(cp_obj) >0:
-		# 	cp_obj = cp_obj[0]
-		# 	disponible_ton = cp_obj.calci_pro_ton + inv_ini[0] + ingresos[0]
-		# 	disponible_imp = cp_obj.calci_pro_cp + 	inv_ini[1] + ingresos[1]
-		# 	rpt.append([cp_obj.piedra_tt_ton,cp_obj.piedra_tt_cp,cp_obj.piedra_tt_imp])
-		# 	rpt.append([cp_obj.calci_pro_ton,cp_obj.calci_pro_cp,cp_obj.calci_pro_imp ])
-		# 	rpt.append(ingresos)
-		# 	rpt.append(inv_ini)
-		# 	rpt.append([disponible_ton,disponible_imp,self.get_prom(disponible_ton,disponible_imp)])
-		# 	rpt.append(ventas)
-		# 	rpt.append([ cp_obj.calci_tt_ton, cp_obj.calci_tt_cp , cp_obj.calci_tt_imp])
-		# 	rpt.append(otros)
-		# 	rpt.append(salidas)
-		# 	fin_ton = disponible_ton - ventas[0]-otros[0]-salidas[0]-cp_obj.calci_tt_ton
-		# 	fin_imp = disponible_imp - ventas[1]-otros[1]-salidas[1]-cp_obj.calci_tt_cp
-		# 	rpt.append([fin_ton,fin_imp,self.get_prom(fin_ton,fin_imp)])
-
-
-
-		# 	worksheet.write(x+1,0,'TRASPASO PROCESO ANTERIOR',bold)
-		# 	worksheet.write(x+2,0,'PRODUCCION COSTO POR TONELADA',bold)
-		# 	worksheet.write(x+3,0,'TRANSFERENCIAS RECIBIDAS',bold)
-		# 	worksheet.write(x+4,0,'INVENTARIO INICIAL',bold)
-		# 	worksheet.write(x+5,0,'VENTAS',bold)
-		# 	worksheet.write(x+6,0,'DISPONIBLE',bold)
-		# 	worksheet.write(x+7,0,'TRASPASO A MICRONIZADO',bold)
-		# 	worksheet.write(x+8,0,'OTRAS SALIDAS',bold)
-		# 	worksheet.write(x+9,0,'TRANSFERENCIAS REALIZADAS',bold)
-		# 	worksheet.write(x+10,0,'INVENTARIO FINAL',bold)
-		# 	aux = 1
-		# 	x+=1
-		# 	for item in rpt:
-		# 		worksheet.write(x,aux,item[0], numberdoscon)
-		# 		worksheet.write(x,aux+1,item[1], numberdoscon)
-		# 		worksheet.write(x,aux+2,item[2], numberdoscon)
-		# 		x+=1
-		
 		workbook.close()
 		
-		f = open(direccion + 'Reporte_Calcinación.xlsx', 'rb')
+		f = open(direccion + 'Reporte_Calcinación_USD.xlsx', 'rb')
 		
 		vals = {
-			'output_name': 'Reportes_Mexicanos_Calcinación.xlsx',
+			'output_name': 'Reporte_Calcinación_USD.xlsx',
 			'output_file': base64.encodestring(''.join(f.readlines())),		
 		}
 
@@ -1641,169 +1266,6 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 
 				parametros = self.env['main.parameter'].search([])[0]
 				tmp = []
-
-				# esta mrd no jala nada
-				# self.env.cr.execute(""" 
-				#    select sum(salida-ingreso),sum(debit-credit) from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-				#    where ((ubicacion_origen in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				#    or (ubicacion_destino in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-				#    and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
-				# """)
-				# tonex = 0
-				# preciox = 0
-				# for w in self.env.cr.fetchall():
-				# 	if w[0]:
-				# 		tonex += w[0]
-				# 		preciox += w[1]
-				
-				# if tonex == None:
-				# 	tonex = 0
-				# if preciox == None:
-				# 	preciox = 0
-
-				# rpt[9][0] = tonex
-				# rpt[9][2] = preciox
-				# rpt[9][1] = 0 if rpt[9][0] == 0 else (rpt[9][2] / rpt[9][0] )
-
-				# self.env.cr.execute(""" 
-				#    select sum(salida-ingreso),sum(debit-credit) from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-				#    where ((ubicacion_origen in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				#    or (ubicacion_destino in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-				# """)
-				# tonex = 0
-				# preciox = 0
-
-
-				# for w in self.env.cr.fetchall():
-				# 	if w[0]:
-				# 		tonex += w[0]
-				# 		preciox += w[1]
-				
-				# if tonex == None:
-				# 	tonex = 0
-				# if preciox == None:
-				# 	preciox = 0
-				# rpt[9][3] = tonex
-				# rpt[9][5] = preciox
-				# rpt[9][4] = 0 if rpt[9][3] == 0 else (rpt[9][5] / rpt[9][3] )
-				# self.env.cr.execute(""" 
-				#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') 
-				#    where ((ubicacion_origen = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				#    or (ubicacion_destino = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-				#    and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
-				# """)
-				# tonex = 0
-				# preciox = 0
-
-
-				# for w in self.env.cr.fetchall():
-				# 	if w[0]:
-				# 		tonex += w[0]
-				# 		preciox += w[1]
-				
-				# if tonex == None:
-				# 	tonex = 0
-				# if preciox == None:
-				# 	preciox = 0
-
-
-				# #producto no conforme
-				# self.env.cr.execute(""" 
-				#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}')  as T
-				#    inner join stock_move sm on sm.id = T.stock_moveid
-				#    inner join stock_picking sp on sp.id = sm.picking_id
-				#    where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				#    or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-				#    and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
-				#    and sp.motivo_guia = '16'
-				# """)
-
-
-				# for w in self.env.cr.fetchall():
-				# 	if w[0]:
-				# 		tonex += w[0]
-				# 		preciox += w[1]
-				
-				# if tonex == None:
-				# 	tonex = 0
-				# if preciox == None:
-				# 	preciox = 0
-				# #fin de prod. no conforme
-
-
-
-				# rpt[10][0] = tonex
-				# rpt[10][2] = preciox
-				# rpt[10][1] = 0 if rpt[10][0] == 0 else (rpt[10][2] / rpt[10][0] )
-
-
-
-				# self.env.cr.execute(""" 
-				#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') 
-				#    where (ubicacion_origen = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				#    or (ubicacion_destino = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				# """)
-				# tonex = 0
-				# preciox = 0
-
-
-				# for w in self.env.cr.fetchall():
-				# 	if w[0]:
-				# 		tonex += w[0]
-				# 		preciox += w[1]
-				
-				# if tonex == None:
-				# 	tonex = 0
-				# if preciox == None:
-				# 	preciox = 0
-
-				# #prod. no conforme
-
-
-				# self.env.cr.execute(""" 
-				#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') as T
-				#    inner join stock_move sm on sm.id = T.stock_moveid
-				#    inner join stock_picking sp on sp.id = sm.picking_id
-				#    where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				#    or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """) )
-				#    and sp.motivo_guia = '16'
-
-				# """)
-
-
-				# for w in self.env.cr.fetchall():
-				# 	if w[0]:
-				# 		tonex += w[0]
-				# 		preciox += w[1]
-				
-				# if tonex == None:
-				# 	tonex = 0
-				# if preciox == None:
-				# 	preciox = 0
-
-
-
-				# rpt[10][3] = tonex
-				# rpt[10][5] = preciox
-				# rpt[10][4] = 0 if rpt[10][3] == 0 else (rpt[10][5] / rpt[10][3] )
-
-				
-				# rpt[11][0] = rpt[4][0] - rpt[5][0] -rpt[6][0] -rpt[7][0] -rpt[8][0] +rpt[9][0] -rpt[10][0]   #rpt[11][0] - rpt[10][0]
-				# rpt[11][2] = rpt[4][2] - rpt[5][2] -rpt[6][2] -rpt[7][2] -rpt[8][2] +rpt[9][2] -rpt[10][2]   #rpt[11][2] - rpt[10][2]
-				# rpt[11][1] = 0 if rpt[11][0] == 0 else (rpt[11][2] / rpt[11][0] )
-
-
-
-				# rpt[11][3] = rpt[4][3] - rpt[5][3] -rpt[6][3] -rpt[7][3] -rpt[8][3] +rpt[9][3] -rpt[10][3] 
-				# rpt[11][5] = rpt[4][5] - rpt[5][5] -rpt[6][5] -rpt[7][5] -rpt[8][5] +rpt[9][5] -rpt[10][5]
-				# rpt[11][4] = 0 if rpt[11][3] == 0 else (rpt[11][5] / rpt[11][3] )
-
 		return rpt
 
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-
-from openerp import models, fields, api, exceptions
+from openerp import models, fields, api
 import base64
 from openerp.osv import osv
+
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -21,13 +21,10 @@ from cgi import escape
 import decimal
 import calendar
 
-def dig_5(n):
-	return ("%5d" % n).replace(' ','0')
+class rm_report_trituracion(models.Model):
+	_inherit= 'rm.report.trituracion'
 
-class rm_report_extraccion(models.Model):
-	_inherit= 'rm.report.extraccion'
-
-	""" ----------------------------- REPORTE EXCEL USD----------------------------- """
+	""" ----------------------------- REPORTE EXCEL ----------------------------- """
 
 	@api.multi
 	def export_excel_usd(self):
@@ -46,8 +43,8 @@ class rm_report_extraccion(models.Model):
 		if not direccion:
 			raise osv.except_osv('Alerta!', u"No fue configurado el directorio para los archivos en Configuracion.")
 
-		workbook = Workbook(direccion +'Reporte_Extracción_USD.xlsx')
-		worksheet = workbook.add_worksheet(u"Extracción")
+		workbook = Workbook(direccion +'Reporte_Trituración_USD.xlsx')
+		worksheet = workbook.add_worksheet(u"Trituración")
 		bold = workbook.add_format({'bold': True})
 		normal = workbook.add_format()
 		boldbord = workbook.add_format({'bold': True})
@@ -62,7 +59,7 @@ class rm_report_extraccion(models.Model):
 		bord = workbook.add_format()
 		bord.set_border(style=1)
 		numberdos.set_border(style=1)
-		numbertres.set_border(style=1)	
+		numbertres.set_border(style=1)
 
 		numberdoscon = workbook.add_format({'num_format':'#,##0.00'})
 
@@ -149,7 +146,7 @@ class rm_report_extraccion(models.Model):
 		worksheet.write(14,col, u'%  PROM', boldbord)
 		col+=1
 		
-		elements = self.env['rm.report.extraccion.line'].search([('rm_report_extraccion_id','=',self.id)]).sorted(key=lambda r: dig_5(r.tipo.order)+dig_5(r.grupo.order))
+		elements = self.env['rm.report.trituracion.line'].search([('rm_report_trituracion_id','=',self.id)]).sorted(key=lambda r: dig_5(r.tipo.order)+dig_5(r.grupo.order))
 		flag = True
 		n_grupo = None
 		n_tipo = None
@@ -475,17 +472,8 @@ class rm_report_extraccion(models.Model):
 		col += 1
 		worksheet.write(x,col, ((sub_tot[-1])), numberdos)
 		x += 1
-		
-		#lugar del error:
-		#correccion temporal:
-		title_tmp = ''
-		try:
-			title_tmp = n_tipo.titulo.upper()
-		except Exception as e:
-			print('Error: ',e)
-		#title_tmp = n_tipo.titulo.upper() if n_tipo.titulo else ''
-		worksheet.write(x,0, u"TOTAL " + title_tmp, boldtotal)
 
+		worksheet.write(x,0, u"TOTAL " + n_tipo.titulo.upper(), boldtotal)
 		col = 1
 		mon = 0
 		while mon+1 <= doce:
@@ -543,7 +531,7 @@ class rm_report_extraccion(models.Model):
 		worksheet.write(x,0, u'Otros datos Informativos'.format(i.tipo.titulo), bold)
 		x += 1
 
-		nombres = ["TONELADAS PRODUCIDAS","COSTO PROCESO POR TONELADA", "COSTO POR TONELADA SIN EXPLOSIVOS", "COSTO DE EXPLOSIVOS", "COSTO LABORATORIO POR TON.", u"COSTO POR TON. SIN DEPRECIACIÓN"]
+		nombres = ["TONELADAS PRODUCIDAS","COSTO PROCESO POR TONELADA", "COSTO POR TONELADA SIN EXPLOSIVOS", "COSTO DE EXPLOSIVOS", "COSTO LABORATORIO POR TON.", "COSTO POR TON. SIN DEPRECIACIÓN"]
 		valores = [[0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0]]
 		valores = self.get_valores()[0]
 		for k in range(12):
@@ -554,7 +542,7 @@ class rm_report_extraccion(models.Model):
 				valores[4][k] = 0
 				valores[5][k] = 0
 			else:
-				explosivo = self.env['rm.report.extraccion.line'].search( [('rm_report_extraccion_id','=',self.id),('pie_pagina','=','explosivo')] )
+				explosivo = self.env['rm.report.trituracion.line'].search( [('rm_report_trituracion_id','=',self.id),('pie_pagina','=','explosivo')] )
 				explosivo_val = 0
 				if len(explosivo) >0:
 					explosivo = explosivo[0]
@@ -584,7 +572,7 @@ class rm_report_extraccion(models.Model):
 						explosivo_val = explosivo.diciembre / exchange[12]
 
 
-				laboratorio = self.env['rm.report.extraccion.line'].search( [('rm_report_extraccion_id','=',self.id),('pie_pagina','=','laboratorio')] )
+				laboratorio = self.env['rm.report.trituracion.line'].search( [('rm_report_trituracion_id','=',self.id),('pie_pagina','=','laboratorio')] )
 				laboratorio_val = 0
 				if len(laboratorio) >0:
 					laboratorio = laboratorio[0]
@@ -614,7 +602,7 @@ class rm_report_extraccion(models.Model):
 						laboratorio_val = laboratorio.diciembre / exchange[12]
 
 
-				depreciacion = self.env['rm.report.extraccion.line'].search( [('rm_report_extraccion_id','=',self.id),('pie_pagina','=','depreciacion')] )
+				depreciacion = self.env['rm.report.trituracion.line'].search( [('rm_report_trituracion_id','=',self.id),('pie_pagina','=','depreciacion')] )
 				depreciacion_val = 0
 				for dep in depreciacion:
 					if k == 0:
@@ -695,7 +683,6 @@ class rm_report_extraccion(models.Model):
 		nombres = ["TRASPASO PROCESO ANTERIOR","PRODUCCION COSTO POR TONELADA","INVENTARIO INICIAL","COMPRAS","DISPONIBLE","ENVIO TR","TRASPASO A TRITURACION","TRASPASO A AGREGADOS","VENTAS","AJUSTE DE INVENTARIO","OTRAS SALIDAS","INVENTARIO FINAL"]
 		
 		data_final_pagina = self.get_pie_pagina()[0]
-		#print "esto es lo raro",data_final_pagina
 
 		for i in range(12):
 			worksheet.write(x,0, nombres[i], normal)
@@ -709,10 +696,10 @@ class rm_report_extraccion(models.Model):
 
 		workbook.close()
 		
-		f = open(direccion + 'Reporte_Extracción_USD.xlsx', 'rb')
+		f = open(direccion + 'Reporte_Trituración_USD.xlsx', 'rb')
 		
 		vals = {
-			'output_name': 'Reportes_Mexicanos_Extrracción_USD.xlsx',
+			'output_name': 'Reporte_Trituración_USD.xlsx',
 			'output_file': base64.encodestring(''.join(f.readlines())),		
 		}
 
