@@ -28,6 +28,7 @@
                     <header>
                         <button name="calculate" string="Actualizar" type="object" class="oe_highlight"/>
                         <button name="export_excel" string="Reporte Excel" type="object"/>
+                        <button name="export_excel_usd" string="Reporte Excel USD" type="object"/>
                     </header>
                         <group>
                             <group>
