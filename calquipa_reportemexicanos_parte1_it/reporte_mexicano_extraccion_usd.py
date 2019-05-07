@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from openerp import models, fields, api, exceptions
 import base64
 from openerp.osv import osv
-
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -47,7 +46,7 @@ class rm_report_extraccion(models.Model):
 		if not direccion:
 			raise osv.except_osv('Alerta!', u"No fue configurado el directorio para los archivos en Configuracion.")
 
-		workbook = Workbook(direccion +'Reporte_Extracción.xlsx')
+		workbook = Workbook(direccion +'Reporte_Extracción_USD.xlsx')
 		worksheet = workbook.add_worksheet(u"Extracción")
 		bold = workbook.add_format({'bold': True})
 		normal = workbook.add_format()
@@ -97,6 +96,8 @@ class rm_report_extraccion(models.Model):
 		worksheet.write(5,12, self.fecha_emision_reporte if self.fecha_emision_reporte else '', normal)
 		worksheet.write(6,8, 'Usuario:', bold)
 		worksheet.write(6,12, self.usuario.name if self.usuario.name else '', normal)
+		worksheet.write(7,8, 'Moneda:', bold)
+		worksheet.write(7,12,u'Dólares', normal)
 
 		colum = {
 			1: "Enero",
@@ -114,29 +115,30 @@ class rm_report_extraccion(models.Model):
 		}
 
 		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.fiscal.id)])
-		ex = self.env['tipo.cambio.mexicano'].search([('period_id','in',periodos.ids)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
 
 		#tc_enero,tc_febrero,tc_marzo,tc_abril,tc_mayo,tc_junio,tc_julio,tc_agosto,tc_septiembre,tc_octubre,tc_noviembre,tc_diciembre = 0,0,0,0,0,0,0,0,0,0,0,0
 
 		exchange = {
-			1:ex.filtered(lambda x:x.period_id.name[:3] == '01/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '01/'))==1 else 1 ,
-			2:ex.filtered(lambda x:x.period_id.name[:3] == '02/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '02/'))==1 else 1 ,
-			3:ex.filtered(lambda x:x.period_id.name[:3] == '03/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '03/'))==1 else 1 ,
-			4:ex.filtered(lambda x:x.period_id.name[:3] == '04/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '04/'))==1 else 1 ,
-			5:ex.filtered(lambda x:x.period_id.name[:3] == '05/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '05/'))==1 else 1 ,
-			6:ex.filtered(lambda x:x.period_id.name[:3] == '06/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '06/'))==1 else 1 ,
-			7:ex.filtered(lambda x:x.period_id.name[:3] == '07/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '07/'))==1 else 1 ,
-			8:ex.filtered(lambda x:x.period_id.name[:3] == '08/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '08/'))==1 else 1 ,
-			9:ex.filtered(lambda x:x.period_id.name[:3] == '09/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '09/'))==1 else 1 ,
-			10:ex.filtered(lambda x:x.period_id.name[:3] == '10/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '10/'))==1 else 1 ,
-			11:ex.filtered(lambda x:x.period_id.name[:3] == '11/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '11/'))==1 else 1 ,
-			12:ex.filtered(lambda x:x.period_id.name[:3] == '12/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.period_id.name[:3] == '12/'))==1 else 1 ,
+			1:ex.filtered(lambda x:x.periodo_id.name[:3] == '01/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '01/'))==1 else 1 ,
+			2:ex.filtered(lambda x:x.periodo_id.name[:3] == '02/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '02/'))==1 else 1 ,
+			3:ex.filtered(lambda x:x.periodo_id.name[:3] == '03/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '03/'))==1 else 1 ,
+			4:ex.filtered(lambda x:x.periodo_id.name[:3] == '04/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '04/'))==1 else 1 ,
+			5:ex.filtered(lambda x:x.periodo_id.name[:3] == '05/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '05/'))==1 else 1 ,
+			6:ex.filtered(lambda x:x.periodo_id.name[:3] == '06/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '06/'))==1 else 1 ,
+			7:ex.filtered(lambda x:x.periodo_id.name[:3] == '07/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '07/'))==1 else 1 ,
+			8:ex.filtered(lambda x:x.periodo_id.name[:3] == '08/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '08/'))==1 else 1 ,
+			9:ex.filtered(lambda x:x.periodo_id.name[:3] == '09/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '09/'))==1 else 1 ,
+			10:ex.filtered(lambda x:x.periodo_id.name[:3] == '10/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '10/'))==1 else 1 ,
+			11:ex.filtered(lambda x:x.periodo_id.name[:3] == '11/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '11/'))==1 else 1 ,
+			12:ex.filtered(lambda x:x.periodo_id.name[:3] == '12/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '12/'))==1 else 1 ,
 		}
 		
 		worksheet.write(14,0, u'TIPO COSTO', boldbord)
 		col = 1
 		mon = 0
 		while mon+1 <= doce:
+			worksheet.write(13,col, exchange[mon+1] if exchange[mon+1] > 1 else '', numberdoscon)
 			worksheet.write(14,col, u'{0}'.format(colum[mon+1]), boldbord)
 			col += 1
 			mon += 1
@@ -676,6 +678,7 @@ class rm_report_extraccion(models.Model):
 		worksheet.merge_range(x,0,x+1,0, u'CONCEPTO', merge_format)
 		worksheet.merge_range(x,1,x,3, u'MES ACTUAL', merge_format)
 		worksheet.merge_range(x,4,x,6, u'ACUMULADO', merge_format)
+		worksheet.write(x,7, u'TCVP', boldbord)
 		x += 1
 		worksheet.write(x,1, u'TONS', boldbord)
 		worksheet.write(x,2, u'PROMEDIO', boldbord)
@@ -683,6 +686,12 @@ class rm_report_extraccion(models.Model):
 		worksheet.write(x,4, u'TONS', boldbord)
 		worksheet.write(x,5, u'PROMEDIO', boldbord)
 		worksheet.write(x,6, u'IMPORTE', boldbord)
+		tcvp =  self.env['tipo.cambio.mexicano'].search([('periodo_id','=',self.period_actual.id)])
+		if len(tcvp) != 1:
+			raise exceptions.Warning('No se ha encontrado el tipo de cambio promedio para el periodo: '
+				+str(self.period_actual.name)+ '\n o el T.C. para dicho periodo esta duplicado')
+		tcvp = tcvp[0].promedio_venta if tcvp[0].promedio_venta > 0 else 1
+		worksheet.write(x,7,tcvp , numberdoscon)
 		x += 1
 
 		nombres = ["TRASPASO PROCESO ANTERIOR","PRODUCCION COSTO POR TONELADA","INVENTARIO INICIAL","COMPRAS","DISPONIBLE","ENVIO TR","TRASPASO A TRITURACION","TRASPASO A AGREGADOS","VENTAS","AJUSTE DE INVENTARIO","OTRAS SALIDAS","INVENTARIO FINAL"]
@@ -692,20 +701,20 @@ class rm_report_extraccion(models.Model):
 
 		for i in range(12):
 			worksheet.write(x,0, nombres[i], normal)
-			worksheet.write(x,1, ((data_final_pagina[i][0])), numberdoscon)
-			worksheet.write(x,2, ((data_final_pagina[i][1])), numberdoscon)
-			worksheet.write(x,3, ((data_final_pagina[i][2])), numberdoscon)
-			worksheet.write(x,4, ((data_final_pagina[i][3])), numberdoscon)
-			worksheet.write(x,5, ((data_final_pagina[i][4])), numberdoscon)
-			worksheet.write(x,6, ((data_final_pagina[i][5])), numberdoscon)
+			worksheet.write(x,1, ((data_final_pagina[i][0]))/tcvp, numberdoscon)
+			worksheet.write(x,2, ((data_final_pagina[i][1]))/tcvp, numberdoscon)
+			worksheet.write(x,3, ((data_final_pagina[i][2]))/tcvp, numberdoscon)
+			worksheet.write(x,4, ((data_final_pagina[i][3]))/tcvp, numberdoscon)
+			worksheet.write(x,5, ((data_final_pagina[i][4]))/tcvp, numberdoscon)
+			worksheet.write(x,6, ((data_final_pagina[i][5]))/tcvp, numberdoscon)
 			x += 1
 
 		workbook.close()
 		
-		f = open(direccion + 'Reporte_Extracción.xlsx', 'rb')
+		f = open(direccion + 'Reporte_Extracción_USD.xlsx', 'rb')
 		
 		vals = {
-			'output_name': 'Reportes_Mexicanos_Extrracción.xlsx',
+			'output_name': 'Reportes_Mexicanos_Extrracción_USD.xlsx',
 			'output_file': base64.encodestring(''.join(f.readlines())),		
 		}
 

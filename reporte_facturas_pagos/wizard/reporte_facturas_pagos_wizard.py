@@ -115,7 +115,22 @@ class reporte_facturas_pagos_wizard(osv.TransientModel):
 		worksheet.write(3,19, u"Conciliación",boldbord)
 		worksheet.write(3,20, u"Glosa",boldbord)
 		saldo = 0
-		for line in self.env['reporte.facturas.pagos'].search(filtro):
+		totales = [0,0]
+		tmp_numero = None
+		for line in self.env['reporte.facturas.pagos'].search(filtro).sorted(key=lambda x:x.numero):
+			
+			if tmp_numero!=None and tmp_numero!=i.numero:
+				worksheet.write(x,13,totales[0],numbertres)
+				worksheet.write(x,14,totales[1],numbertres)
+				worksheet.write(x,15,totales[0]-totales[1],numbertres)
+				totales = [0,0]
+				x+=2
+
+
+			tmp_numero = i.numero if i.numero else ''
+			totales[0] += i.debe
+			totales[1] += i.haber			
+
 			worksheet.write(x,0,line.periodo if line.periodo else '' ,bord )
 			worksheet.write(x,1,line.libro if line.libro  else '',bord )
 			worksheet.write(x,2,line.fechaemision if line.fechaemision else '',bord)
@@ -133,15 +148,22 @@ class reporte_facturas_pagos_wizard(osv.TransientModel):
 			worksheet.write(x,14,line.haber ,numberdos)
 
 			saldo = saldo + line.debe - line.haber
+			
 			worksheet.write(x,15,saldo ,numberdos)
 			worksheet.write(x,16,line.divisa if  line.divisa else '',bord)
 			worksheet.write(x,17,line.tipocambio ,numbertres)
 			worksheet.write(x,18,line.importedivisa ,numberdos)
 			worksheet.write(x,19,line.conciliacion if line.conciliacion else '',bord)
 			worksheet.write(x,20,line.glosa if line.glosa else '',bord)
-			x = x +1
+			
+			x+=1
 
-		tam_col = [11,6,8.8,7.14,38,11,11,11,10,11,14,10,11,14,14,10,16,16,20,36]
+		if tmp_empresa!=None:
+			worksheet.write(x,13,totales[0],numbertres)
+			worksheet.write(x,14,totales[1],numbertres)
+			worksheet.write(x,15,totales[0]-totales[1],numbertres)
+
+		tam_col = [9,6,10,10,5,11,13,25,11,11,23,23,10,12,12,12,9,9,9,20]
 
 		worksheet.set_column('A:A', tam_col[0])
 		worksheet.set_column('B:B', tam_col[1])

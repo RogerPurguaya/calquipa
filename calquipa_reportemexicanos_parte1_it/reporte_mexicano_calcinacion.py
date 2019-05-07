@@ -149,7 +149,7 @@ class rm_report_calcinacion(models.Model):
 		self.total_general = 0
 		for i in self.conf_line_ids:
 			self.total_general += i.acumulado
-		print self.total_general
+		#print self.total_general
 	total_general = fields.Float('Total general', compute="get_total_general")
 
 	@api.one	
@@ -157,7 +157,7 @@ class rm_report_calcinacion(models.Model):
 		self.total_promedio_general = 0
 		for i in self.conf_line_ids:
 			self.total_promedio_general += i.promedio
-		print self.total_promedio_general
+		#print self.total_promedio_general
 	total_promedio_general = fields.Float('Total general', compute="get_total_promedio_general")
 
 	@api.one
@@ -254,270 +254,11 @@ where t1.type<>'view') saldos
 where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(self.id) + """
 			""")
 
-	@api.one
-	def get_pie_pagina(self):
-		cp_obj = self.env['costos.produccion'].search( [('periodo','=',self.period_actual.id)] )
-		rpt = []
-		if len(cp_obj) >0:
-			cp_obj = cp_obj[0]		
-			#### la primera linea
-			rpt.append([ cp_obj.piedra_tt_ton, cp_obj.piedra_tt_cp , cp_obj.piedra_tt_imp , 0,0,0])
-			rpt.append([ cp_obj.calci_pro_ton, cp_obj.calci_pro_cp , cp_obj.calci_pro_imp , 0,0,0])
-			rpt.append([ cp_obj.calci_ini_ton, cp_obj.calci_ini_cp , cp_obj.calci_ini_imp , 0,0,0])
-			rpt.append([0,0,0,0,0,0])
-			rpt.append([ cp_obj.calci_dis_ton, cp_obj.calci_dis_cp , cp_obj.calci_dis_imp , 0,0,0])
-			rpt.append([0,0,0,0,0,0])
-			rpt.append([ cp_obj.calci_tt_ton, cp_obj.calci_tt_cp , cp_obj.calci_tt_imp , 0,0,0])
-			rpt.append([0,0,0,0,0,0])
-			rpt.append([ cp_obj.calci_ven_ton, cp_obj.calci_ven_cp , cp_obj.calci_ven_imp , 0,0,0])
-			rpt.append([0,0,0,0,0,0])
-			rpt.append([0,0,0,0,0,0])
-			rpt.append([ cp_obj.calci_final_ton, cp_obj.calci_final_cp , cp_obj.calci_final_imp , 0,0,0])
-			
-		else:
-			for i in range(0,12):
-				rpt.append([0,0,0,0,0,0])
-
-
-		period_list = []
-		nro_act = 1
-		period_act =  ("%2d"%nro_act).replace(' ','0') +  '/' + self.period_actual.code.split('/')[1]
-		nro_act = 2
-		mkmk = self.env['account.period'].search( [('code','=',period_act)] )
-		if len(mkmk)>0:
-			period_list.append(mkmk[0])
-
-		while period_act != self.period_actual.code:
-			period_act =  ("%2d"%nro_act).replace(' ','0') +  '/' + self.period_actual.code.split('/')[1]
-			nro_act += 1
-			mkmk = self.env['account.period'].search( [('code','=',period_act)] )
-			if len(mkmk)>0:
-				period_list.append(mkmk[0])
-
-		for i in period_list:
-			cp_obj = self.env['costos.produccion'].search( [('periodo','=',i.id)] )
-			if len(cp_obj) >0:
-				cp_obj = cp_obj[0]		
-				#### Aqui toda actualizar valores no modificarlos y  ahi sacar el promedio del medio con eso se termina ejemplo
-				rpt[0][3] += cp_obj.piedra_tt_ton
-				rpt[0][5] += cp_obj.piedra_tt_imp
-				rpt[0][4] = 0 if rpt[0][3] == 0 else (rpt[0][5] / rpt[0][3] )
-
-				rpt[1][3] += cp_obj.calci_pro_ton
-				rpt[1][5] += cp_obj.calci_pro_imp
-				rpt[1][4] = 0 if rpt[1][3] == 0 else (rpt[1][5] / rpt[1][3] )
-
-
-				if i.code.split('/')[0] == '01':
-					rpt[2][3] += cp_obj.calci_ini_ton
-					rpt[2][5] += cp_obj.calci_ini_imp
-					rpt[2][4] = 0 if rpt[2][3] == 0 else (rpt[2][5] / rpt[2][3] )
-
-				rpt[4][3] = rpt[1][3]+ rpt[2][3]+ rpt[3][3]
-				rpt[4][5] = rpt[1][5]+ rpt[2][5]+ rpt[3][5]
-				rpt[4][4] = 0 if rpt[4][3] == 0 else (rpt[4][5] / rpt[4][3] )
-
-				rpt[6][3] += cp_obj.calci_tt_ton
-				rpt[6][5] += cp_obj.calci_tt_imp
-				rpt[6][4] = 0 if rpt[6][3] == 0 else (rpt[6][5] / rpt[6][3] )
-
-
-				rpt[8][3] += cp_obj.calci_ven_ton
-				rpt[8][5] += cp_obj.calci_ven_imp
-				rpt[8][4] = 0 if rpt[8][3] == 0 else (rpt[8][5] / rpt[8][3] )
-
-
-				parametros = self.env['main.parameter'].search([])[0]
-				tmp = []
-
-
-
-				self.env.cr.execute(""" 
-				   select sum(salida-ingreso),sum(debit-credit) from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				   '{""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-				   where ((ubicacion_origen in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				   or (ubicacion_destino in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-				   and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
-				""")
-				tonex = 0
-				preciox = 0
-
-
-				for w in self.env.cr.fetchall():
-					if w[0]:
-						tonex += w[0]
-						preciox += w[1]
-				
-				if tonex == None:
-					tonex = 0
-				if preciox == None:
-					preciox = 0
-
-
-
-				rpt[9][0] = tonex
-				rpt[9][2] = preciox
-				rpt[9][1] = 0 if rpt[9][0] == 0 else (rpt[9][2] / rpt[9][0] )
-
-
-
-				self.env.cr.execute(""" 
-				   select sum(salida-ingreso),sum(debit-credit) from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				   '{""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-				   where ((ubicacion_origen in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				   or (ubicacion_destino in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-				""")
-				tonex = 0
-				preciox = 0
-
-
-				for w in self.env.cr.fetchall():
-					if w[0]:
-						tonex += w[0]
-						preciox += w[1]
-				
-				if tonex == None:
-					tonex = 0
-				if preciox == None:
-					preciox = 0
-
-
-
-				rpt[9][3] = tonex
-				rpt[9][5] = preciox
-				rpt[9][4] = 0 if rpt[9][3] == 0 else (rpt[9][5] / rpt[9][3] )
-
-
-
-
-
-				self.env.cr.execute(""" 
-				   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') 
-				   where ((ubicacion_origen = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				   or (ubicacion_destino = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-				   and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
-				""")
-				tonex = 0
-				preciox = 0
-
-
-				for w in self.env.cr.fetchall():
-					if w[0]:
-						tonex += w[0]
-						preciox += w[1]
-				
-				if tonex == None:
-					tonex = 0
-				if preciox == None:
-					preciox = 0
-
-
-				#producto no conforme
-				self.env.cr.execute(""" 
-				   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}')  as T
-				   inner join stock_move sm on sm.id = T.stock_moveid
-				   inner join stock_picking sp on sp.id = sm.picking_id
-				   where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				   or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-				   and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
-				   and sp.motivo_guia = '16'
-				""")
-
-
-				for w in self.env.cr.fetchall():
-					if w[0]:
-						tonex += w[0]
-						preciox += w[1]
-				
-				if tonex == None:
-					tonex = 0
-				if preciox == None:
-					preciox = 0
-				#fin de prod. no conforme
-
-
-
-				rpt[10][0] = tonex
-				rpt[10][2] = preciox
-				rpt[10][1] = 0 if rpt[10][0] == 0 else (rpt[10][2] / rpt[10][0] )
-
-
-
-				self.env.cr.execute(""" 
-				   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') 
-				   where (ubicacion_origen = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				   or (ubicacion_destino = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				""")
-				tonex = 0
-				preciox = 0
-
-
-				for w in self.env.cr.fetchall():
-					if w[0]:
-						tonex += w[0]
-						preciox += w[1]
-				
-				if tonex == None:
-					tonex = 0
-				if preciox == None:
-					preciox = 0
-
-				#prod. no conforme
-
-
-				self.env.cr.execute(""" 
-				   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-				   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') as T
-				   inner join stock_move sm on sm.id = T.stock_moveid
-				   inner join stock_picking sp on sp.id = sm.picking_id
-				   where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-				   or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """) )
-				   and sp.motivo_guia = '16'
-
-				""")
-
-
-				for w in self.env.cr.fetchall():
-					if w[0]:
-						tonex += w[0]
-						preciox += w[1]
-				
-				if tonex == None:
-					tonex = 0
-				if preciox == None:
-					preciox = 0
-
-
-
-				rpt[10][3] = tonex
-				rpt[10][5] = preciox
-				rpt[10][4] = 0 if rpt[10][3] == 0 else (rpt[10][5] / rpt[10][3] )
-
-				
-				rpt[11][0] = rpt[4][0] - rpt[5][0] -rpt[6][0] -rpt[7][0] -rpt[8][0] +rpt[9][0] -rpt[10][0]   #rpt[11][0] - rpt[10][0]
-				rpt[11][2] = rpt[4][2] - rpt[5][2] -rpt[6][2] -rpt[7][2] -rpt[8][2] +rpt[9][2] -rpt[10][2]   #rpt[11][2] - rpt[10][2]
-				rpt[11][1] = 0 if rpt[11][0] == 0 else (rpt[11][2] / rpt[11][0] )
-
-
-
-				rpt[11][3] = rpt[4][3] - rpt[5][3] -rpt[6][3] -rpt[7][3] -rpt[8][3] +rpt[9][3] -rpt[10][3] 
-				rpt[11][5] = rpt[4][5] - rpt[5][5] -rpt[6][5] -rpt[7][5] -rpt[8][5] +rpt[9][5] -rpt[10][5]
-				rpt[11][4] = 0 if rpt[11][3] == 0 else (rpt[11][5] / rpt[11][3] )
-
-
-
-		return rpt
-
 
 
 
 	@api.one
 	def get_valores(self):
-
-
 		rpt = []
 		periodos = []
 		ini = '01/' + self.period_actual.code.split('/')[1]
@@ -1156,18 +897,185 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 
 		nombres = ["TRASPASO PROCESO ANTERIOR","PRODUCCION COSTO POR TONELADA","INVENTARIO INICIAL","COMPRAS","DISPONIBLE","ENVIO TR","TRASPASO A MICRONIZADO","TRASPASO A AGREGADOS","VENTAS","AJUSTE DE INVENTARIO","OTRAS SALIDAS","INVENTARIO FINAL"]
 		
-		data_final_pagina = self.get_pie_pagina()[0]
-
+		data = self.get_pie_pagina()[0]
 		for i in range(12):
 			worksheet.write(x,0, nombres[i], normal)
-			worksheet.write(x,1, ((data_final_pagina[i][0])), numberdoscon)
-			worksheet.write(x,2, ((data_final_pagina[i][1])), numberdoscon)
-			worksheet.write(x,3, ((data_final_pagina[i][2])), numberdoscon)
-			worksheet.write(x,4, ((data_final_pagina[i][3])), numberdoscon)
-			worksheet.write(x,5, ((data_final_pagina[i][4])), numberdoscon)
-			worksheet.write(x,6, ((data_final_pagina[i][5])), numberdoscon)
+			worksheet.write(x,1, ((data[i][0])), numberdoscon)
+			worksheet.write(x,2, ((data[i][1])), numberdoscon)
+			worksheet.write(x,3, ((data[i][2])), numberdoscon)
+			worksheet.write(x,4, ((data[i][3])), numberdoscon)
+			worksheet.write(x,5, ((data[i][4])), numberdoscon)
+			worksheet.write(x,6, ((data[i][5])), numberdoscon)
 			x += 1
+		
 
+		# new code (nuevas funcionalidades que quedan aun pendientes) 
+		# x +=  14
+		# worksheet.merge_range(x,0,x+1,0, u'CONCEPTO', merge_format)
+		# worksheet.merge_range(x,1,x,3, u'MES ACTUAL', merge_format)
+		# worksheet.merge_range(x,4,x,6, u'ACUMULADO', merge_format)
+		# x += 1
+		# worksheet.write(x,1, u'TONS', boldbord)
+		# worksheet.write(x,2, u'PROMEDIO', boldbord)
+		# worksheet.write(x,3, u'IMPORTE', boldbord)
+		# worksheet.write(x,4, u'TONS', boldbord)
+		# worksheet.write(x,5, u'PROMEDIO', boldbord)
+		# worksheet.write(x,6, u'IMPORTE', boldbord)
+
+		# date_ini = str(self.period_actual.date_start)
+		# date_fin = str(self.period_actual.date_stop)
+		# from datetime import datetime
+		# #datetime.strptime(str(self.fiscal.name)+'0101',"%Y%m%d").date()
+		# enero =  datetime.strptime(str(self.fiscal.name)+'0101',"%Y%m%d").date()
+		# conf = self.env['main.parameter'].search([])[0]
+		# self.env.cr.execute("""
+		# select 
+		# distinct sm.location_dest_id
+		# from
+		# stock_move sm 
+		# join stock_picking sp on sp.id = sm.picking_id
+		# join stock_location sl on sl.id = sm.location_dest_id
+		# where sm.product_id = """+str(conf.pproduct_costos_calcinacion.id)+""" 
+		# and sp.state = 'done'
+		# and sp.date::date >= '"""+date_ini+"""' 
+		# and sp.date::date <= '"""+date_fin+"""'
+		# and sl.usage = 'internal'
+		# union 
+		# select 
+		# distinct sm.location_id
+		# from
+		# stock_move sm 
+		# join stock_picking sp on sp.id = sm.picking_id
+		# join stock_location sl on sl.id = sm.location_id
+		# where sm.product_id = """+str(conf.pproduct_costos_calcinacion.id)+""" and sp.state = 'done'
+		# and sp.date::date >= '"""+date_ini+"""'
+		# and sp.date::date <= '"""+date_fin+"""'
+		# and sl.usage = 'internal'
+		# """)
+		# locations = self.env.cr.fetchall()
+		# cp_obj = self.env['costos.produccion'].search( [('periodo','=',self.period_actual.id)])
+		# inv_ini = [0,0,0,0,0,0]
+		# ventas = [0,0,0,0,0,0]
+		# otros = [0,0,0,0,0,0]
+		# ingresos = [0,0,0,0,0,0]
+		# salidas = [0,0,0,0,0,0]
+		# rpt = []	
+		# prod = conf.pproduct_costos_calcinacion.id
+		# for loc in locations:
+		# 	ton_ini,imp_ini = self.get_inv_ini(loc[0],prod,conf)
+		# 	inv_ini[0] += ton_ini
+		# 	inv_ini[1] += imp_ini
+		# 	ton_ini,imp_ini = self.get_inv_ini(loc[0],prod,conf,initial_period=True)
+		# 	inv_ini[3] += ton_ini
+		# 	inv_ini[4] += imp_ini
+
+		# 	ton_ini,imp_ini = self.get_ingre_trans(loc[0],prod,conf,date_ini,date_fin)
+		# 	ingresos[0] += ton_ini
+		# 	ingresos[1] += imp_ini
+		# 	ton_ini,imp_ini = self.get_ingre_trans(loc[0],prod,conf,enero,date_fin)
+		# 	ingresos[3] += ton_ini
+		# 	ingresos[4] += imp_ini
+
+		# 	ton_ini,imp_ini = self.get_costo_ventas(loc[0],prod,conf,date_ini,date_fin)
+		# 	ventas[0] += ton_ini
+		# 	ventas[1] += imp_ini
+		# 	ton_ini,imp_ini = self.get_costo_ventas(loc[0],prod,conf,enero,date_fin)
+		# 	ventas[3] += ton_ini
+		# 	ventas[4] += imp_ini
+
+		# 	ton_ini,imp_ini = self.get_otros(loc[0],prod,conf,date_ini,date_fin)
+		# 	otros[0] += ton_ini
+		# 	otros[1] += imp_ini
+		# 	ton_ini,imp_ini = self.get_otros(loc[0],prod,conf,enero,date_fin)
+		# 	otros[3] += ton_ini
+		# 	otros[4] += imp_ini
+
+		# 	ton_ini,imp_ini = self.get_transf_reali(loc[0],prod,conf,date_ini,date_fin)
+		# 	salidas[0] += ton_ini
+		# 	salidas[1] += imp_ini
+		# 	ton_ini,imp_ini = self.get_transf_reali(loc[0],prod,conf,enero,date_fin)
+		# 	salidas[3] += ton_ini
+		# 	salidas[4] += imp_ini
+
+		# inv_ini[2] = self.get_prom(inv_ini[0],inv_ini[1])
+		# ventas[2] = self.get_prom(ventas[0],ventas[1])
+		# otros[2] = self.get_prom(otros[0],otros[1])
+		# ingresos[2] = self.get_prom(ingresos[0],ingresos[1])
+		# salidas[2] = self.get_prom(salidas[0],salidas[1])
+		
+		# inv_ini[5] = self.get_prom(inv_ini[3],inv_ini[4])
+		# ventas[5] = self.get_prom(ventas[3],ventas[4])
+		# otros[5] = self.get_prom(otros[3],otros[4])
+		# ingresos[5] = self.get_prom(ingresos[3],ingresos[4])
+		# salidas[5] = self.get_prom(salidas[3],salidas[4])
+
+		# data[2] = inv_ini
+		# data[3] = ingresos
+		# ton_dis = data[0][0]+data[1][0]+data[2][0]+data[3][0]
+		# ton_imp = data[0][1]+data[1][1]+data[2][1]+data[3][1]
+		# ton_dis_tot = data[0][3]+data[1][3]+data[2][3]+data[3][3]
+		# ton_imp_tot = data[0][4]+data[1][4]+data[2][4]+data[3][4]
+		# data[4] = [ton_dis,ton_imp,self.get_prom(ton_dis,ton_imp),ton_dis_tot,ton_imp_tot,self.get_prom(ton_dis_tot,ton_imp_tot)]
+		# data[5] = salidas
+		# data[8] = ventas
+		# data[10] = otros
+		# ton_dis = ton_dis-data[5][0]+data[6][0]+data[7][0]+data[8][0]+data[9][0]+data[10][0]
+		# ton_imp = ton_imp-data[5][1]+data[6][1]+data[7][1]+data[8][1]+data[9][1]+data[10][1]
+		# ton_dis_tot = ton_dis_tot-data[5][3]+data[6][3]+data[7][3]+data[8][3]+data[9][3]+data[10][3]
+		# ton_imp_tot = ton_imp_tot-data[5][4]+data[6][4]+data[7][4]+data[8][4]+data[9][4]+data[10][4]
+		# data[11] = [ton_dis,ton_imp,self.get_prom(ton_dis,ton_imp),ton_dis_tot,ton_imp_tot,self.get_prom(ton_dis_tot,ton_imp_tot)]
+
+
+## Imprimir totales:
+		# for i in range(12):
+		# 	worksheet.write(x,0, nombres[i], normal)
+		# 	worksheet.write(x,1, ((data[i][0])), numberdoscon)
+		# 	worksheet.write(x,2, ((data[i][1])), numberdoscon)
+		# 	worksheet.write(x,3, ((data[i][2])), numberdoscon)
+		# 	worksheet.write(x,4, ((data[i][3])), numberdoscon)
+		# 	worksheet.write(x,5, ((data[i][4])), numberdoscon)
+		# 	worksheet.write(x,6, ((data[i][5])), numberdoscon)
+		# 	x += 1
+		
+		
+# Funcionamiento sin totales generales del año
+		# if len(cp_obj) >0:
+		# 	cp_obj = cp_obj[0]
+		# 	disponible_ton = cp_obj.calci_pro_ton + inv_ini[0] + ingresos[0]
+		# 	disponible_imp = cp_obj.calci_pro_cp + 	inv_ini[1] + ingresos[1]
+		# 	rpt.append([cp_obj.piedra_tt_ton,cp_obj.piedra_tt_cp,cp_obj.piedra_tt_imp])
+		# 	rpt.append([cp_obj.calci_pro_ton,cp_obj.calci_pro_cp,cp_obj.calci_pro_imp ])
+		# 	rpt.append(ingresos)
+		# 	rpt.append(inv_ini)
+		# 	rpt.append([disponible_ton,disponible_imp,self.get_prom(disponible_ton,disponible_imp)])
+		# 	rpt.append(ventas)
+		# 	rpt.append([ cp_obj.calci_tt_ton, cp_obj.calci_tt_cp , cp_obj.calci_tt_imp])
+		# 	rpt.append(otros)
+		# 	rpt.append(salidas)
+		# 	fin_ton = disponible_ton - ventas[0]-otros[0]-salidas[0]-cp_obj.calci_tt_ton
+		# 	fin_imp = disponible_imp - ventas[1]-otros[1]-salidas[1]-cp_obj.calci_tt_cp
+		# 	rpt.append([fin_ton,fin_imp,self.get_prom(fin_ton,fin_imp)])
+
+
+
+		# 	worksheet.write(x+1,0,'TRASPASO PROCESO ANTERIOR',bold)
+		# 	worksheet.write(x+2,0,'PRODUCCION COSTO POR TONELADA',bold)
+		# 	worksheet.write(x+3,0,'TRANSFERENCIAS RECIBIDAS',bold)
+		# 	worksheet.write(x+4,0,'INVENTARIO INICIAL',bold)
+		# 	worksheet.write(x+5,0,'VENTAS',bold)
+		# 	worksheet.write(x+6,0,'DISPONIBLE',bold)
+		# 	worksheet.write(x+7,0,'TRASPASO A MICRONIZADO',bold)
+		# 	worksheet.write(x+8,0,'OTRAS SALIDAS',bold)
+		# 	worksheet.write(x+9,0,'TRANSFERENCIAS REALIZADAS',bold)
+		# 	worksheet.write(x+10,0,'INVENTARIO FINAL',bold)
+		# 	aux = 1
+		# 	x+=1
+		# 	for item in rpt:
+		# 		worksheet.write(x,aux,item[0], numberdoscon)
+		# 		worksheet.write(x,aux+1,item[1], numberdoscon)
+		# 		worksheet.write(x,aux+2,item[2], numberdoscon)
+		# 		x+=1
+		
 		workbook.close()
 		
 		f = open(direccion + 'Reporte_Calcinación.xlsx', 'rb')
@@ -1186,6 +1094,716 @@ where opt.cuenta = saldos.nivel1 and opt.rm_report_calcinacion_id = """ + str(se
 			"target": "new",
 		}
 
-	""" ----------------------------- REPORTE EXCEL ----------------------------- """
+
+	# metodos para obtener datos de kardex, 
+	#quedan pendiente para futuras mejoras
+	# (no nos borres no te hacen nada :) )
+	#
+	@api.multi
+	def get_inv_ini(self,location,product,conf,initial_period=None):
+		ton,imp,prom = 0,0,0
+		if initial_period:
+			code_ant = ['01',str(self.fiscal.name)]
+		else:
+			code_ant = self.period_actual.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)])
+		if mes == 12:
+			fechaini = str(self.period_actual.date_start).replace('-','')
+			fechafin = str(self.period_actual.date_stop).replace('-','')
+			self.env.cr.execute(""" 
+				SELECT
+				round(saldof,2),
+				round(saldov,2),
+				CASE WHEN saldof != 0 
+				THEN round(saldov/saldof,4) ELSE 0 END as cal
+				 from get_kardex_v("""+fechaini+""","""+fechafin+""",
+				'{"""+str(product) + """}',
+				'{"""+str(conf.location_virtual_produccion.id) + """,
+				""" + str(location) + """}') 
+				where 
+				(ubicacion_origen = """+str(conf.location_virtual_saldoinicial.id)+ """ and ubicacion_destino = """ + str(location) + """)
+				or (ubicacion_origen = """+str(location) + """ and ubicacion_destino = """ + str(conf.location_virtual_saldoinicial.id) + """) 
+				""")
+			for i in self.env.cr.fetchall():
+				ton = i[0]
+				imp = i[1]
+		else:
+			if len(periodo_anterior )>0:
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
+				self.env.cr.execute("""
+				SELECT
+				round(saldof,2),
+				round(saldov,2),
+				CASE WHEN saldof != 0 
+				THEN round(saldov/saldof,4) ELSE 0 END as cal
+				 from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",
+				'{""" + str(product) + """}',
+				'{""" + str(conf.location_virtual_produccion.id) + """,
+				""" + str(location) + """}') 
+				where ubicacion_destino = """ + str(location) + """
+				 or ubicacion_origen = """ + str(location) + """ 
+				 """)
+				for i in self.env.cr.fetchall():
+					ton = i[0]
+					imp = i[1]
+
+		ton = ton if ton else 0
+		imp = imp if imp else 0
+		return ton,imp
+
+	# new code
+	@api.multi
+	def get_ingre_trans(self,location,product,conf,dateini,datefin):
+		location,product = str(location),str(product)
+		ton,imp,prom = 0,0,0
+		fechaini = str(dateini).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(datefin).replace('-','')
+		# las tansferencias recibidas
+		self.env.cr.execute("""
+		SELECT  
+		CASE WHEN SUM(ingreso) > 0 THEN round(SUM(ingreso),2) ELSE 0 END as ingreso,
+		CASE WHEN SUM(credit) > 0 THEN round(SUM(credit),2) ELSE 0 END as credit,
+		CASE WHEN SUM(ingreso) != 0 
+		THEN round(SUM(credit)/SUM(ingreso),4) ELSE 0 END as cal
+		 from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",
+		 '{"""+str(product)+"""}',
+		 '{"""+str(location)+"""}') 
+		 where  
+		operation_type = '06'
+		and ubicacion_destino = """+location+"""
+		and fecha >= '"""+ str(dateini) +"""' 
+		and fecha <= '"""+ str(datefin) +"""'
+		""")
+		r = self.env.cr.fetchall()
+		for i in r:
+			ton = i[0]
+			imp = i[1]
+		ton = ton if ton else 0
+		imp = imp if imp else 0
+		return ton,imp
+
+	# new code
+	@api.multi
+	def get_costo_ventas(self,location,product,conf,dateini,datefin):
+		location,product = str(location),str(product)
+		ton,imp,prom = 0,0,0
+		fechaini = str(dateini).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(datefin).replace('-','')
+		locations = self.env['stock.location'].search([('usage','=','customer')]).ids
+		locations = ','.join(map(str,[location]+locations))
+		self.env.cr.execute(""" 
+		SELECT 
+		round(SUM(ingreso),2),
+		round(SUM(valor),2),
+		CASE WHEN SUM(ingreso) != 0 
+		THEN round(SUM(valor)/SUM(ingreso),2) ELSE 0 END as cal
+		from (SELECT 
+		(salida-ingreso) as ingreso,
+		(credit-debit) as valor,
+		ubicacion_origen,
+		ubicacion_destino
+		from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",
+		'{"""+str(product)+"""}',
+		'{"""+locations+"""}') 
+		where ((ubicacion_destino = """+str(location)+""") 
+		or (ubicacion_origen = """+str(location)+"""))
+		and fecha >= '"""+str(dateini)+"""'  
+		and fecha <= '"""+str(datefin)+"""')T
+		where 
+		ubicacion_origen in ("""+locations+""") 
+		and ubicacion_destino in ("""+locations+""")
+			""")
+		for i in self.env.cr.fetchall():
+			ton = i[0]
+			imp = i[1]
+		ton = ton if ton else 0
+		imp = imp if imp else 0
+		return ton,imp
+
+	@api.multi
+	def get_otros(self,location,product,conf,dateini,datefin):
+		location,product = str(location),str(product)
+		ton,imp,prom = 0,0,0
+		fechaini = str(dateini).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(datefin).replace('-','')
+		self.env.cr.execute(""" 
+		SELECT 
+		CASE WHEN sum(salida)>0 
+		THEN round(sum(salida),2) ELSE 0 END as ingreso,
+		CASE WHEN sum(credit)>0 
+		THEN round(sum(credit),2) ELSE 0 END as credit,
+		CASE WHEN SUM(salida) != 0 and SUM(credit) != 0
+		THEN round(SUM(credit)/SUM(salida),2) ELSE 0 END as cal
+		from get_kardex_v
+		("""+str(fecha_inianio)+""","""+str(fechafin)+""",'{"""+product+"""}',
+		'{"""+location+""","""+str(conf.location_perdidas_mermas.id)+"""}') 
+		where (ubicacion_destino = """+location+"""
+		or ubicacion_origen = """+location+""")
+		and fecha >= '"""+str(dateini)+"""'  
+		and fecha <= '"""+str(datefin)+"""'
+		and operation_type = '16'
+		""")
+		for i in self.env.cr.fetchall():
+			ton = i[0]
+			imp = i[1]
+		ton = ton if ton else 0
+		imp = imp if imp else 0
+		return ton,imp
+
+
+	# new code
+	@api.multi
+	def get_transf_reali(self,location,product,conf,dateini,datefin):
+		location,product = str(location),str(product)
+		ton,imp,prom = 0,0,0
+		fechaini = str(dateini).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(datefin).replace('-','')
+		self.env.cr.execute(""" 
+			SELECT 
+			round(SUM(salida),2),
+			round(SUM(credit),2),
+			CASE WHEN SUM(salida) != 0
+			THEN round(SUM(credit)/SUM(salida),2) ELSE 0 END as cal
+			from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+			'{"""+product+"""}','{"""+location+"""}')
+			where operation_type = '06'
+			and fecha >= '"""+str(dateini)+"""'   
+			and fecha <= '"""+str(datefin)+"""'
+		""")
+		for i in self.env.cr.fetchall():
+			ton = i[0]
+			imp = i[1]
+		ton = ton if ton else 0
+		imp = imp if imp else 0
+		return ton,imp
+
+	@api.multi
+	def get_prom(self,ton,imp):
+		res = 0
+		try:
+			res = imp/ton
+		except ZeroDivisionError as e:
+			print('Error: ',e)
+		return res
+
+	@api.multi
+	def get_name_location(self,name):
+		name = name.split('/')
+		if len(name) == 2 or len(name) == 3:
+			return name[1]
+		elif len(name)==1:
+			return name[0]
+		else:
+			return ''
+
+	@api.one
+	def get_pie_pagina(self):
+		cp_obj = self.env['costos.produccion'].search( [('periodo','=',self.period_actual.id)] )
+		rpt = []
+		if len(cp_obj) >0:
+			cp_obj = cp_obj[0]		
+			#### la primera linea
+			rpt.append([ cp_obj.piedra_tt_ton, cp_obj.piedra_tt_cp , cp_obj.piedra_tt_imp , 0,0,0])
+			rpt.append([ cp_obj.calci_pro_ton, cp_obj.calci_pro_cp , cp_obj.calci_pro_imp , 0,0,0])
+			rpt.append([ cp_obj.calci_ini_ton, cp_obj.calci_ini_cp , cp_obj.calci_ini_imp , 0,0,0])
+			rpt.append([0,0,0,0,0,0])
+			rpt.append([ cp_obj.calci_dis_ton, cp_obj.calci_dis_cp , cp_obj.calci_dis_imp , 0,0,0])
+			rpt.append([0,0,0,0,0,0])
+			rpt.append([ cp_obj.calci_tt_ton, cp_obj.calci_tt_cp , cp_obj.calci_tt_imp , 0,0,0])
+			rpt.append([0,0,0,0,0,0])
+			rpt.append([ cp_obj.calci_ven_ton, cp_obj.calci_ven_cp , cp_obj.calci_ven_imp , 0,0,0])
+			rpt.append([0,0,0,0,0,0])
+			rpt.append([0,0,0,0,0,0])
+			rpt.append([ cp_obj.calci_final_ton, cp_obj.calci_final_cp , cp_obj.calci_final_imp , 0,0,0])
+			
+		else:
+			for i in range(0,12):
+				rpt.append([0,0,0,0,0,0])
+
+
+		period_list = []
+		nro_act = 1
+		period_act =  ("%2d"%nro_act).replace(' ','0') +  '/' + self.period_actual.code.split('/')[1]
+		nro_act = 2
+		mkmk = self.env['account.period'].search( [('code','=',period_act)] )
+		if len(mkmk)>0:
+			period_list.append(mkmk[0])
+
+		while period_act != self.period_actual.code:
+			period_act =  ("%2d"%nro_act).replace(' ','0') +  '/' + self.period_actual.code.split('/')[1]
+			nro_act += 1
+			mkmk = self.env['account.period'].search( [('code','=',period_act)] )
+			if len(mkmk)>0:
+				period_list.append(mkmk[0])
+
+		for i in period_list:
+			cp_obj = self.env['costos.produccion'].search( [('periodo','=',i.id)] )
+			if len(cp_obj) >0:
+				cp_obj = cp_obj[0]		
+				#### Aqui toda actualizar valores no modificarlos y  ahi sacar el promedio del medio con eso se termina ejemplo
+				rpt[0][3] += cp_obj.piedra_tt_ton
+				rpt[0][5] += cp_obj.piedra_tt_imp
+				rpt[0][4] = 0 if rpt[0][3] == 0 else (rpt[0][5] / rpt[0][3] )
+
+				rpt[1][3] += cp_obj.calci_pro_ton
+				rpt[1][5] += cp_obj.calci_pro_imp
+				rpt[1][4] = 0 if rpt[1][3] == 0 else (rpt[1][5] / rpt[1][3] )
+
+
+				if i.code.split('/')[0] == '01':
+					rpt[2][3] += cp_obj.calci_ini_ton
+					rpt[2][5] += cp_obj.calci_ini_imp
+					rpt[2][4] = 0 if rpt[2][3] == 0 else (rpt[2][5] / rpt[2][3] )
+
+				rpt[4][3] = rpt[1][3]+ rpt[2][3]+ rpt[3][3]
+				rpt[4][5] = rpt[1][5]+ rpt[2][5]+ rpt[3][5]
+				rpt[4][4] = 0 if rpt[4][3] == 0 else (rpt[4][5] / rpt[4][3] )
+
+				rpt[6][3] += cp_obj.calci_tt_ton
+				rpt[6][5] += cp_obj.calci_tt_imp
+				rpt[6][4] = 0 if rpt[6][3] == 0 else (rpt[6][5] / rpt[6][3] )
+
+
+				rpt[8][3] += cp_obj.calci_ven_ton
+				rpt[8][5] += cp_obj.calci_ven_imp
+				rpt[8][4] = 0 if rpt[8][3] == 0 else (rpt[8][5] / rpt[8][3] )
+
+
+				parametros = self.env['main.parameter'].search([])[0]
+				tmp = []
+
+
+
+				self.env.cr.execute(""" 
+				   select sum(salida-ingreso),sum(debit-credit) from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				   '{""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+				   where ((ubicacion_origen in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				   or (ubicacion_destino in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+				   and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
+				""")
+				tonex = 0
+				preciox = 0
+
+
+				for w in self.env.cr.fetchall():
+					if w[0]:
+						tonex += w[0]
+						preciox += w[1]
+				
+				if tonex == None:
+					tonex = 0
+				if preciox == None:
+					preciox = 0
+
+
+
+				rpt[9][0] = tonex
+				rpt[9][2] = preciox
+				rpt[9][1] = 0 if rpt[9][0] == 0 else (rpt[9][2] / rpt[9][0] )
+
+
+
+				self.env.cr.execute(""" 
+				   select sum(salida-ingreso),sum(debit-credit) from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				   '{""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+				   where ((ubicacion_origen in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				   or (ubicacion_destino in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+				""")
+				tonex = 0
+				preciox = 0
+
+
+				for w in self.env.cr.fetchall():
+					if w[0]:
+						tonex += w[0]
+						preciox += w[1]
+				
+				if tonex == None:
+					tonex = 0
+				if preciox == None:
+					preciox = 0
+
+
+
+				rpt[9][3] = tonex
+				rpt[9][5] = preciox
+				rpt[9][4] = 0 if rpt[9][3] == 0 else (rpt[9][5] / rpt[9][3] )
+
+
+
+
+
+				self.env.cr.execute(""" 
+				   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') 
+				   where ((ubicacion_origen = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				   or (ubicacion_destino = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+				   and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
+				""")
+				tonex = 0
+				preciox = 0
+
+
+				for w in self.env.cr.fetchall():
+					if w[0]:
+						tonex += w[0]
+						preciox += w[1]
+				
+				if tonex == None:
+					tonex = 0
+				if preciox == None:
+					preciox = 0
+
+
+				#producto no conforme
+				self.env.cr.execute(""" 
+				   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}')  as T
+				   inner join stock_move sm on sm.id = T.stock_moveid
+				   inner join stock_picking sp on sp.id = sm.picking_id
+				   where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				   or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+				   and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
+				   and sp.motivo_guia = '16'
+				""")
+
+
+				for w in self.env.cr.fetchall():
+					if w[0]:
+						tonex += w[0]
+						preciox += w[1]
+				
+				if tonex == None:
+					tonex = 0
+				if preciox == None:
+					preciox = 0
+				#fin de prod. no conforme
+
+
+
+				rpt[10][0] = tonex
+				rpt[10][2] = preciox
+				rpt[10][1] = 0 if rpt[10][0] == 0 else (rpt[10][2] / rpt[10][0] )
+
+
+
+				self.env.cr.execute(""" 
+				   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') 
+				   where (ubicacion_origen = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				   or (ubicacion_destino = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				""")
+				tonex = 0
+				preciox = 0
+
+
+				for w in self.env.cr.fetchall():
+					if w[0]:
+						tonex += w[0]
+						preciox += w[1]
+				
+				if tonex == None:
+					tonex = 0
+				if preciox == None:
+					preciox = 0
+
+				#prod. no conforme
+
+
+				self.env.cr.execute(""" 
+				   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') as T
+				   inner join stock_move sm on sm.id = T.stock_moveid
+				   inner join stock_picking sp on sp.id = sm.picking_id
+				   where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				   or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """) )
+				   and sp.motivo_guia = '16'
+
+				""")
+
+
+				for w in self.env.cr.fetchall():
+					if w[0]:
+						tonex += w[0]
+						preciox += w[1]
+				
+				if tonex == None:
+					tonex = 0
+				if preciox == None:
+					preciox = 0
+
+
+
+				rpt[10][3] = tonex
+				rpt[10][5] = preciox
+				rpt[10][4] = 0 if rpt[10][3] == 0 else (rpt[10][5] / rpt[10][3] )
+
+				
+				rpt[11][0] = rpt[4][0] - rpt[5][0] -rpt[6][0] -rpt[7][0] -rpt[8][0] +rpt[9][0] -rpt[10][0]   #rpt[11][0] - rpt[10][0]
+				rpt[11][2] = rpt[4][2] - rpt[5][2] -rpt[6][2] -rpt[7][2] -rpt[8][2] +rpt[9][2] -rpt[10][2]   #rpt[11][2] - rpt[10][2]
+				rpt[11][1] = 0 if rpt[11][0] == 0 else (rpt[11][2] / rpt[11][0] )
+
+
+
+				rpt[11][3] = rpt[4][3] - rpt[5][3] -rpt[6][3] -rpt[7][3] -rpt[8][3] +rpt[9][3] -rpt[10][3] 
+				rpt[11][5] = rpt[4][5] - rpt[5][5] -rpt[6][5] -rpt[7][5] -rpt[8][5] +rpt[9][5] -rpt[10][5]
+				rpt[11][4] = 0 if rpt[11][3] == 0 else (rpt[11][5] / rpt[11][3] )
+
+		return rpt
+
+
+	# esta funcion no funciona aun, queda pendiente:		
+	@api.one
+	def get_data(self):
+		cp_obj = self.env['costos.produccion'].search( [('periodo','=',self.period_actual.id)] )
+		rpt = []
+		if len(cp_obj) >0:
+			cp_obj = cp_obj[0]		
+			#### la primera linea
+			rpt.append([ cp_obj.piedra_tt_ton, cp_obj.piedra_tt_cp , cp_obj.piedra_tt_imp , 0,0,0])
+			rpt.append([ cp_obj.calci_pro_ton, cp_obj.calci_pro_cp , cp_obj.calci_pro_imp , 0,0,0])
+			rpt.append([ cp_obj.calci_ini_ton, cp_obj.calci_ini_cp , cp_obj.calci_ini_imp , 0,0,0]) # inv inicial
+			rpt.append([0,0,0,0,0,0]) # ingresos
+			rpt.append([ cp_obj.calci_dis_ton, cp_obj.calci_dis_cp , cp_obj.calci_dis_imp , 0,0,0])
+			rpt.append([0,0,0,0,0,0]) # otros 
+			rpt.append([ cp_obj.calci_tt_ton, cp_obj.calci_tt_cp , cp_obj.calci_tt_imp , 0,0,0])
+			rpt.append([0,0,0,0,0,0])
+			rpt.append([ cp_obj.calci_ven_ton, cp_obj.calci_ven_cp , cp_obj.calci_ven_imp , 0,0,0])
+			rpt.append([0,0,0,0,0,0])
+			rpt.append([0,0,0,0,0,0])
+			rpt.append([ cp_obj.calci_final_ton, cp_obj.calci_final_cp , cp_obj.calci_final_imp , 0,0,0])
+			
+		else:
+			for i in range(0,12):
+				rpt.append([0,0,0,0,0,0])
+
+
+		period_list = []
+		nro_act = 1
+		period_act =  ("%2d"%nro_act).replace(' ','0') +  '/' + self.period_actual.code.split('/')[1]
+		nro_act = 2
+		mkmk = self.env['account.period'].search( [('code','=',period_act)] )
+		if len(mkmk)>0:
+			period_list.append(mkmk[0])
+
+		while period_act != self.period_actual.code:
+			period_act =  ("%2d"%nro_act).replace(' ','0') +  '/' + self.period_actual.code.split('/')[1]
+			nro_act += 1
+			mkmk = self.env['account.period'].search( [('code','=',period_act)] )
+			if len(mkmk)>0:
+				period_list.append(mkmk[0])
+
+		for i in period_list:
+			cp_obj = self.env['costos.produccion'].search( [('periodo','=',i.id)] )
+			if len(cp_obj) >0:
+				cp_obj = cp_obj[0]		
+				#### Aqui toda actualizar valores no modificarlos y  ahi sacar el promedio del medio con eso se termina ejemplo
+				rpt[0][3] += cp_obj.piedra_tt_ton
+				rpt[0][5] += cp_obj.piedra_tt_imp
+				rpt[0][4] = 0 if rpt[0][3] == 0 else (rpt[0][5] / rpt[0][3] )
+
+				rpt[1][3] += cp_obj.calci_pro_ton
+				rpt[1][5] += cp_obj.calci_pro_imp
+				rpt[1][4] = 0 if rpt[1][3] == 0 else (rpt[1][5] / rpt[1][3] )
+
+
+				if i.code.split('/')[0] == '01':
+					rpt[2][3] += cp_obj.calci_ini_ton
+					rpt[2][5] += cp_obj.calci_ini_imp
+					rpt[2][4] = 0 if rpt[2][3] == 0 else (rpt[2][5] / rpt[2][3] )
+
+				rpt[4][3] = rpt[1][3]+ rpt[2][3]+ rpt[3][3]
+				rpt[4][5] = rpt[1][5]+ rpt[2][5]+ rpt[3][5]
+				rpt[4][4] = 0 if rpt[4][3] == 0 else (rpt[4][5] / rpt[4][3] )
+
+				rpt[6][3] += cp_obj.calci_tt_ton
+				rpt[6][5] += cp_obj.calci_tt_imp
+				rpt[6][4] = 0 if rpt[6][3] == 0 else (rpt[6][5] / rpt[6][3] )
+
+
+				rpt[8][3] += cp_obj.calci_ven_ton
+				rpt[8][5] += cp_obj.calci_ven_imp
+				rpt[8][4] = 0 if rpt[8][3] == 0 else (rpt[8][5] / rpt[8][3] )
+
+				parametros = self.env['main.parameter'].search([])[0]
+				tmp = []
+
+				# esta mrd no jala nada
+				# self.env.cr.execute(""" 
+				#    select sum(salida-ingreso),sum(debit-credit) from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+				#    where ((ubicacion_origen in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				#    or (ubicacion_destino in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+				#    and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
+				# """)
+				# tonex = 0
+				# preciox = 0
+				# for w in self.env.cr.fetchall():
+				# 	if w[0]:
+				# 		tonex += w[0]
+				# 		preciox += w[1]
+				
+				# if tonex == None:
+				# 	tonex = 0
+				# if preciox == None:
+				# 	preciox = 0
+
+				# rpt[9][0] = tonex
+				# rpt[9][2] = preciox
+				# rpt[9][1] = 0 if rpt[9][0] == 0 else (rpt[9][2] / rpt[9][0] )
+
+				# self.env.cr.execute(""" 
+				#    select sum(salida-ingreso),sum(debit-credit) from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+				#    where ((ubicacion_origen in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				#    or (ubicacion_destino in (select id from stock_location where check_ajuste_inventario = true) and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+				# """)
+				# tonex = 0
+				# preciox = 0
+
+
+				# for w in self.env.cr.fetchall():
+				# 	if w[0]:
+				# 		tonex += w[0]
+				# 		preciox += w[1]
+				
+				# if tonex == None:
+				# 	tonex = 0
+				# if preciox == None:
+				# 	preciox = 0
+				# rpt[9][3] = tonex
+				# rpt[9][5] = preciox
+				# rpt[9][4] = 0 if rpt[9][3] == 0 else (rpt[9][5] / rpt[9][3] )
+				# self.env.cr.execute(""" 
+				#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') 
+				#    where ((ubicacion_origen = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				#    or (ubicacion_destino = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+				#    and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
+				# """)
+				# tonex = 0
+				# preciox = 0
+
+
+				# for w in self.env.cr.fetchall():
+				# 	if w[0]:
+				# 		tonex += w[0]
+				# 		preciox += w[1]
+				
+				# if tonex == None:
+				# 	tonex = 0
+				# if preciox == None:
+				# 	preciox = 0
+
+
+				# #producto no conforme
+				# self.env.cr.execute(""" 
+				#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}')  as T
+				#    inner join stock_move sm on sm.id = T.stock_moveid
+				#    inner join stock_picking sp on sp.id = sm.picking_id
+				#    where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				#    or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+				#    and fecha >= '"""+ str(self.period_actual.date_start) +"""' and fecha <= '"""+ str(self.period_actual.date_stop)+"""'
+				#    and sp.motivo_guia = '16'
+				# """)
+
+
+				# for w in self.env.cr.fetchall():
+				# 	if w[0]:
+				# 		tonex += w[0]
+				# 		preciox += w[1]
+				
+				# if tonex == None:
+				# 	tonex = 0
+				# if preciox == None:
+				# 	preciox = 0
+				# #fin de prod. no conforme
+
+
+
+				# rpt[10][0] = tonex
+				# rpt[10][2] = preciox
+				# rpt[10][1] = 0 if rpt[10][0] == 0 else (rpt[10][2] / rpt[10][0] )
+
+
+
+				# self.env.cr.execute(""" 
+				#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') 
+				#    where (ubicacion_origen = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				#    or (ubicacion_destino = """ + str(parametros.location_perdidas_mermas.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				# """)
+				# tonex = 0
+				# preciox = 0
+
+
+				# for w in self.env.cr.fetchall():
+				# 	if w[0]:
+				# 		tonex += w[0]
+				# 		preciox += w[1]
+				
+				# if tonex == None:
+				# 	tonex = 0
+				# if preciox == None:
+				# 	preciox = 0
+
+				# #prod. no conforme
+
+
+				# self.env.cr.execute(""" 
+				#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(self.period_actual.date_start)[:4]+'0101'+""","""+str(self.period_actual.date_stop).replace('-','')+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}') as T
+				#    inner join stock_move sm on sm.id = T.stock_moveid
+				#    inner join stock_picking sp on sp.id = sm.picking_id
+				#    where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				#    or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """) )
+				#    and sp.motivo_guia = '16'
+
+				# """)
+
+
+				# for w in self.env.cr.fetchall():
+				# 	if w[0]:
+				# 		tonex += w[0]
+				# 		preciox += w[1]
+				
+				# if tonex == None:
+				# 	tonex = 0
+				# if preciox == None:
+				# 	preciox = 0
+
+
+
+				# rpt[10][3] = tonex
+				# rpt[10][5] = preciox
+				# rpt[10][4] = 0 if rpt[10][3] == 0 else (rpt[10][5] / rpt[10][3] )
+
+				
+				# rpt[11][0] = rpt[4][0] - rpt[5][0] -rpt[6][0] -rpt[7][0] -rpt[8][0] +rpt[9][0] -rpt[10][0]   #rpt[11][0] - rpt[10][0]
+				# rpt[11][2] = rpt[4][2] - rpt[5][2] -rpt[6][2] -rpt[7][2] -rpt[8][2] +rpt[9][2] -rpt[10][2]   #rpt[11][2] - rpt[10][2]
+				# rpt[11][1] = 0 if rpt[11][0] == 0 else (rpt[11][2] / rpt[11][0] )
+
+
+
+				# rpt[11][3] = rpt[4][3] - rpt[5][3] -rpt[6][3] -rpt[7][3] -rpt[8][3] +rpt[9][3] -rpt[10][3] 
+				# rpt[11][5] = rpt[4][5] - rpt[5][5] -rpt[6][5] -rpt[7][5] -rpt[8][5] +rpt[9][5] -rpt[10][5]
+				# rpt[11][4] = 0 if rpt[11][3] == 0 else (rpt[11][5] / rpt[11][3] )
+
+		return rpt
 
 
