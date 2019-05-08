@@ -702,7 +702,7 @@ class rm_report_extraccion(models.Model):
 			worksheet.write(x,1, (data_final_pagina[i][0]), numberdoscon)
 			worksheet.write(x,2, ((data_final_pagina[i][1]))/tcvp, numberdoscon)
 			worksheet.write(x,3, ((data_final_pagina[i][2]))/tcvp, numberdoscon)
-			worksheet.write(x,4, ((data_final_pagina[i][3]))/tcvp, numberdoscon)
+			worksheet.write(x,4, ((data_final_pagina[i][3])), numberdoscon)
 			worksheet.write(x,5, ((data_final_pagina[i][4]))/tcvp, numberdoscon)
 			worksheet.write(x,6, ((data_final_pagina[i][5]))/tcvp, numberdoscon)
 			x += 1

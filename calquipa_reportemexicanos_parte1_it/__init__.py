@@ -32,3 +32,6 @@ import reporte_mexicano_micronizado_usd
 import reporte_mexicano_trituracion_usd
 import reporte_mexicano_administracion_usd
 import reporte_mexicano_ventas_usd
+import reporte_mexicano_capacitacion_usd
+import reporte_mexicano_promocion_usd
+import reporte_mexicano_intercompanias_usd

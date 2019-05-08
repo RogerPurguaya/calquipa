@@ -21,6 +21,10 @@ from cgi import escape
 import decimal
 import calendar
 
+def dig_5(n):
+	return ("%5d" % n).replace(' ','0')
+
+
 class rm_report_micronizado(models.Model):
 	_inherit='rm.report.micronizado'
 
@@ -689,7 +693,7 @@ class rm_report_micronizado(models.Model):
 			worksheet.write(x,1, (data_final_pagina[i][0]), numberdoscon)
 			worksheet.write(x,2, ((data_final_pagina[i][1]))/tcvp, numberdoscon)
 			worksheet.write(x,3, ((data_final_pagina[i][2]))/tcvp, numberdoscon)
-			worksheet.write(x,4, ((data_final_pagina[i][3]))/tcvp, numberdoscon)
+			worksheet.write(x,4, ((data_final_pagina[i][3])), numberdoscon)
 			worksheet.write(x,5, ((data_final_pagina[i][4]))/tcvp, numberdoscon)
 			worksheet.write(x,6, ((data_final_pagina[i][5]))/tcvp, numberdoscon)
 			x += 1

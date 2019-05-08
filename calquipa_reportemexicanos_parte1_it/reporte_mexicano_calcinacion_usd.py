@@ -80,7 +80,7 @@ class rm_report_calcinacion(models.Model):
 		merge_format.set_bg_color('#DCE6F1')
 		merge_format.set_text_wrap()
 		merge_format.set_font_size(9)
-
+		doce = 12
 
 		worksheet.insert_image('C2', 'calidra.jpg')
 		worksheet.write(1,8, u'ANEXO DE OPERACIÓN {0}'.format(self.fiscal.name), bold)
@@ -679,7 +679,7 @@ class rm_report_calcinacion(models.Model):
 			worksheet.write(x,1, ((data[i][0])), numberdoscon)
 			worksheet.write(x,2, ((data[i][1]))/tcvp, numberdoscon)
 			worksheet.write(x,3, ((data[i][2]))/tcvp, numberdoscon)
-			worksheet.write(x,4, ((data[i][3]))/tcvp, numberdoscon)
+			worksheet.write(x,4, ((data[i][3])), numberdoscon)
 			worksheet.write(x,5, ((data[i][4]))/tcvp, numberdoscon)
 			worksheet.write(x,6, ((data[i][5]))/tcvp, numberdoscon)
 			x += 1

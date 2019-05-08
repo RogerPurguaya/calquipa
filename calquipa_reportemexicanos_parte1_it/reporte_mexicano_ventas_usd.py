@@ -19,6 +19,9 @@ from reportlab.lib.utils import simpleSplit
 from cgi import escape
 import decimal
 
+def dig_5(n):
+	return ("%5d" % n).replace(' ','0')
+
 class rm_report_ventas(models.Model):
 	_inherit= 'rm.report.ventas'
 
