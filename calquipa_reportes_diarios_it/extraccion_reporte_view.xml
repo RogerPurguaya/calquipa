@@ -141,6 +141,10 @@
                     <field name="diesel"          attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="vale_cargador"   attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="cargador"        attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="nro_vale" string="N° de vale Excavadora 336" attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="excavadora" string="Diesel Excavadora 336" attrs="{'readonly':[('check_period','=',True)]}"/>
+                   <!--  <field name="nro_vale" string="N° de vale Excavadora 336"/>
+                    <field name="excavadora" string="Diesel Excavadora 336"/> -->
                     <!--<field name="agua"            attrs="{'readonly':[('check_period','=',True)]}"/>-->
                 </tree>
             </field>

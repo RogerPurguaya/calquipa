@@ -12,7 +12,7 @@
 	'auto_install': False,
 	'demo': [],
 	'data':	[
-		'wizard/reporte_facturas_pagos_wizard_view.xml',#'reporte_facturas_pagos_view.xml'
+		'wizard/reporte_facturas_pagos_wizard_view.xml',
 	],
 	'installable': True
 }

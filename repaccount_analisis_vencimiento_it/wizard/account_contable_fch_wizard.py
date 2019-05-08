@@ -25,7 +25,8 @@ class account_payable_analisis_vencimiento_wizard(osv.TransientModel):
 
 select 
 id, 
-fecha_emision, 
+fecha_emision,
+date_reception,
 fecha_ven,
 plazo,
 empresa,
@@ -43,8 +44,6 @@ CASE WHEN atraso > 60  and atraso < 91  then saldo else 0 end  as hasta_90,
 CASE WHEN atraso > 90  and atraso < 181  then saldo else 0 end  as hasta_180,
 CASE WHEN atraso > 180  then saldo else 0 end  as mas_de_180
 
-
-
 from
 (
 select 
@@ -52,9 +51,15 @@ aml.id as id,
 ap.code as periodo,
 lib.name as libro,
 am.name as voucher,
-am.date as fecha_emision,
-aml.date_maturity as fecha_ven,
 jj.value as plazo,
+am.date as fecha_emision,
+ft.date_reception as date_reception,
+
+CASE WHEN ft.date_reception is not null
+and ft.date_due is not null 
+THEN ft.date_due 
+else aml.date_maturity END as fecha_ven,
+
 rp.name as empresa,
 aa.code,
 itd.code as tipo,
@@ -62,7 +67,9 @@ aml.nro_comprobante as nro_comprobante,
 abs(T.saldo) as saldo,
 rc.name as divisa,
 abs(saldo_me) as saldo_me,
-'"""+ str(self.date) +"""'::date - aml.date_maturity as atraso,
+CASE WHEN ft.date_reception is not null 
+THEN '"""+ str(self.date) +"""'::date - ft.date_reception 
+else '"""+ str(self.date) +"""'::date - aml.date_maturity END as atraso,
 am.state as estado
 
 
@@ -73,6 +80,7 @@ inner join account_period api on api.id = ami.period_id
 left join account_account on account_account.id=account_move_line.account_id
 where (left(account_account.code,2)='42' or left(account_account.code,2)='46') 
 and ami.period_id in ( select id from account_period where periodo_num(code)>=201900 )
+and account_account.code not in ('42111','42112')
 
 group by identifica
 having sum(debit)-sum(credit) < 0 
@@ -90,12 +98,10 @@ left join account_payment_term hh on hh.id=ft.payment_term
 left join ir_translation jj on jj.res_id=hh.id and jj.name='account.payment.term,name'
 
 where am.state='posted'
-order by empresa, code, nro_comprobante
-) T
+order by empresa, code, nro_comprobante)T
 
 					
 					) """)
-
 
 		move_obj = self.env['account.payable.contable.vencimiento']
 		filtro = []
@@ -166,48 +172,49 @@ order by empresa, code, nro_comprobante
 			#worksheet.write(1,1, total.date.strftime('%Y-%m-%d %H:%M'),bord)
 			
 			worksheet.write(4,0, "F. Emi.",boldbord)
-			
-			worksheet.write(4,1, "F. Ven.",boldbord)
-			worksheet.write(4,2, "Plazo",boldbord)
-			worksheet.write(4,3, "Empresa",boldbord)
-			worksheet.write(4,4, "TD",boldbord)				
-			worksheet.write(4,5, u"Número",boldbord)
+			worksheet.write(4,1, "F. Recep.",boldbord)
+			worksheet.write(4,2, "F. Ven.",boldbord)
+			worksheet.write(4,3, "Plazo",boldbord)
+			worksheet.write(4,4, "Empresa",boldbord)
+			worksheet.write(4,5, "TD",boldbord)				
+			worksheet.write(4,6, u"Número",boldbord)
 
-			worksheet.write(4,6, u"Moneda",boldbord)
-			worksheet.write(4,7, u"Saldo Me",boldbord)
-			worksheet.write(4,8, "Cuenta",boldbord)
+			worksheet.write(4,7, u"Moneda",boldbord)
+			worksheet.write(4,8, u"Saldo Me",boldbord)
+			worksheet.write(4,9, "Cuenta",boldbord)
 
-			worksheet.write(4,9, "Por Vencer",boldbord)
-			worksheet.write(4,10, u"Hasta 15",boldbord)
-			worksheet.write(4,11, u"Hasta 30",boldbord)
-			worksheet.write(4,12, u"Hasta 60",boldbord)
-			worksheet.write(4,13, u"Hasta 90",boldbord)
-			worksheet.write(4,14, u"Hasta 180",boldbord)
-			worksheet.write(4,15, u"Mas de 180",boldbord)
+			worksheet.write(4,10, "Por Vencer",boldbord)
+			worksheet.write(4,11, u"Hasta 15",boldbord)
+			worksheet.write(4,12, u"Hasta 30",boldbord)
+			worksheet.write(4,13, u"Hasta 60",boldbord)
+			worksheet.write(4,14, u"Hasta 90",boldbord)
+			worksheet.write(4,15, u"Hasta 180",boldbord)
+			worksheet.write(4,16, u"Mas de 180",boldbord)
 
 
 			for line in lstidsmove:
 				worksheet.write(x,0,line.fecha_emision if line.fecha_emision else '' ,bord )
-				worksheet.write(x,1,line.fecha_ven if line.fecha_ven  else '',bord )
-				worksheet.write(x,2,line.plazo if line.plazo  else '',bord)
-				worksheet.write(x,3,line.empresa if line.empresa  else '',bord)
-				worksheet.write(x,4,line.tipo if line.tipo  else '',bord)
-				worksheet.write(x,5,line.nro_comprobante if line.nro_comprobante else '',bord)
-				worksheet.write(x,6,line.moneda if line.moneda else '',bord)
-				worksheet.write(x,7,line.saldo_me if line.moneda else '',bord)
-				worksheet.write(x,8,line.cuenta if line.cuenta else '',bord)
-				worksheet.write(x,9,line.por_vencer ,numberdos)
-				worksheet.write(x,10,line.hasta_15 ,numberdos)
-				worksheet.write(x,11,line.hasta_30 ,numberdos)
-				worksheet.write(x,12,line.hasta_60 ,numberdos)
-				worksheet.write(x,13,line.hasta_90 ,numberdos)
-				worksheet.write(x,14,line.hasta_180 ,numberdos)
-				worksheet.write(x,15,line.mas_de_180 ,numberdos)
+				worksheet.write(x,1,line.date_reception if line.date_reception else '' ,bord )
+				worksheet.write(x,2,line.fecha_ven if line.fecha_ven  else '',bord )
+				worksheet.write(x,3,line.plazo if line.plazo  else '',bord)
+				worksheet.write(x,4,line.empresa if line.empresa  else '',bord)
+				worksheet.write(x,5,line.tipo if line.tipo  else '',bord)
+				worksheet.write(x,6,line.nro_comprobante if line.nro_comprobante else '',bord)
+				worksheet.write(x,7,line.moneda if line.moneda else '',bord)
+				worksheet.write(x,8,line.saldo_me if line.moneda else '',bord)
+				worksheet.write(x,9,line.cuenta if line.cuenta else '',bord)
+				worksheet.write(x,10,line.por_vencer ,numberdos)
+				worksheet.write(x,11,line.hasta_15 ,numberdos)
+				worksheet.write(x,12,line.hasta_30 ,numberdos)
+				worksheet.write(x,13,line.hasta_60 ,numberdos)
+				worksheet.write(x,14,line.hasta_90 ,numberdos)
+				worksheet.write(x,15,line.hasta_180 ,numberdos)
+				worksheet.write(x,16,line.mas_de_180 ,numberdos)
 
 				x = x +1
 
 
-			tam_col = [16,7,10,13,16,16,16,20,14]
+			tam_col = [16,16,16,7,10,13,16,16,16,20,14]
 			worksheet.set_row(0, 30)
 
 			worksheet.set_column('A:A', tam_col[0])
@@ -219,6 +226,7 @@ order by empresa, code, nro_comprobante
 			worksheet.set_column('G:G', tam_col[6])
 			worksheet.set_column('H:H', tam_col[7])
 			worksheet.set_column('I:I', tam_col[8])
+			worksheet.set_column('I:I', tam_col[9])
 			workbook.close()
 			
 			f = open(direccion + 'tempo_vencimientopayable.xlsx', 'rb')
@@ -276,6 +284,7 @@ nro_comprobante ,
 case when divisa is not null then divisa else 'PEN' end as moneda,
 saldo_me,
 code as cuenta,
+date_reception,
 
 CASE WHEN atraso <= 0 OR atraso is null then saldo else 0 end  as por_vencer,
 CASE WHEN atraso > 0  and atraso < 16  then saldo else 0 end  as hasta_15,
@@ -294,8 +303,14 @@ aml.id as id,
 ap.code as periodo,
 lib.name as libro,
 am.name as voucher,
+ft.date_reception,
+
+CASE WHEN ft.date_reception is not null
+and ft.date_due is not null 
+THEN ft.date_due 
+else aml.date_maturity END as fecha_ven,
+--aml.date_maturity as fecha_ven,
 am.date as fecha_emision,
-aml.date_maturity as fecha_ven,
 jj.value as plazo,
 rp.name as empresa,
 aa.code,
@@ -304,7 +319,9 @@ aml.nro_comprobante as nro_comprobante,
 abs(T.saldo) as saldo,
 rc.name as divisa,
 abs(saldo_me) as saldo_me,
-'"""+ str(self.date) +"""'::date - aml.date_maturity as atraso,
+CASE WHEN ft.date_reception is not null 
+THEN '"""+ str(self.date) +"""'::date - ft.date_reception 
+else '"""+ str(self.date) +"""'::date - aml.date_maturity END as atraso,
 am.state as estado
 
 
@@ -408,49 +425,50 @@ order by empresa, code, nro_comprobante
 			#worksheet.write(1,1, total.date.strftime('%Y-%m-%d %H:%M'),bord)
 			
 			worksheet.write(4,0, "F. Emi.",boldbord)
-			
-			worksheet.write(4,1, "F. Ven.",boldbord)
-			worksheet.write(4,2, "Plazo",boldbord)
-			worksheet.write(4,3, "Empresa",boldbord)
-			worksheet.write(4,4, "TD",boldbord)				
-			worksheet.write(4,5, u"Número",boldbord)
+			worksheet.write(4,1, "F. Recep.",boldbord)
+			worksheet.write(4,2, "F. Ven.",boldbord)
+			worksheet.write(4,3, "Plazo",boldbord)
+			worksheet.write(4,4, "Empresa",boldbord)
+			worksheet.write(4,5, "TD",boldbord)				
+			worksheet.write(4,6, u"Número",boldbord)
+			worksheet.write(4,7, u"Moneda",boldbord)
+			worksheet.write(4,8, u"Saldo Me",boldbord)
+			worksheet.write(4,9, "Cuenta",boldbord)
 
-			worksheet.write(4,6, u"Moneda",boldbord)
-			worksheet.write(4,7, u"Saldo Me",boldbord)
-			worksheet.write(4,8, "Cuenta",boldbord)
-
-			worksheet.write(4,9, "Por Vencer",boldbord)
-			worksheet.write(4,10, u"De 1 a 15",boldbord)
-			worksheet.write(4,11, u"De 16 a 30",boldbord)
-			worksheet.write(4,12, u"De 31 a 60",boldbord)
-			worksheet.write(4,13, u"De 61 a 90",boldbord)
-			worksheet.write(4,14, u"De 91 a 180",boldbord)
-			worksheet.write(4,15, u"Mas de 180",boldbord)
+			worksheet.write(4,10, "Por Vencer",boldbord)
+			worksheet.write(4,11, u"De 1 a 15",boldbord)
+			worksheet.write(4,12, u"De 16 a 30",boldbord)
+			worksheet.write(4,13, u"De 31 a 60",boldbord)
+			worksheet.write(4,14, u"De 61 a 90",boldbord)
+			worksheet.write(4,15, u"De 91 a 180",boldbord)
+			worksheet.write(4,16, u"Mas de 180",boldbord)
 
 
 			for line in lstidsmove:
+				
 				worksheet.write(x,0,line.fecha_emision if line.fecha_emision else '' ,bord )
-				worksheet.write(x,1,line.fecha_ven if line.fecha_ven  else '',bord )
-				worksheet.write(x,2,line.plazo if line.plazo  else '',bord)
-				worksheet.write(x,3,line.empresa if line.empresa  else '',bord)
-				worksheet.write(x,4,line.tipo if line.tipo  else '',bord)
-				worksheet.write(x,5,line.nro_comprobante if line.nro_comprobante else '',bord)
-				worksheet.write(x,6,line.moneda if line.moneda else '',bord)
-				worksheet.write(x,7,line.saldo_me if line.moneda else '',bord)
+				worksheet.write(x,1,line.date_reception if line.date_reception else '' ,bord )
+				worksheet.write(x,2,line.fecha_ven if line.fecha_ven  else '',bord )
+				worksheet.write(x,3,line.plazo if line.plazo  else '',bord)
+				worksheet.write(x,4,line.empresa if line.empresa  else '',bord)
+				worksheet.write(x,5,line.tipo if line.tipo  else '',bord)
+				worksheet.write(x,6,line.nro_comprobante if line.nro_comprobante else '',bord)
+				worksheet.write(x,7,line.moneda if line.moneda else '',bord)
+				worksheet.write(x,8,line.saldo_me if line.moneda else '',bord)
 
-				worksheet.write(x,8,line.cuenta if line.cuenta else '',bord)
-				worksheet.write(x,9,line.por_vencer ,numberdos)
-				worksheet.write(x,10,line.hasta_15 ,numberdos)
-				worksheet.write(x,11,line.hasta_30 ,numberdos)
-				worksheet.write(x,12,line.hasta_60 ,numberdos)
-				worksheet.write(x,13,line.hasta_90 ,numberdos)
-				worksheet.write(x,14,line.hasta_180 ,numberdos)
-				worksheet.write(x,15,line.mas_de_180 ,numberdos)
+				worksheet.write(x,9,line.cuenta if line.cuenta else '',bord)
+				worksheet.write(x,10,line.por_vencer ,numberdos)
+				worksheet.write(x,11,line.hasta_15 ,numberdos)
+				worksheet.write(x,12,line.hasta_30 ,numberdos)
+				worksheet.write(x,13,line.hasta_60 ,numberdos)
+				worksheet.write(x,14,line.hasta_90 ,numberdos)
+				worksheet.write(x,15,line.hasta_180 ,numberdos)
+				worksheet.write(x,16,line.mas_de_180 ,numberdos)
 
 				x = x +1
 
 
-			tam_col = [16,7,10,13,16,16,16,20,14]
+			tam_col = [16,16,16,7,10,13,16,16,16,20,14]
 			worksheet.set_row(0, 30)
 
 			worksheet.set_column('A:A', tam_col[0])

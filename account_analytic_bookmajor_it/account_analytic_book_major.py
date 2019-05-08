@@ -9,7 +9,7 @@ class account_analytic_book_major(models.Model):
 
 	@api.multi
 	def compute_saldo(self):
-		#print "Comenzo"
+		print "Comenzo"
 		y = None
 		SaldoN = 0
 		for x in self.sorted(key=lambda r: r.id):
@@ -19,7 +19,7 @@ class account_analytic_book_major(models.Model):
 			SaldoN += x.debe
 			SaldoN -= x.haber
 			x.saldo = SaldoN
-			#print y,SaldoN,x.voucher
+			print y,SaldoN,x.voucher
 
 	
 	periodo= fields.Char('Periodo', size=50)

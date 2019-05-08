@@ -500,15 +500,34 @@
                                                 <div style="border-bottom: 2px dotted white;">
                                                     <label string="Producción" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="calci_pro_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="calci_pro_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="calci_pro_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
+
+
+                                                <!-- nuevo -->
+
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Transferencias Recibidas" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_trans_recib" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_tranf_impo_recib" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_trans_prom_recib" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <!-- end nuevo -->
 
                                                 <div style="border-bottom: 2px dotted white;">
                                                     <label string="Disponible" col="1" colspan="1"/>
@@ -555,15 +574,34 @@
                                                 <div style="border-bottom: 2px dotted white;">
                                                     <label string="Otros" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="calci_salida_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="calci_salida_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="calci_salida_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
+
+
+                                                 <!-- nuevo -->
+
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Transferencias Realizadas" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_trans_reali" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_tranf_impo_real" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="calci_trans_prom_real" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <!-- end nuevo -->
 
 
                                                 <label string="Inventario Final" col="1" colspan="1"/>
@@ -612,6 +650,23 @@
                                                     <field name="micro_pro_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
 
+                                            <!-- nuevo micronizado-->
+
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Transferencias Recibidas" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_trans_recib" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_tranf_impo_recib" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_trans_prom_recib" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <!-- end nuevo -->
 
                                                 <div style="border-bottom: 2px dotted white;">
                                                     <label string="Compra Mercaderia" col="1" colspan="1"/>
@@ -642,15 +697,33 @@
                                                 <div style="border-bottom: 2px dotted white;">
                                                     <label string="Ventas" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="micro_ven_ton" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="micro_ven_imp" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
-                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                <div style="text-align: right;border-bottom: 2px dotted white;">
                                                     <field name="micro_ven_cp" nolabel="1" readonly="1" col="1" colspan="1"/>
                                                 </div>
+
+                                                <!-- nuevo micronizado 2-->
+
+
+                                                <div style="border-bottom: 2px dotted white;">
+                                                    <label string="Transferencias Realizadas" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_trans_reali" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_tranf_impo_real" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+                                                <div style="text-align: right;border-bottom: 2px dotted steelblue;">
+                                                    <field name="micro_trans_prom_real" nolabel="1" readonly="1" col="1" colspan="1"/>
+                                                </div>
+
+                                                <!-- end nuevo -->
 
                                                 <label string="Inventario Final" col="1" colspan="1"/>
                                                 <div style="text-align: right;">                                                    

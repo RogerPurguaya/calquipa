@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "C:\\anaconda\\python.exe",
-    "files.exclude": {
-       "**/*.pyc": true,
-     }
-}

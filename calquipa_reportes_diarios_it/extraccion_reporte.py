@@ -231,6 +231,8 @@ class extraccion_compra_insumos(models.Model):
 	diesel = fields.Float('Diesel de perforadora')
 	vale_cargador = fields.Char(u'N° de vale de cargador frontal')
 	cargador = fields.Float(u'Diesel de cargador frontal')
+	nro_vale = fields.Char(u'Nro de vale')
+	excavadora = fields.Float(u'Excavadora')
 
 	agua = fields.Float('Agua')
 
@@ -857,7 +859,7 @@ class extraccion_reporte(models.Model):
 		month2name = {
 			1: u"Enero",
 			2: u"Febrero",
-			3: u"Mazro",
+			3: u"Marzo",
 			4: u"Abril",
 			5: u"Mayo",
 			6: u"Junio",
@@ -1001,7 +1003,7 @@ class extraccion_reporte(models.Model):
 		worksheet.set_column("A:A", 3.86)
 		worksheet.set_column("V:V", 3.86)
 		worksheet.set_column("BG:BG", 3.86)
-		worksheet.set_column("BT:BT", 3.86)
+		worksheet.set_column("BV:BV", 3.86)
 
 		worksheet.set_column("B:B", 7.86)
 		worksheet.set_column("C:C", 9.14)
@@ -1038,13 +1040,13 @@ class extraccion_reporte(models.Model):
 		worksheet.insert_image('I3', 'calquipalleft.png', {'x_scale': 1.5, 'y_scale': 1.5})
 
 		worksheet.set_row(9, 21)
-		worksheet.merge_range("B10:CD10", u'Extracción', merge_format_t)
+		worksheet.merge_range("B10:CF10", u'Extracción', merge_format_t)
 
 		worksheet.set_row(11, 20)
 		worksheet.merge_range("B12:U12", u'Perforación', merge_format_t2)
 		worksheet.merge_range("W12:BF12", u'Carga y Acarreo', merge_format_t2)
-		worksheet.merge_range("BH12:BS12", u'Compra de Insumos', merge_format_t2)
-		worksheet.merge_range("BU12:CD12", u'Inventario de Insumos', merge_format_t2)
+		worksheet.merge_range("BH12:BU12", u'Compra de Insumos', merge_format_t2)
+		worksheet.merge_range("BW12:CF12", u'Inventario de Insumos', merge_format_t2)
 
 		worksheet.set_row(12, 20.25)
 		worksheet.set_row(13, 33)
@@ -1122,32 +1124,34 @@ class extraccion_reporte(models.Model):
 		worksheet.merge_range("BQ13:BQ15", u'Diesel de perforadora', merge_format_t32)
 		worksheet.merge_range("BR13:BR15", u'N° de vale de cargador frontal', merge_format_t32)
 		worksheet.merge_range("BS13:BS15", u'Diesel de cargador frontal', merge_format_t32)
+		worksheet.merge_range("BT13:BT15", u'Nro Vale Excavadora 336', merge_format_t32)
+		worksheet.merge_range("BU13:BU15", u'Excavadora 336', merge_format_t32)
 		#worksheet.merge_range("BO13:BO15", u'Agua', merge_format_t32)
 
-		worksheet.merge_range("BU13:BU14", u'Fecha', merge_format_t31)
-		worksheet.merge_range("BV13:CB13", u'Explosivo', merge_format_t32)
-		worksheet.write("BV14",'Alto Explosivo, Boster (Unidades)', merge_format_t32)
-		worksheet.write("BW14",'Bajo Explosivo, Anfo (KG)', merge_format_t32)
-		worksheet.write("BX14",'Mecha para Explosivo (m)', merge_format_t32)
-		worksheet.write("BY14",'Det. no Elec. Exanel', merge_format_t32)
-		worksheet.write("BZ14",'Fulminante Detonador', merge_format_t32)
-		worksheet.write("CA14",u'Cordón NP', merge_format_t32)
-		worksheet.write("CB14",'Retaro, Conect Unidireccional', merge_format_t32)
-		worksheet.merge_range("CC13:CC14", u'Diesel perforadora', merge_format_t32)
-		worksheet.merge_range("CD13:CD14", u'Diesel cargador', merge_format_t32)		
+		worksheet.merge_range("BW13:BW14", u'Fecha', merge_format_t31)
+		worksheet.merge_range("BX13:CD13", u'Explosivo', merge_format_t32)
+		worksheet.write("BX14",'Alto Explosivo, Boster (Unidades)', merge_format_t32)
+		worksheet.write("BY14",'Bajo Explosivo, Anfo (KG)', merge_format_t32)
+		worksheet.write("BZ14",'Mecha para Explosivo (m)', merge_format_t32)
+		worksheet.write("CA14",'Det. no Elec. Exanel', merge_format_t32)
+		worksheet.write("CB14",'Fulminante Detonador', merge_format_t32)
+		worksheet.write("CC14",u'Cordón NP', merge_format_t32)
+		worksheet.write("CD14",'Retaro, Conect Unidireccional', merge_format_t32)
+		worksheet.merge_range("CE13:CE14", u'Diesel perforadora', merge_format_t32)
+		worksheet.merge_range("CF13:CF14", u'Diesel cargador', merge_format_t32)		
 		#worksheet.write("BZ13:BZ15", u'Agua', merge_format_t32)
 
 		peii = self.env['extraccion.inventario.insumos'].search([('year_id','=',yr),('month_id','=',mnth)])
-		worksheet.write("BU15", u'Inv. Inicial', merge_format_t31)
-		worksheet.write("BV15", peii[0].inv_boster if len(peii)>0 else 0, data_format_drgr)
-		worksheet.write("BW15", peii[0].inv_anfo if len(peii)>0 else 0, data_format_drgr)
-		worksheet.write("BX15", peii[0].inv_mecha if len(peii)>0 else 0, data_format_drgr)
-		worksheet.write("BY15", peii[0].inv_exanel if len(peii)>0 else 0, data_format_drgr)
-		worksheet.write("BZ15", peii[0].inv_fulminante if len(peii)>0 else 0, data_format_drgr)
-		worksheet.write("CA15", peii[0].inv_np if len(peii)>0 else 0, data_format_drgr)
-		worksheet.write("CB15", peii[0].inv_unidireccional if len(peii)>0 else 0, data_format_drgr)
-		worksheet.write("CC15", peii[0].inv_diesel if len(peii)>0 else 0, data_format_drgr)
-		worksheet.write("CD15", peii[0].inv_diesel_carg if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("BW15", u'Inv. Inicial', merge_format_t31)
+		worksheet.write("BX15", peii[0].inv_boster if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("BY15", peii[0].inv_anfo if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("BZ15", peii[0].inv_mecha if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("CA15", peii[0].inv_exanel if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("CB15", peii[0].inv_fulminante if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("CC15", peii[0].inv_np if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("CD15", peii[0].inv_unidireccional if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("CE15", peii[0].inv_diesel if len(peii)>0 else 0, data_format_drgr)
+		worksheet.write("CF15", peii[0].inv_diesel_carg if len(peii)>0 else 0, data_format_drgr)
 
 		ep = self.env['extraccion.perforacion'].search([('year_id','=',yr),('month_id','=',mnth)])
 		eca = self.env['extraccion.carga.acarreo'].search([('year_id','=',yr),('month_id','=',mnth)])
@@ -1189,7 +1193,7 @@ class extraccion_reporte(models.Model):
 			worksheet.write(x,1, fch, data_format_dlr)
 			worksheet.write(x,22, fch, data_format_dlr)
 			worksheet.write(x,59, fch, data_format_dlr)
-			worksheet.write(x,72, fch, data_format_dlr)
+			worksheet.write(x,74, fch, data_format_dlr)
 			if i % 2 == 0:
 				worksheet.write(x,2, ep[i].horas_operacion, data_format_d)
 				worksheet.write(x,3, ep[i].metros_lineales, data_format_d)
@@ -1258,17 +1262,19 @@ class extraccion_reporte(models.Model):
 				worksheet.write(x,68, eci[i].diesel, data_format_dr)
 				worksheet.write(x,69, eci[i].vale_cargador if eci[i].vale_cargador else '', data_format_dr)
 				worksheet.write(x,70, eci[i].cargador, data_format_dr)
+				worksheet.write(x,71, eci[i].nro_vale if eci[i].nro_vale else '', merge_format_ca)
+				worksheet.write(x,72, eci[i].excavadora if eci[i].excavadora else '', data_format_dr)
 				#worksheet.write(x,66, eci[i].agua, data_format_dr)
 
-				worksheet.write(x,73, eii[i].boster, data_format_d)
-				worksheet.write(x,74, eii[i].anfo, data_format_d)
-				worksheet.write(x,75, eii[i].mecha, data_format_d)
-				worksheet.write(x,76, eii[i].exanel, data_format_d)
-				worksheet.write(x,77, eii[i].fulminante, data_format_d)
-				worksheet.write(x,78, eii[i].np, data_format_d)
-				worksheet.write(x,79, eii[i].unidireccional, data_format_dr)
-				worksheet.write(x,80, eii[i].diesel, data_format_dr)
-				worksheet.write(x,81, eii[i].diesel_carga, data_format_dr)
+				worksheet.write(x,75, eii[i].boster, data_format_d)
+				worksheet.write(x,76, eii[i].anfo, data_format_d)
+				worksheet.write(x,77, eii[i].mecha, data_format_d)
+				worksheet.write(x,78, eii[i].exanel, data_format_d)
+				worksheet.write(x,79, eii[i].fulminante, data_format_d)
+				worksheet.write(x,80, eii[i].np, data_format_d)
+				worksheet.write(x,81, eii[i].unidireccional, data_format_dr)
+				worksheet.write(x,82, eii[i].diesel, data_format_dr)
+				worksheet.write(x,83, eii[i].diesel_carga, data_format_dr)
 				#worksheet.write(x,77, eii[i].agua, data_format_dr)
 
 			else:
@@ -1339,17 +1345,18 @@ class extraccion_reporte(models.Model):
 				worksheet.write(x,68, eci[i].diesel, data_format_drgr)
 				worksheet.write(x,69, eci[i].vale_cargador if eci[i].vale_cargador else '', data_format_drgr)
 				worksheet.write(x,70, eci[i].cargador, data_format_drgr)
-				#worksheet.write(x,66, eci[i].agua, data_format_drgr)
+				worksheet.write(x,71, eci[i].nro_vale if eci[i].nro_vale else '', data_format_drgr)
+				worksheet.write(x,72, eci[i].excavadora if eci[i].excavadora else '', data_format_drgr)
 
-				worksheet.write(x,73, eii[i].boster, data_format_dgr)
-				worksheet.write(x,74, eii[i].anfo, data_format_dgr)
-				worksheet.write(x,75, eii[i].mecha, data_format_dgr)
-				worksheet.write(x,76, eii[i].exanel, data_format_dgr)
-				worksheet.write(x,77, eii[i].fulminante, data_format_dgr)
-				worksheet.write(x,78, eii[i].np, data_format_dgr)
-				worksheet.write(x,79, eii[i].unidireccional, data_format_drgr)
-				worksheet.write(x,80, eii[i].diesel, data_format_drgr)
-				worksheet.write(x,81, eii[i].diesel_carga, data_format_drgr)
+				worksheet.write(x,75, eii[i].boster, data_format_dgr)
+				worksheet.write(x,76, eii[i].anfo, data_format_dgr)
+				worksheet.write(x,77, eii[i].mecha, data_format_dgr)
+				worksheet.write(x,78, eii[i].exanel, data_format_dgr)
+				worksheet.write(x,79, eii[i].fulminante, data_format_dgr)
+				worksheet.write(x,80, eii[i].np, data_format_dgr)
+				worksheet.write(x,81, eii[i].unidireccional, data_format_drgr)
+				worksheet.write(x,82, eii[i].diesel, data_format_drgr)
+				worksheet.write(x,83, eii[i].diesel_carga, data_format_drgr)
 				#worksheet.write(x,77, eii[i].agua, data_format_drgr)
 			
 			sum_ep[0] += ep[i].horas_operacion
@@ -1417,6 +1424,8 @@ class extraccion_reporte(models.Model):
 			sum_eci[6] += eci[i].unidireccional
 			sum_eci[7] += eci[i].diesel
 			sum_eci[8] += eci[i].cargador
+			#sum_eci[9] += eci[i].cargador
+			sum_eci[10] += eci[i].excavadora if eci[i].excavadora else 0
 			#sum_eci[6] += eci[i].agua
 
 			sum_eii[0] += eii[i].boster
@@ -1502,18 +1511,20 @@ class extraccion_reporte(models.Model):
 		worksheet.write(x,68, sum_eci[7], data_format_total)
 		worksheet.write(x,69, ' ', data_format_total)
 		worksheet.write(x,70, sum_eci[8], data_format_total)
+		worksheet.write(x,71, ' ', data_format_total)
+		worksheet.write(x,72, sum_eci[10], data_format_total)
 		#worksheet.write(x,66, sum_eci[6], data_format_total)
 
-		worksheet.write(x,72, u'Totales', data_format_total)
-		worksheet.write(x,73, eii[-1].boster if len(eii) > 0 else 0, data_format_total)
-		worksheet.write(x,74, eii[-1].anfo if len(eii) > 0 else 0, data_format_total)
-		worksheet.write(x,75, eii[-1].mecha if len(eii) > 0 else 0, data_format_total)
-		worksheet.write(x,76, eii[-1].exanel if len(eii) > 0 else 0, data_format_total)
-		worksheet.write(x,77, eii[-1].fulminante if len(eii) > 0 else 0, data_format_total)
-		worksheet.write(x,78, eii[-1].np if len(eii) > 0 else 0, data_format_total)
-		worksheet.write(x,79, eii[-1].unidireccional if len(eii) > 0 else 0, data_format_total)
-		worksheet.write(x,80, eii[-1].diesel if len(eii) > 0 else 0, data_format_total)
-		worksheet.write(x,81, eii[-1].diesel_carga if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,74, u'Totales', data_format_total)
+		worksheet.write(x,75, eii[-1].boster if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,76, eii[-1].anfo if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,77, eii[-1].mecha if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,78, eii[-1].exanel if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,79, eii[-1].fulminante if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,80, eii[-1].np if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,81, eii[-1].unidireccional if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,82, eii[-1].diesel if len(eii) > 0 else 0, data_format_total)
+		worksheet.write(x,83, eii[-1].diesel_carga if len(eii) > 0 else 0, data_format_total)
 		#worksheet.write(x,77, sum_eii[8], data_format_total)
 
 		x = 48

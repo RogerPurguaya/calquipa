@@ -201,9 +201,11 @@ class trituracion_compra_diesel(models.Model):
 	month_id = fields.Integer(u'Mes')
 
 	date = fields.Date('Fecha')
-
+	nro_vale_gen1 = fields.Char(u'vale 1')
 	diesel_gen1 = fields.Float(u'Compra Diesel Generador no. 1')
+	nro_vale_gen2 = fields.Char(u'vale 2')
 	diesel_gen2 = fields.Float(u'Compra Diesel Generador no. 2')
+	nro_vale_gen3 = fields.Char(u'vale 3')
 	diesel_comp = fields.Float(u'Compra Diesel Generador Cummins')
 	agua_comp = fields.Float(u'Compra Agua Gls/Ton')
 
@@ -816,8 +818,8 @@ class trituracion_reporte(models.Model):
 		worksheet.set_row(11, 20)
 		worksheet.merge_range("B12:Z12", u'Trituración Negro Africano Calquipa', merge_format_t2)
 		worksheet.merge_range("AB12:AE12", u'Envio Piedra a Horno Maez', merge_format_t2)
-		worksheet.merge_range("AG12:AK12", u'Compra de Insumos', merge_format_t2)
-		worksheet.merge_range("AM12:AQ12", u'Inventario de Insumos', merge_format_t2)
+		worksheet.merge_range("AG12:AN12", u'Compra de Insumos', merge_format_t2)
+		worksheet.merge_range("AP12:AT12", u'Inventario de Insumos', merge_format_t2)
 
 		worksheet.set_row(12, 20.25)
 		worksheet.set_row(13, 33)
@@ -856,23 +858,26 @@ class trituracion_reporte(models.Model):
 		worksheet.merge_range("AE13:AE15", u'Total Tons Enviadass Cal', merge_format_t32)
 
 		worksheet.merge_range("AG13:AG15", u'Fecha', merge_format_t31)
-		worksheet.merge_range("AH13:AH15", u'Compra Diesel Generador no. 1', merge_format_t32)
-		worksheet.merge_range("AI13:AI15", u'Compra Diesel Generador no. 2', merge_format_t32)
-		worksheet.merge_range("AJ13:AJ15", u'Compra Cummins', merge_format_t32)
-		worksheet.merge_range("AK13:AK15", u'Compra Agua Gls/Ton', merge_format_t32)
+		worksheet.merge_range("AH13:AH15", u'Nro de Vale Generador no. 1', merge_format_t32)
+		worksheet.merge_range("AI13:AI15", u'Compra Diesel Generador no. 1', merge_format_t32)
+		worksheet.merge_range("AJ13:AJ15", u'Nro de Vale Generador no. 2', merge_format_t32)
+		worksheet.merge_range("AK13:AK15", u'Compra Diesel Generador no. 2', merge_format_t32)
+		worksheet.merge_range("AL13:AL15", u'Nro de Vale Cummins', merge_format_t32)
+		worksheet.merge_range("AM13:AM15", u'Compra Cummins', merge_format_t32)
+		worksheet.merge_range("AN13:AN15", u'Compra Agua Gls/Ton', merge_format_t32)
 
-		worksheet.merge_range("AM13:AM14", u'Fecha', merge_format_t31)
-		worksheet.merge_range("AN13:AN14", u'Inventario Diesel Generador no. 1', merge_format_t32)
-		worksheet.merge_range("AO13:AO14", u'Inventario Diesel Generador no. 2', merge_format_t32)
-		worksheet.merge_range("AP13:AP14", u'Inventario Cummins', merge_format_t32)
-		worksheet.merge_range("AQ13:AQ14", u'Inventario Agua Gls/Ton', merge_format_t32)
+		worksheet.merge_range("AP13:AP14", u'Fecha', merge_format_t31)
+		worksheet.merge_range("AQ13:AQ14", u'Inventario Diesel Generador no. 1', merge_format_t32)
+		worksheet.merge_range("AR13:AR14", u'Inventario Diesel Generador no. 2', merge_format_t32)
+		worksheet.merge_range("AS13:AS14", u'Inventario Cummins', merge_format_t32)
+		worksheet.merge_range("AT13:AT14", u'Inventario Agua Gls/Ton', merge_format_t32)
 
 		ptid = self.env['trituracion.inventario.diesel'].search([('year_id','=',yr),('month_id','=',mnth)])
-		worksheet.write("AM15", u'Inv. Inicial', merge_format_t31)
-		worksheet.write("AN15", ptid[0].inv_diesel_gen1 if len(ptid) > 0 else 0, data_format_drgr)
-		worksheet.write("AO15", ptid[0].inv_diesel_gen2 if len(ptid) > 0 else 0, data_format_drgr)
-		worksheet.write("AP15", ptid[0].inv_diesel_comp if len(ptid) > 0 else 0, data_format_drgr)
-		worksheet.write("AQ15", ptid[0].inv_agua_comp if len(ptid) > 0 else 0, data_format_drgr)
+		worksheet.write("AP15", u'Inv. Inicial', merge_format_t31)
+		worksheet.write("AQ15", ptid[0].inv_diesel_gen1 if len(ptid) > 0 else 0, data_format_drgr)
+		worksheet.write("AR15", ptid[0].inv_diesel_gen2 if len(ptid) > 0 else 0, data_format_drgr)
+		worksheet.write("AS15", ptid[0].inv_diesel_comp if len(ptid) > 0 else 0, data_format_drgr)
+		worksheet.write("AT15", ptid[0].inv_agua_comp if len(ptid) > 0 else 0, data_format_drgr)
 
 		tna = self.env['trituracion.negro.africano'].search([('year_id','=',yr),('month_id','=',mnth)])
 		thm = self.env['trituracion.horno.maez'].search([('year_id','=',yr),('month_id','=',mnth)])
@@ -908,7 +913,7 @@ class trituracion_reporte(models.Model):
 			worksheet.write(x,1, fch, data_format_dlr)
 			worksheet.write(x,27, fch, data_format_dlr)
 			worksheet.write(x,32, fch, data_format_dlr)
-			worksheet.write(x,38, fch, data_format_dlr)
+			worksheet.write(x,41, fch, data_format_dlr)
 
 			if i % 2 == 0:
 				worksheet.write(x,2, tna[i].horas_operacion, data_format_d)
@@ -944,15 +949,18 @@ class trituracion_reporte(models.Model):
 				worksheet.write(x,29, thm[i].piedra_2da, data_format_d)	
 				worksheet.write(x,30, thm[i].total_tn, data_format_dr)
 
-				worksheet.write(x,33, tcd[i].diesel_gen1, data_format_d)			
-				worksheet.write(x,34, tcd[i].diesel_gen2, data_format_d)	
-				worksheet.write(x,35, tcd[i].diesel_comp, data_format_d)	
-				worksheet.write(x,36, tcd[i].agua_comp, data_format_dr)
+				worksheet.write(x,33, tcd[i].nro_vale_gen1 if tcd[i].nro_vale_gen1 else '', data_format_d)			
+				worksheet.write(x,34, tcd[i].diesel_gen1, data_format_d)
+				worksheet.write(x,35, tcd[i].nro_vale_gen2 if tcd[i].nro_vale_gen2 else '', data_format_d)	
+				worksheet.write(x,36, tcd[i].diesel_gen2, data_format_d)
+				worksheet.write(x,37, tcd[i].nro_vale_gen3 if tcd[i].nro_vale_gen3 else '', data_format_d)	
+				worksheet.write(x,38, tcd[i].diesel_comp, data_format_d)
+				worksheet.write(x,39, tcd[i].agua_comp, data_format_dr)
 
-				worksheet.write(x,39, tid[i].diesel_gen1, data_format_d)			
-				worksheet.write(x,40, tid[i].diesel_gen2, data_format_d)	
-				worksheet.write(x,41, tid[i].diesel_comp, data_format_d)	
-				worksheet.write(x,42, tid[i].agua_comp, data_format_dr)
+				worksheet.write(x,42, tid[i].diesel_gen1, data_format_d)			
+				worksheet.write(x,43, tid[i].diesel_gen2, data_format_d)	
+				worksheet.write(x,44, tid[i].diesel_comp, data_format_d)	
+				worksheet.write(x,45, tid[i].agua_comp, data_format_dr)
 
 			else:
 				worksheet.write(x,2, tna[i].horas_operacion, data_format_dgr)
@@ -987,15 +995,18 @@ class trituracion_reporte(models.Model):
 				worksheet.write(x,29, thm[i].piedra_2da, data_format_dgr)	
 				worksheet.write(x,30, thm[i].total_tn, data_format_drgr)
 
-				worksheet.write(x,33, tcd[i].diesel_gen1, data_format_dgr)			
-				worksheet.write(x,34, tcd[i].diesel_gen2, data_format_dgr)	
-				worksheet.write(x,35, tcd[i].diesel_comp, data_format_dgr)	
-				worksheet.write(x,36, tcd[i].agua_comp, data_format_drgr)
+				worksheet.write(x,33, tcd[i].nro_vale_gen1 if tcd[i].nro_vale_gen1 else '', data_format_dgr)			
+				worksheet.write(x,34, tcd[i].diesel_gen1, data_format_dgr)
+				worksheet.write(x,35, tcd[i].nro_vale_gen2 if tcd[i].nro_vale_gen2 else '', data_format_dgr)	
+				worksheet.write(x,36, tcd[i].diesel_gen2, data_format_dgr)
+				worksheet.write(x,37, tcd[i].nro_vale_gen3 if tcd[i].nro_vale_gen3 else '', data_format_dgr)	
+				worksheet.write(x,38, tcd[i].diesel_comp, data_format_dgr)
+				worksheet.write(x,39, tcd[i].agua_comp, data_format_dgr)
 
-				worksheet.write(x,39, tid[i].diesel_gen1, data_format_dgr)			
-				worksheet.write(x,40, tid[i].diesel_gen2, data_format_dgr)	
-				worksheet.write(x,41, tid[i].diesel_comp, data_format_dgr)	
-				worksheet.write(x,42, tid[i].agua_comp, data_format_drgr)
+				worksheet.write(x,42, tid[i].diesel_gen1, data_format_dgr)			
+				worksheet.write(x,43, tid[i].diesel_gen2, data_format_dgr)	
+				worksheet.write(x,44, tid[i].diesel_comp, data_format_dgr)	
+				worksheet.write(x,45, tid[i].agua_comp, data_format_drgr)
 			
 			sum_tna[0] += tna[i].horas_operacion
 			sum_tna[1] += tna[i].nro_viajes
@@ -1074,16 +1085,19 @@ class trituracion_reporte(models.Model):
 		worksheet.write(x,30, sum_tep[2], data_format_total)
 
 		worksheet.write(x,32, u'Totales', data_format_total)
-		worksheet.write(x,33, sum_tcd[0], data_format_total)
-		worksheet.write(x,34, sum_tcd[1], data_format_total)
-		worksheet.write(x,35, sum_tcd[2], data_format_total)
-		worksheet.write(x,36, sum_tcd[3], data_format_total)
+		worksheet.write(x,33, '', data_format_total)
+		worksheet.write(x,34, sum_tcd[0], data_format_total)
+		worksheet.write(x,35, '', data_format_total)
+		worksheet.write(x,36, sum_tcd[1], data_format_total)
+		worksheet.write(x,37, '', data_format_total)
+		worksheet.write(x,38, sum_tcd[2], data_format_total)
+		worksheet.write(x,39, sum_tcd[3], data_format_total)
 
-		worksheet.write(x,38,'Totales', data_format_total)
-		worksheet.write(x,39, tid[-1].diesel_gen1 if len(tid) > 0 else 0, data_format_total)
-		worksheet.write(x,40, tid[-1].diesel_gen2 if len(tid) > 0 else 0, data_format_total)
-		worksheet.write(x,41, tid[-1].diesel_comp if len(tid) > 0 else 0, data_format_total)
-		worksheet.write(x,42, tid[-1].agua_comp if len(tid) > 0 else 0, data_format_total)
+		worksheet.write(x,41,'Totales', data_format_total)
+		worksheet.write(x,42, tid[-1].diesel_gen1 if len(tid) > 0 else 0, data_format_total)
+		worksheet.write(x,43, tid[-1].diesel_gen2 if len(tid) > 0 else 0, data_format_total)
+		worksheet.write(x,44, tid[-1].diesel_comp if len(tid) > 0 else 0, data_format_total)
+		worksheet.write(x,45, tid[-1].agua_comp if len(tid) > 0 else 0, data_format_total)
 
 		x = 48
 

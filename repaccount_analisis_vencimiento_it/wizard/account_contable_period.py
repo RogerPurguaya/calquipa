@@ -17,7 +17,7 @@ class account_payable_contable_vencimiento(models.Model):
 
 	nro_comprobante = fields.Char(string='Número',size=200)
 	empresa = fields.Char(string='Empresa',size=200)
-
+	date_reception = fields.Char(string='Fecha de Recepcion',size=200)
 	tipo = fields.Char('TD')
 	cuenta = fields.Char(string='Cuenta',size=200)
 	moneda = fields.Char('Moneda')
@@ -47,7 +47,7 @@ class account_receivable_contable_vencimiento(models.Model):
 
 	nro_comprobante = fields.Char(string='Número',size=200)
 	empresa = fields.Char(string='Empresa',size=200)
-
+	date_reception = fields.Char(string='Fecha de Recepcion',size=200)
 	tipo = fields.Char('TD')
 	cuenta = fields.Char(string='Cuenta',size=200)
 	moneda = fields.Char('Moneda')

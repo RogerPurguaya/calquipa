@@ -167,8 +167,9 @@ class account_voucher(osv.osv):
                         rs['amount'] = amount
                         total_credit -= amount
 
-            if rs['amount_unreconciled'] == rs['amount']:
-                rs['reconcile'] = True
+            #Desactiva el check de conciliacion completa
+            #if rs['amount_unreconciled'] == rs['amount']:
+                #rs['reconcile'] = True
 
             if rs['type'] == 'cr':
                 default['value']['line_cr_ids'].append(rs)

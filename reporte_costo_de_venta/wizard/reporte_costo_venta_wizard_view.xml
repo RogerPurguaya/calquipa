@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="reporte_costo_venta_wizard_form">
+			<field name="name">reporte.costo.venta.wizard.form</field>
+			<field name="model">reporte.costo.venta.wizard</field>
+			<field name="arch" type="xml">
+				<form string="reporte Costo venta" version="8.0">
+					<group>
+							<field name="config_product" string="Producto" attrs="{'invisible':[('all_products','=',True)],'required':[('all_products','=',False)]}"/>
+							<field name="period" required="1"/>
+							<field name="all_products"/>
+					</group>
+					<footer>
+						<button string="Exportar a Excel" name="do_rebuild" type="object" class="oe_highlight"/>
+						O
+						<button string="Cancelar" class="oe_link" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="reporte_costo_venta_wizard_view_action" model="ir.actions.act_window">
+			<field name="name">Reporte Costo de Venta</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">reporte.costo.venta.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem name="Reporte Costo de Venta"
+            action="reporte_costo_venta_wizard_view_action"
+            id="reporte_costo_venta_wizard_menu_view"
+            parent="calquipa_reportemexicanos_parte1_it.reportes_mexicanos_reportes_menu"
+            sequence="904"
+        />
+
+
+	</data>
+</openerp>

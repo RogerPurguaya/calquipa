@@ -7,12 +7,12 @@ from datetime import datetime
 
 class reporte_facturas_pagos_wizard(osv.TransientModel):
 	_name='reporte.facturas.pagos.wizard'
-	period_ini = fields.Many2one('account.period','Periodo Inicial',required=True)
-	period_end = fields.Many2one('account.period','Periodo Final',required=True)
-	asientos =  fields.Selection([('posted','Asentados'),('draft','No Asentados'),('both','Ambos')], 'Asientos')
+	period_ini = fields.Many2one('account.period','Periodo Inicial')
+	period_end = fields.Many2one('account.period','Periodo Final')
+	#asientos =  fields.Selection([('posted','Asentados'),('draft','No Asentados'),('both','Ambos')], 'Asientos')
 	moneda = fields.Many2one('res.currency','Moneda')
-	cuentas = fields.Many2many('account.account','account_book_major_account_rel','id_book_origen','id_account_destino', string='Cuentas', required=True)
-	fiscalyear_id = fields.Many2one('account.fiscalyear','Año Fiscal',required=True)
+	cuentas = fields.Many2many('account.account', string='Cuentas')
+	fiscalyear_id = fields.Many2one('account.fiscalyear','Año Fiscal')
 	
 	@api.onchange('fiscalyear_id')
 	def onchange_fiscalyear(self):
@@ -46,7 +46,9 @@ class reporte_facturas_pagos_wizard(osv.TransientModel):
 				currency = True
 				
 		self.env.cr.execute("""
-			CREATE OR REPLACE view reporte_facturas_pagos as (SELECT * FROM get_reporte_facturas_pagos("""+ str(currency)+ """,periodo_num('""" + period_ini.code + """'),periodo_num('""" + period_end.code +"""')) 
+			CREATE OR REPLACE view reporte_facturas_pagos as 
+			(SELECT * FROM get_reporte_facturas_pagos("""+ str(currency)+ 
+			""",periodo_num('""" + period_ini.code + """'),periodo_num('""" + period_end.code +"""')) 
 		)""")
 
 		if self.cuentas:
@@ -67,6 +69,19 @@ class reporte_facturas_pagos_wizard(osv.TransientModel):
 		worksheet = workbook.add_worksheet("Reporte de Facturas y pagos")
 		bold = workbook.add_format({'bold': True})
 		normal = workbook.add_format()
+		
+		title = workbook.add_format({'bold':True})
+		title.set_align('center')
+		title.set_font_size(10)
+		title.set_bg_color('#fff06d')
+		title.set_font_color('#000000')
+		title.set_text_wrap()
+
+		total2 = workbook.add_format({'num_format':'0.00'})
+		total2.set_align('center')
+		total2.set_bg_color('#e3ccff')
+		total2.set_font_color('#000000')
+		
 		boldbord = workbook.add_format({'bold': True})
 		boldbord.set_border(style=2)
 		boldbord.set_align('center')
@@ -79,57 +94,60 @@ class reporte_facturas_pagos_wizard(osv.TransientModel):
 		bord = workbook.add_format()
 		bord.set_border(style=1)
 		numberdos.set_border(style=1)
-		numbertres.set_border(style=1)			
-		x= 4				
+		numbertres.set_border(style=1)
+
+		x= 5				
 		tam_col = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 		tam_letra = 1.2
 		import sys
 		reload(sys)
 		sys.setdefaultencoding('iso-8859-1')
 
-		worksheet.write(0,0, "Reporte de facturas y pagos:", bold)
-		worksheet.write(0,1, self.period_ini.name, normal)
-		worksheet.write(0,2, self.period_end.name, normal)
-		worksheet.write(1,0, "Fecha:",bold)
-		worksheet.write(1,1, str(datetime.today().date()), normal)
+		worksheet.merge_range(0,0,0,4, "Reporte de facturas y pagos:", bold)
+		worksheet.merge_range(1,0,1,3, self.period_ini.name, normal)
+		worksheet.merge_range(2,0,2,3, self.period_end.name, normal)
+		worksheet.write(3,0, "Fecha:",bold)
+		worksheet.merge_range(3,1,3,3, str(datetime.today().date()), normal)
 		
-		worksheet.write(3,0, "Periodo",boldbord)
-		worksheet.write(3,1, "Libro",boldbord)
-		worksheet.write(3,2, u"Fecha Emisión y Pago",boldbord)
-		worksheet.write(3,3, "Fecha Vencimiento",boldbord)
-		worksheet.write(3,4, "Tipo Documento",boldbord)
-		worksheet.write(3,5, u"Número",boldbord)
-		worksheet.write(3,6, u"RUC",boldbord)
-		worksheet.write(3,7, u"Partner",boldbord)
-		worksheet.write(3,8, "Voucher",boldbord)
-		worksheet.write(3,9, "Cuenta",boldbord)
-		worksheet.write(3,10, u"Diarios",boldbord)
-		worksheet.write(3,11, u"Medio de Pago",boldbord)
-		worksheet.write(3,12, u"Número de operación",boldbord)
-		worksheet.write(3,13, "Debe",boldbord)
-		worksheet.write(3,14, "Haber",boldbord)
-		worksheet.write(3,15, "Saldo",boldbord)
-		worksheet.write(3,16, "Divisa",boldbord)
-		worksheet.write(3,17, "Tipo Cambio",boldbord)
-		worksheet.write(3,18, "Importe Divisa",boldbord)
-		worksheet.write(3,19, u"Conciliación",boldbord)
-		worksheet.write(3,20, u"Glosa",boldbord)
+		worksheet.write(4,0, "Periodo",boldbord)
+		worksheet.write(4,1, "Libro",boldbord)
+		worksheet.write(4,2, u"Fecha Emisión y Pago",boldbord)
+		worksheet.write(4,3, "Fecha Vencimiento",boldbord)
+		worksheet.write(4,4, "Tipo Documento",boldbord)
+		worksheet.write(4,5, u"Número",boldbord)
+		worksheet.write(4,6, u"RUC",boldbord)
+		worksheet.write(4,7, u"Partner",boldbord)
+		worksheet.write(4,8, "Voucher",boldbord)
+		worksheet.write(4,9, "Cuenta",boldbord)
+		worksheet.write(4,10, u"Diarios",boldbord)
+		worksheet.write(4,11, u"Medio de Pago",boldbord)
+		worksheet.write(4,12, u"Número de operación",boldbord)
+		worksheet.write(4,13, "Debe",boldbord)
+		worksheet.write(4,14, "Haber",boldbord)
+		worksheet.write(4,15, "Saldo",boldbord)
+		worksheet.write(4,16, "Divisa",boldbord)
+		worksheet.write(4,17, "Tipo Cambio",boldbord)
+		worksheet.write(4,18, "Importe Divisa",boldbord)
+		worksheet.write(4,19, u"Conciliación",boldbord)
+		worksheet.write(4,20, u"Glosa",boldbord)
 		saldo = 0
 		totales = [0,0]
 		tmp_numero = None
 		for line in self.env['reporte.facturas.pagos'].search(filtro).sorted(key=lambda x:x.numero):
 			
-			if tmp_numero!=None and tmp_numero!=i.numero:
-				worksheet.write(x,13,totales[0],numbertres)
-				worksheet.write(x,14,totales[1],numbertres)
-				worksheet.write(x,15,totales[0]-totales[1],numbertres)
+			if tmp_numero!=None and tmp_numero!=line.numero:
+				worksheet.write(x,12,'Total',title)
+				worksheet.write(x,13,totales[0],total2)
+				worksheet.write(x,14,totales[1],total2)
+				worksheet.write(x,15,totales[0]-totales[1],total2)
 				totales = [0,0]
+				saldo = 0
 				x+=2
 
 
-			tmp_numero = i.numero if i.numero else ''
-			totales[0] += i.debe
-			totales[1] += i.haber			
+			tmp_numero = line.numero if line.numero else ''
+			totales[0] += line.debe
+			totales[1] += line.haber			
 
 			worksheet.write(x,0,line.periodo if line.periodo else '' ,bord )
 			worksheet.write(x,1,line.libro if line.libro  else '',bord )
@@ -158,12 +176,12 @@ class reporte_facturas_pagos_wizard(osv.TransientModel):
 			
 			x+=1
 
-		if tmp_empresa!=None:
-			worksheet.write(x,13,totales[0],numbertres)
-			worksheet.write(x,14,totales[1],numbertres)
-			worksheet.write(x,15,totales[0]-totales[1],numbertres)
+		if tmp_numero!=None:
+			worksheet.write(x,13,totales[0],numberdos)
+			worksheet.write(x,14,totales[1],numberdos)
+			worksheet.write(x,15,totales[0]-totales[1],numberdos)
 
-		tam_col = [9,6,10,10,5,11,13,25,11,11,23,23,10,12,12,12,9,9,9,20]
+		tam_col = [9,6,10,10,5,11,13,30,11,11,23,23,10,12,12,12,10,10,10,10,25]
 
 		worksheet.set_column('A:A', tam_col[0])
 		worksheet.set_column('B:B', tam_col[1])
@@ -185,6 +203,7 @@ class reporte_facturas_pagos_wizard(osv.TransientModel):
 		worksheet.set_column('R:R', tam_col[17])
 		worksheet.set_column('S:S', tam_col[18])
 		worksheet.set_column('T:T', tam_col[19])
+		worksheet.set_column('U:U', tam_col[20])
 		workbook.close()
 		
 		f = open(direccion + 'Reporte_facturas_pagos.xlsx', 'rb')
@@ -195,13 +214,13 @@ class reporte_facturas_pagos_wizard(osv.TransientModel):
 			'output_file': base64.encodestring(''.join(f.readlines())),		
 		}
 
-		mod_obj = self.env['ir.model.data']
-		act_obj = self.env['ir.actions.act_window']
+		#mod_obj = self.env['ir.model.data']
+		#act_obj = self.env['ir.actions.act_window']
 		sfs_id = self.env['export.file.save'].create(vals)
-		result = {}
-		view_ref = mod_obj.get_object_reference('account_contable_book_it', 'export_file_save_action')
-		view_id = view_ref and view_ref[1] or False
-		result = act_obj.read( [view_id] )
+		# result = {}
+		# view_ref = mod_obj.get_object_reference('account_contable_book_it', 'export_file_save_action')
+		# view_id = view_ref and view_ref[1] or False
+		# result = act_obj.read( [view_id] )
 	
 		return {
 			"type": "ir.actions.act_window",

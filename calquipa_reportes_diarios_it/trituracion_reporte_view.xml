@@ -107,11 +107,17 @@
                     <field name="year_id" invisible="1"/>
                     <field name="month_id" invisible="1"/>
                     <field name="check_period" invisible="1"/>
-
                     <field name="date"          readonly="1"/>
+                    
+                    <field name="nro_vale_gen1" string="Nro de Vale Generador 1" attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="diesel_gen1"    attrs="{'readonly':[('check_period','=',True)]}"/>
+                    
+                    <field name="nro_vale_gen2" string="Nro de Vale Generador 2" attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="diesel_gen2"    attrs="{'readonly':[('check_period','=',True)]}"/>
+                    
+                    <field name="nro_vale_gen3" string="Nro de Vale Cummins" attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="diesel_comp"    attrs="{'readonly':[('check_period','=',True)]}"/>
+                    
                     <field name="agua_comp"      attrs="{'readonly':[('check_period','=',True)]}"/>
                 </tree>
             </field>

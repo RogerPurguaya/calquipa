@@ -2767,8 +2767,6 @@ class costos_produccion(models.Model):
 		self.verificador()
 		parametros = self.env['main.parameter'].search([])[0]
 		rep = 0
-
-
 		fechaini = str(self.periodo.date_start).replace('-','')
 		fecha_inianio = fechaini[:4] + '0101'
 		fechafin = str(self.periodo.date_stop).replace('-','')
@@ -2917,8 +2915,8 @@ class costos_produccion(models.Model):
 		#	rep = i[0]
 
 		#self.calci_final_ton = rep
-
-		self.calci_final_ton = self.calci_dis_ton - self.calci_tt_ton - self.calci_ven_ton - self.calci_salida_ton
+		# changed
+		self.calci_final_ton = self.calci_dis_ton - self.calci_tt_ton - self.calci_ven_ton - self.calci_salida_ton - self.calci_trans_reali
 
 	@api.one
 	def get_calci_final_imp(self):
@@ -2942,8 +2940,8 @@ class costos_produccion(models.Model):
 		#	rep = i[1]
 
 		#self.calci_final_imp = rep
-
-		self.calci_final_imp = self.calci_dis_imp - self.calci_tt_imp - self.calci_ven_imp- self.calci_salida_imp
+		# changed
+		self.calci_final_imp = self.calci_dis_imp - self.calci_tt_imp - self.calci_ven_imp- self.calci_salida_imp - self.calci_tranf_impo_real
 
 	@api.one
 	def get_calci_final_cp(self):
@@ -2952,6 +2950,262 @@ class costos_produccion(models.Model):
 		else:
 			self.calci_final_cp = self.calci_final_imp / self.calci_final_ton
 
+
+	# new code
+	@api.one
+	def get_calci_trasf_recibidas(self):
+
+		# las tansferencias recibidas
+		parametros = self.env['main.parameter'].search([])[0]
+		self.env.cr.execute(""" 
+		select 
+		SUM(sm.product_uom_qty) as total
+		from 
+		stock_move sm
+		join stock_picking sp on sm.picking_id = sp.id
+		join stock_location sl on sl.id = sm.location_dest_id
+		where sp.motivo_guia = '6' and sm.location_dest_id  = """ + str(parametros.location_existencias_calcinacion.id) +""" 
+		and sp.date::date >= '"""+ str(self.periodo.date_start) +"""' 
+		and sp.date::date <= '"""+ str(self.periodo.date_stop)+"""'
+		and sp.state = 'done'
+		""")
+		result = self.env.cr.dictfetchall()		
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.calci_trans_recib = float(result[0]['total'])
+			else:
+				self.calci_trans_recib = 0
+		else:
+			self.calci_trans_recib = 0
+
+
+	@api.one
+	def get_calci_tranf_impo_recib(self):
+		parametros = self.env['main.parameter'].search([])[0]
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
+		self.env.cr.execute(""" 
+		   select round(SUM(round(credit,6)),2) as total
+		   from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+		   '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+		   '{""" + str(parametros.location_existencias_calcinacion.id) +"""}') as T
+		   inner join stock_move sm on sm.id = T.stock_moveid
+		   inner join stock_picking sp on sp.id = sm.picking_id
+		   where ubicacion_destino = """+str(parametros.location_existencias_calcinacion.id) + """
+		   and operation_type = '06'
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.calci_tranf_impo_recib = float(result[0]['total'])
+			else:
+				self.calci_tranf_impo_recib = 0
+		else:
+			self.calci_tranf_impo_recib = 0
+
+	@api.one
+	@api.depends('calci_tranf_impo_recib','calci_trans_recib')
+	def get_calci_trans_prom_recib(self):
+		for rec in self:
+			if rec.calci_trans_recib > 0:
+				rec.calci_trans_prom_recib = rec.calci_tranf_impo_recib / rec.calci_trans_recib
+			else:
+				rec.calci_trans_prom_recib = 0
+
+
+	# end new code
+	# new code
+	@api.one
+	def get_calci_trasf_realizadas(self):
+
+		# las transferencias realizadas
+		parametros = self.env['main.parameter'].search([])[0]
+		self.env.cr.execute(""" 
+		select 
+		SUM(sm.product_uom_qty) as total
+		from 
+		stock_move sm
+		join stock_picking sp on sm.picking_id = sp.id
+		join stock_location sl on sl.id = sm.location_id
+		where sp.motivo_guia = '6' and sl.id  = """ + str(parametros.location_existencias_calcinacion.id) +"""  
+		and sp.date::date >= '"""+ str(self.periodo.date_start) +"""' 
+		and sp.date::date <= '"""+ str(self.periodo.date_stop)+"""'
+		and sp.state = 'done'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.calci_trans_reali = float(result[0]['total'])
+			else:
+				self.calci_trans_reali = 0
+		else:
+			self.calci_trans_reali = 0
+	# end new code
+
+	@api.one
+	def get_calci_tranf_impo_real(self):
+		parametros = self.env['main.parameter'].search([])[0]
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
+		self.env.cr.execute(""" 
+		   select round(SUM(round(credit,6)),2) as total
+		   from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+		   '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+		   '{""" + str(parametros.location_existencias_calcinacion.id) +"""}') as T
+		   where operation_type = '06'
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.calci_tranf_impo_real = float(result[0]['total'])
+			else:
+				self.calci_tranf_impo_real = 0
+		else:
+			self.calci_tranf_impo_real = 0
+
+	@api.one
+	@api.depends('calci_tranf_impo_real','calci_trans_reali')
+	def get_calci_tranf_prom_real(self):
+		for rec in self:
+			if rec.calci_trans_reali > 0:
+				rec.calci_trans_prom_real = rec.calci_tranf_impo_real / rec.calci_trans_reali
+			else:
+				rec.calci_trans_prom_real = 0
+
+
+
+	# MICRONIZADO
+	@api.one
+	def get_micro_trasf_recibidas(self):
+
+		# las tansferencias recibidas
+		parametros = self.env['main.parameter'].search([])[0]
+		self.env.cr.execute(""" 
+		select 
+		SUM(sm.product_uom_qty) as total
+		from 
+		stock_move sm
+		join stock_picking sp on sm.picking_id = sp.id
+		join stock_location sl on sl.id = sm.location_dest_id
+		where sp.motivo_guia = '6' 
+		and sm.location_dest_id  = """ + str(parametros.location_existencias_micronizado.id) +""" 
+		and sp.date::date >= '"""+ str(self.periodo.date_start) +"""' 
+		and sp.date::date <= '"""+ str(self.periodo.date_stop)+"""'
+		and sp.state = 'done'
+		""")
+		result = self.env.cr.dictfetchall()		
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.micro_trans_recib = float(result[0]['total'])
+			else:
+				self.micro_trans_recib = 0
+		else:
+			self.micro_trans_recib = 0
+
+
+	@api.one
+	def get_micro_tranf_impo_recib(self):
+		parametros = self.env['main.parameter'].search([])[0]
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
+		self.env.cr.execute(""" 
+		   select round(SUM(round(credit,6)),2) as total
+		   from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+		   '{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+		   '{""" + str(parametros.location_existencias_micronizado.id) +"""}') as T
+		   inner join stock_move sm on sm.id = T.stock_moveid
+		   inner join stock_picking sp on sp.id = sm.picking_id
+		   where ubicacion_destino = """+str(parametros.location_existencias_micronizado.id) + """
+		   and operation_type = '06'
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.micro_tranf_impo_recib = float(result[0]['total'])
+			else:
+				self.micro_tranf_impo_recib = 0
+		else:
+			self.micro_tranf_impo_recib = 0
+
+	@api.one
+	@api.depends('micro_tranf_impo_recib','micro_trans_recib')
+	def get_micro_trans_prom_recib(self):
+		for rec in self:
+			if rec.micro_trans_recib > 0:
+				rec.micro_trans_prom_recib = rec.micro_tranf_impo_recib / rec.micro_trans_recib
+			else:
+				rec.micro_trans_prom_recib = 0
+
+
+	# end new code
+
+
+	# new code
+	@api.one
+	def get_micro_trasf_realizadas(self):
+
+		# las transferencias realizadas
+		parametros = self.env['main.parameter'].search([])[0]
+		self.env.cr.execute(""" 
+		select 
+		SUM(sm.product_uom_qty) as total
+		from 
+		stock_move sm
+		join stock_picking sp on sm.picking_id = sp.id
+		join stock_location sl on sl.id = sm.location_id
+		where sp.motivo_guia = '6' 
+		and sl.id  = """ + str(parametros.location_existencias_micronizado.id) +"""  
+		and sp.date::date >= '"""+ str(self.periodo.date_start) +"""' 
+		and sp.date::date <= '"""+ str(self.periodo.date_stop)+"""'
+		and sp.state = 'done'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.micro_trans_reali = float(result[0]['total'])
+			else:
+				self.micro_trans_reali = 0
+		else:
+			self.micro_trans_reali = 0
+	# end new code
+
+	@api.one
+	def get_micro_tranf_impo_real(self):
+		parametros = self.env['main.parameter'].search([])[0]
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
+		self.env.cr.execute(""" 
+		   select round(SUM(round(credit,6)),2) as total
+		   from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+		   '{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+		   '{""" + str(parametros.location_existencias_micronizado.id) +"""}') as T
+		   where operation_type = '06'
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.micro_tranf_impo_real = float(result[0]['total'])
+			else:
+				self.micro_tranf_impo_real = 0
+		else:
+			self.micro_tranf_impo_real = 0
+
+	@api.one
+	@api.depends('micro_tranf_impo_real','micro_trans_reali')
+	def get_micro_tranf_prom_real(self):
+		for rec in self:
+			if rec.micro_trans_reali > 0:
+				rec.micro_trans_prom_real = rec.micro_tranf_impo_real / rec.micro_trans_reali
+			else:
+				rec.micro_trans_prom_real = 0
 
 
 
@@ -2999,12 +3253,12 @@ class costos_produccion(models.Model):
 				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
 				self.env.cr.execute(""" 
-					select ingreso as ingreso,(credit) as credit from (
-					select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-					where ( ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-					or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-					) T""")
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+				where ( ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				) T""")
 
 				for i in self.env.cr.fetchall():
 					rep = i[0]
@@ -3079,11 +3333,13 @@ class costos_produccion(models.Model):
 
 	@api.one
 	def get_calci_dis_ton(self):
-		self.calci_dis_ton = self.calci_ini_ton + self.calci_pro_ton
+		# changed
+		self.calci_dis_ton = self.calci_ini_ton + self.calci_pro_ton + self.calci_trans_recib
 
 	@api.one
 	def get_calci_dis_imp(self):
-		self.calci_dis_imp = self.calci_ini_imp + self.calci_pro_imp
+		# changed
+		self.calci_dis_imp = self.calci_ini_imp + self.calci_pro_imp + self.calci_tranf_impo_recib
 
 	@api.one
 	def get_calci_dis_cp(self):
@@ -3108,7 +3364,10 @@ class costos_produccion(models.Model):
 
 		var_txt_con = """ 
 		select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
-			select fecha, (salida - ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			select fecha, (salida - ingreso) as ingreso,(credit) as credit,
+			 ubicacion_destino, ubicacion_origen 
+			 from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",
+			 '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
 			'{"""
 
 		flag_c = 0
@@ -3206,9 +3465,23 @@ class costos_produccion(models.Model):
 	calci_final_imp = fields.Float('II Importe',compute="get_calci_final_imp",digits=(12,2))
 	calci_final_cp = fields.Float('II Costo Prom.',compute="get_calci_final_cp",digits=(12,6))
 	
+	# new code calcinacion:
+	calci_trans_recib = fields.Float('T. Recibidas',compute="get_calci_trasf_recibidas",digits=(12,2))
+	calci_tranf_impo_recib = fields.Float('T. Recibidas',compute="get_calci_tranf_impo_recib",digits=(12,2))
+	calci_trans_prom_recib = fields.Float('T. Recibidas',compute="get_calci_trans_prom_recib",digits=(12,2))
 
+	calci_trans_reali = fields.Float('T. Realizadas',compute="get_calci_trasf_realizadas",digits=(12,2))
+	calci_tranf_impo_real = fields.Float('Imp Calci',compute="get_calci_tranf_impo_real",digits=(12,2))
+	calci_trans_prom_real = fields.Float('Prom Calci',compute="get_calci_tranf_prom_real",digits=(12,2))
+	
+	# new code micronacion:
+	micro_trans_recib = fields.Float('T. Recibidas',compute="get_micro_trasf_recibidas",digits=(12,2))
+	micro_tranf_impo_recib = fields.Float('T. Recibidas',compute="get_micro_tranf_impo_recib",digits=(12,2))
+	micro_trans_prom_recib = fields.Float('T. Recibidas',compute="get_micro_trans_prom_recib",digits=(12,2))
 
-
+	micro_trans_reali = fields.Float('T. Realizadas',compute="get_micro_trasf_realizadas",digits=(12,2))
+	micro_tranf_impo_real = fields.Float('Imp micro',compute="get_micro_tranf_impo_real",digits=(12,2))
+	micro_trans_prom_real = fields.Float('Prom micro',compute="get_micro_tranf_prom_real",digits=(12,2))
 	# esto es apartir de aki----------------------------------------
 
 
@@ -3426,7 +3699,7 @@ class costos_produccion(models.Model):
 
 		#self.micro_final_ton = rep
 
-		self.micro_final_ton = self.micro_dis_ton -  self.micro_ven_ton
+		self.micro_final_ton = self.micro_dis_ton -  self.micro_ven_ton - self.micro_trans_reali
 	@api.one
 	def get_micro_final_imp(self):
 		self.verificador()
@@ -3450,7 +3723,8 @@ class costos_produccion(models.Model):
 
 		#self.micro_final_imp = rep
 
-		self.micro_final_imp = self.micro_dis_imp - self.micro_ven_imp
+		# changed 04/04/2019
+		self.micro_final_imp = self.micro_dis_imp - self.micro_ven_imp - self.micro_tranf_impo_real
 
 	@api.one
 	def get_micro_final_cp(self):
@@ -3585,14 +3859,14 @@ class costos_produccion(models.Model):
 		else:
 			self.micro_ini_cp = self.micro_ini_imp / self.micro_ini_ton
 		
-
+	# changed 03/04/2019
 	@api.one
 	def get_micro_dis_ton(self):
-		self.micro_dis_ton = self.micro_ini_ton + self.micro_pro_ton + self.micro_merc_ton
+		self.micro_dis_ton = self.micro_ini_ton + self.micro_pro_ton + self.micro_merc_ton + self.micro_trans_recib
 
 	@api.one
 	def get_micro_dis_imp(self):
-		self.micro_dis_imp = self.micro_ini_imp + self.micro_pro_imp + self.micro_merc_imp
+		self.micro_dis_imp = self.micro_ini_imp + self.micro_pro_imp + self.micro_merc_imp + self.micro_tranf_impo_recib
 
 	@api.one
 	def get_micro_dis_cp(self):
