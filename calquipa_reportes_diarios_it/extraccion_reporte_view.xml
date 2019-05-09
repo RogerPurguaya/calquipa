@@ -29,7 +29,10 @@
                     <field name="mecha"           attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="exanel"          attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="fulminante"      attrs="{'readonly':[('check_period','=',True)]}"/>
+                     <field name="detonador"      attrs="{'readonly':[('check_period','=',True)]}" string="Detonador Ensamblado 2.1 m C/C"/>
+                      <field name="mecha_rapida"  attrs="{'readonly':[('check_period','=',True)]}" string="Mecha Rápida"/>
                     <field name="np"              attrs="{'readonly':[('check_period','=',True)]}"/>
+                     <field name="emulsion" attrs="{'readonly':[('check_period','=',True)]}" string="Emulsión"/>
                     <field name="unidireccional"  attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="cons_explosivo"  attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="grs_ton"         readonly="1"/>
