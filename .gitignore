@@ -5,3 +5,5 @@
 *.xls
 *.xlsx
 /backups_it/static/*
+/*.vscode
+*.vscode

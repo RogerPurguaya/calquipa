@@ -3,7 +3,7 @@ from openerp.osv import osv
 import base64
 from openerp import models, fields, api
 import codecs
-import pprint
+import pprint,string
 
 class account_sale_register_report_wizard_detallado(osv.TransientModel):
 	_name='account.sale.register.report.wizard.detallado'
@@ -120,13 +120,17 @@ inner join account_account aa on aml.account_id = aa.id and left(aa.code,1) in (
 			worksheet.write(4,13, "Moneda",boldbord)
 
 			for line in contenido:
+				type_code = line[2] if line[2] else ''
+				qty = line[6] if line[6] else 0
+				if type_code=='07':
+					qty*=-1
 				worksheet.write(x,0,line[0] if line[0] else '' ,bord )
 				worksheet.write(x,1,line[1] if line[1] else '' ,bord )
-				worksheet.write(x,2,line[2] if line[2] else '' ,bord )
+				worksheet.write(x,2,type_code ,bord )
 				worksheet.write(x,3,line[3] if line[3] else '' ,bord )
 				worksheet.write(x,4,line[4] if line[4] else '' ,bord )
 				worksheet.write(x,5,line[5] if line[5] else '' ,bord )
-				worksheet.write(x,6,line[6]  ,numberdos )
+				worksheet.write(x,6,qty,numberdos )
 				worksheet.write(x,7,line[7] if line[7] else '' ,bord )
 				worksheet.write(x,8,line[8]  ,numberdos )
 				worksheet.write(x,9,line[9]  ,numberdos )
@@ -134,35 +138,16 @@ inner join account_account aa on aml.account_id = aa.id and left(aa.code,1) in (
 				worksheet.write(x,11,line[11]  ,numberdos )
 				worksheet.write(x,12,line[13]  ,numberdos )
 				worksheet.write(x,13,line[14]  ,numberdos )
-
-				x = x +1
+				x+=1
 
 			tam_col = [10,10,10,20,18,11,8,11,11,11,11,11,11,11,11,11,5,8,10,8,9]
 			worksheet.set_row(0, 30)
-
-			worksheet.set_column('A:A', tam_col[0])
-			worksheet.set_column('B:B', tam_col[1])
-			worksheet.set_column('C:C', tam_col[2])
-			worksheet.set_column('D:D', tam_col[3])
-			worksheet.set_column('E:E', tam_col[4])
-			worksheet.set_column('F:F', tam_col[5])
-			worksheet.set_column('G:G', tam_col[6])
-			worksheet.set_column('H:H', tam_col[7])
-			worksheet.set_column('I:I', tam_col[8])
-			worksheet.set_column('J:J', tam_col[9])
-			worksheet.set_column('K:K', tam_col[10])
-			worksheet.set_column('L:L', tam_col[11])
-			worksheet.set_column('M:M', tam_col[12])
-			worksheet.set_column('N:N', tam_col[13])
-			worksheet.set_column('O:O', tam_col[14])
-			worksheet.set_column('P:P', tam_col[15])
-			worksheet.set_column('Q:Q', tam_col[16])
-			worksheet.set_column('R:R', tam_col[17])
-
+			alpha = list(string.ascii_uppercase)
+			for i,item in enumerate(tam_col):
+				worksheet.set_column(alpha[i]+':'+alpha[i],item)
 			workbook.close()
 			
 			f = open(direccion + 'tempo_libroventas.xlsx', 'rb')
-			
 			
 			sfs_obj = self.pool.get('repcontab_base.sunat_file_save')
 			vals = {
@@ -177,7 +162,6 @@ inner join account_account aa on aml.account_id = aa.id and left(aa.code,1) in (
 			view_ref = mod_obj.get_object_reference('account_contable_book_it', 'export_file_save_action')
 			view_id = view_ref and view_ref[1] or False
 			result = act_obj.read( [view_id] )
-			print sfs_id
 			return {
 			    "type": "ir.actions.act_window",
 			    "res_model": "export.file.save",
