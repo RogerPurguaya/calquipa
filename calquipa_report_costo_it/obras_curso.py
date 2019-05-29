@@ -121,25 +121,25 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_total_unidades_producidas_extraccion(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.tu_prod_extra = 452369
+		self.tu_prod_extra = rep
 
 	@api.one
 	def get_c_uni_extra(self):
@@ -157,26 +157,26 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_prod_proc_anter_tri(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
 
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute("""
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute("""
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.prod_proc_anter_tri = 78369
+		self.prod_proc_anter_tri = rep
 
 	@api.one
 	def get_gastos_tri(self):
@@ -195,25 +195,25 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_total_unidades_producidas_tri(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 	where ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+			where ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.tu_prod_tri = 89365
+		self.tu_prod_tri = rep
 
 	@api.one
 	def get_c_uni_tri(self):
@@ -238,26 +238,26 @@ class costos_produccion(models.Model):
 	def get_prod_proc_anter_cal(self):
 		self.verificador()
 
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.prod_proc_anter_cal = 59634
+		self.prod_proc_anter_cal = rep
 
 	@api.one
 	def get_gastos_cal(self):
@@ -276,27 +276,27 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_total_unidades_producidas_cal(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 	where ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
-
-
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+			where ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
 
-		self.tu_prod_cal = 78945
+		for i in self.env.cr.fetchall():
+			rep = i[0]
+
+
+		self.tu_prod_cal = rep
 
 	@api.one
 	def get_c_uni_cal(self):
@@ -319,27 +319,27 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_prod_proc_anter_mic(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
-
-
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
 
-		self.prod_proc_anter_mic = 36948
+		for i in self.env.cr.fetchall():
+			rep = i[1]
+
+
+		self.prod_proc_anter_mic = rep
 
 	@api.one
 	def get_gastos_mic(self):
@@ -358,25 +358,25 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_total_unidades_producidas_mic(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 	where ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)		
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+			where ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)		
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.tu_prod_mic = 69563
+		self.tu_prod_mic = rep
 
 	@api.one
 	def get_c_uni_mic(self):
@@ -1364,58 +1364,58 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_extra_pro_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit   from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit   from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.extra_pro_ton = 56932
+		self.extra_pro_ton = rep
 
 
 	@api.one
 	def get_extra_pro_imp(self):
-		# """t = self.env['costos.produccion.lineas'].search([('centro_costo','=','921: Total Extracción'),('costos_id','=',self.id)])
-		# if t and t[0]:
-		# 	t = t[0]
-		# 	self.extra_pro_imp=t.monto
-		# else:
-		# 	self.extra_pro_imp= 0
-		# """
+		"""t = self.env['costos.produccion.lineas'].search([('centro_costo','=','921: Total Extracción'),('costos_id','=',self.id)])
+		if t and t[0]:
+			t = t[0]
+			self.extra_pro_imp=t.monto
+		else:
+			self.extra_pro_imp= 0
+		"""
 
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 			
-		self.extra_pro_imp = 69583
+		self.extra_pro_imp = rep
 
 	@api.one
 	def get_extra_pro_cp(self):
@@ -1428,50 +1428,50 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_extra_tt_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, salida as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, salida as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.extra_tt_ton = 89635
+		self.extra_tt_ton = rep
 
 	@api.one
 	def get_extra_tt_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.extra_tt_imp = 45326
+		self.extra_tt_imp = rep
 
 	@api.one
 	def get_extra_tt_cp(self):
@@ -1542,61 +1542,61 @@ class costos_produccion(models.Model):
 	def get_extra_ini_ton(self):
 
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
-
-
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
-		# if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+		if mes == 12:
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
+
+			for i in self.env.cr.fetchall():
+				rep = i[0]
+
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha ,saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 			where (ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 			or (ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 			) T """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha ,saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+					where (ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+					or (ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
+					) T """)
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.extra_ini_ton = 64358
+		self.extra_ini_ton = rep
 
 
 
@@ -1609,61 +1609,61 @@ class costos_produccion(models.Model):
 	def get_extra_ini_imp(self):
 
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
 
-		# if mes == 12:
+		if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			for i in self.env.cr.fetchall():
+				rep = i[0]
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha, ingreso as ingreso,(saldov) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
-		# 			where (ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 			or (ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
-		# 			) T """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha, ingreso as ingreso,(saldov) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_extraccion.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_extraccion.id) + """}') 
+					where (ubicacion_destino = """ + str(parametros.location_existencias_extraccion.id) + """)
+					or (ubicacion_origen = """ + str(parametros.location_existencias_extraccion.id) + """)
+					) T """)
 				
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[1]
+				for i in self.env.cr.fetchall():
+					rep = i[1]
 
-		self.extra_ini_imp = 78965
+		self.extra_ini_imp = rep
 
 
 		#if self.extra_tt_imp + self.extra_final_imp - self.extra_pro_imp >=0.05:
@@ -1723,59 +1723,59 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_tritu_pro_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.tritu_pro_ton = 98365
+		self.tritu_pro_ton = rep
 
 
 	@api.one
 	def get_tritu_pro_imp(self):
-		# """
-		# t = self.env['costos.produccion.lineas'].search([('centro_costo','=','922: Total Trituración'),('costos_id','=',self.id)])
-		# if t and t[0]:
-		# 	t = t[0]
-		# 	self.tritu_pro_imp=t.monto + self.extra_tt_imp
-		# else:
-		# 	self.tritu_pro_imp= 0 + self.extra_tt_imp"""
+		"""
+		t = self.env['costos.produccion.lineas'].search([('centro_costo','=','922: Total Trituración'),('costos_id','=',self.id)])
+		if t and t[0]:
+			t = t[0]
+			self.tritu_pro_imp=t.monto + self.extra_tt_imp
+		else:
+			self.tritu_pro_imp= 0 + self.extra_tt_imp"""
 
 
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 			
-		self.tritu_pro_imp = 62145
+		self.tritu_pro_imp = rep
 
 	@api.one
 	def get_tritu_pro_cp(self):
@@ -1788,50 +1788,50 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_tritu_tt_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, salida as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, salida as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.tritu_tt_ton = 24156
+		self.tritu_tt_ton = rep
 
 	@api.one
 	def get_tritu_tt_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.tritu_tt_imp = 78945
+		self.tritu_tt_imp = rep
 
 	@api.one
 	def get_tritu_tt_cp(self):
@@ -1904,56 +1904,56 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_tritu_repro_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}')
-		# 	inner join stock_move sm on sm.id = get_kardex_v.stock_moveid
-		# 	inner join stock_picking sp on sp.id = sm.picking_id
-		# 	where (ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """ or ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	and coalesce(sp.motivo_guia,'0') = '17'
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}')
+			inner join stock_move sm on sm.id = get_kardex_v.stock_moveid
+			inner join stock_picking sp on sp.id = sm.picking_id
+			where (ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """ or ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+			and coalesce(sp.motivo_guia,'0') = '17'
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.tritu_repro_ton = 36156
+		self.tritu_repro_ton = rep
 
 
 	@api.one
 	def get_tritu_repro_imp(self):
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}')
-		# 	inner join stock_move sm on sm.id = get_kardex_v.stock_moveid
-		# 	inner join stock_picking sp on sp.id = sm.picking_id
-		# 	where (ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """ or ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	and coalesce(sp.motivo_guia,'0') = '17'		
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}')
+			inner join stock_move sm on sm.id = get_kardex_v.stock_moveid
+			inner join stock_picking sp on sp.id = sm.picking_id
+			where (ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """ or ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+			and coalesce(sp.motivo_guia,'0') = '17'		
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 		
-		# if not rep:
-		# 	rep = 0
-		self.tritu_repro_imp = 36215
+		if not rep:
+			rep = 0
+		self.tritu_repro_imp = rep 
 
 	@api.one
 	def get_tritu_repro_cp(self):
@@ -1992,61 +1992,61 @@ class costos_produccion(models.Model):
 	def get_tritu_ini_ton(self):
 
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
-
-
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
-		# if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+		if mes == 12:
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
+
+			for i in self.env.cr.fetchall():
+				rep = i[0]
+
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 			where ( ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 			or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 			) T """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+					where ( ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+					or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
+					) T """)
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.tritu_ini_ton = 78321
+		self.tritu_ini_ton = rep
 
 		#if self.tritu_tt_ton + self.tritu_final_ton - self.tritu_pro_ton >=0.05:
 		#	self.tritu_ini_ton = self.tritu_tt_ton + self.tritu_final_ton - self.tritu_pro_ton
@@ -2058,60 +2058,60 @@ class costos_produccion(models.Model):
 
 
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
 
-		# if mes == 12:
+		if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			for i in self.env.cr.fetchall():
+				rep = i[0]
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
-		# 			where ( ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 			or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 			) T """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_trituracion.id) + """}') 
+					where ( ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+					or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
+					) T """)
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.tritu_ini_imp = 36254
+		self.tritu_ini_imp = rep
 
 		#if self.tritu_tt_imp + self.tritu_final_imp - self.tritu_pro_imp >=0.05:
 		#	self.tritu_ini_imp = self.tritu_tt_imp + self.tritu_final_imp - self.tritu_pro_imp
@@ -2147,76 +2147,76 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_tritu_ven_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# var_txt_con = """ 
-		# select (ingreso) as ingreso,(credit) as credit,ubicacion_destino ,ubicacion_origen from (
-		# 	select fecha,(salida - ingreso) as ingreso,(credit) as credit,ubicacion_destino ,ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{"""
+		var_txt_con = """ 
+		select (ingreso) as ingreso,(credit) as credit,ubicacion_destino ,ubicacion_origen from (
+			select fecha,(salida - ingreso) as ingreso,(credit) as credit,ubicacion_destino ,ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{"""
 
-		# flag_c = 0
-		# for i in self.env['stock.location'].search([('usage','=','customer')]):
-		# 	if flag_c == 0:
-		# 		var_txt_con += str(i.id)
-		# 	else:
-		# 		var_txt_con += ',' + str(i.id)
-		# 	flag_c += 1
+		flag_c = 0
+		for i in self.env['stock.location'].search([('usage','=','customer')]):
+			if flag_c == 0:
+				var_txt_con += str(i.id)
+			else:
+				var_txt_con += ',' + str(i.id)
+			flag_c += 1
 
 
-		# self.env.cr.execute( var_txt_con +','+ str(parametros.location_existencias_trituracion.id)+"""}') 
-		# 	where ( ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute( var_txt_con +','+ str(parametros.location_existencias_trituracion.id)+"""}') 
+			where ( ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+			or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	for ii in self.env['stock.location'].search([('usage','=','customer')]):
-		# 		if i[2] == ii.id or i[3] == ii.id :
-		# 			rep += i[0]
+		for i in self.env.cr.fetchall():
+			for ii in self.env['stock.location'].search([('usage','=','customer')]):
+				if i[2] == ii.id or i[3] == ii.id :
+					rep += i[0]
 
-		self.tritu_ven_ton = 32154
+		self.tritu_ven_ton = rep
 
 	@api.one
 	def get_tritu_ven_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# var_txt_con = """ 
-		# select (ingreso) as ingreso,(credit) as credit,ubicacion_destino ,ubicacion_origen from (
-		# 	select fecha,(salida - ingreso) as ingreso,(credit-debit) as credit,ubicacion_destino ,ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
-		# 	'{"""
+		var_txt_con = """ 
+		select (ingreso) as ingreso,(credit) as credit,ubicacion_destino ,ubicacion_origen from (
+			select fecha,(salida - ingreso) as ingreso,(credit-debit) as credit,ubicacion_destino ,ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_trituracion.id) + """}',
+			'{"""
 
-		# flag_c = 0
-		# for i in self.env['stock.location'].search([('usage','=','customer')]):
-		# 	if flag_c == 0:
-		# 		var_txt_con += str(i.id)
-		# 	else:
-		# 		var_txt_con += ',' + str(i.id)
-		# 	flag_c += 1
+		flag_c = 0
+		for i in self.env['stock.location'].search([('usage','=','customer')]):
+			if flag_c == 0:
+				var_txt_con += str(i.id)
+			else:
+				var_txt_con += ',' + str(i.id)
+			flag_c += 1
 
-		# self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_trituracion.id) + """}') 
-		# 	where ( ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_trituracion.id) + """}') 
+			where ( ubicacion_destino = """ + str(parametros.location_existencias_trituracion.id) + """)
+			or ( ubicacion_origen = """ + str(parametros.location_existencias_trituracion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
 
-		# for i in self.env.cr.fetchall():
-		# 	for ii in self.env['stock.location'].search([('usage','=','customer')]):
-		# 		if i[2] == ii.id or i[3] == ii.id :
-		# 			rep += i[1]
+		for i in self.env.cr.fetchall():
+			for ii in self.env['stock.location'].search([('usage','=','customer')]):
+				if i[2] == ii.id or i[3] == ii.id :
+					rep += i[1]
 
-		self.tritu_ven_imp = 35600
+		self.tritu_ven_imp = rep
 
 	@api.one
 	def get_tritu_ven_cp(self):
@@ -2270,51 +2270,51 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_piedra_pro_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.piedra_pro_ton = 45231
+		self.piedra_pro_ton = rep
 
 
 	@api.one
 	def get_piedra_pro_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.piedra_pro_imp = 65123
+		self.piedra_pro_imp = rep
 
 	@api.one
 	def get_piedra_pro_cp(self):
@@ -2328,50 +2328,50 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_piedra_tt_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4]  + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4]  + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, salida as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, salida as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.piedra_tt_ton = 31625
+		self.piedra_tt_ton = rep
 
 	@api.one
 	def get_piedra_tt_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.piedra_tt_imp = 45123
+		self.piedra_tt_imp = rep
 
 	@api.one
 	def get_piedra_tt_cp(self):
@@ -2445,118 +2445,118 @@ class costos_produccion(models.Model):
 	def get_piedra_ini_ton(self):
 		
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
 
-		# if mes == 12:
+		if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			for i in self.env.cr.fetchall():
+				rep = i[0]
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 			where (ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 			or (ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 			) T """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+					where (ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+					or (ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+					) T """)
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.piedra_ini_ton = 65423
+		self.piedra_ini_ton = rep
 
 	@api.one
 	def get_piedra_ini_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
 
-		# if mes == 12:
+		if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			for i in self.env.cr.fetchall():
+				rep = i[0]
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
-		# 			where (ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 			or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 			) T """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_intermedia.id) + """}') 
+					where (ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+					or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+					) T """)
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.piedra_ini_imp = 21365
+		self.piedra_ini_imp = rep
 
 	@api.one
 	def get_piedra_ini_cp(self):
@@ -2587,75 +2587,75 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_piedra_ven_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# var_txt_con = """ 
-		# select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
-		# 	select fecha, (salida-ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 	'{"""
+		var_txt_con = """ 
+		select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
+			select fecha, (salida-ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+			'{"""
 
-		# flag_c = 0
-		# for i in self.env['stock.location'].search([('usage','=','customer')]):
-		# 	if flag_c == 0:
-		# 		var_txt_con += str(i.id)
-		# 	else:
-		# 		var_txt_con += ',' + str(i.id)
-		# 	flag_c += 1
+		flag_c = 0
+		for i in self.env['stock.location'].search([('usage','=','customer')]):
+			if flag_c == 0:
+				var_txt_con += str(i.id)
+			else:
+				var_txt_con += ',' + str(i.id)
+			flag_c += 1
 
-		# self.env.cr.execute( var_txt_con +','+ str(parametros.location_existencias_intermedia.id)+ """}') 
-		# 	where ( ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute( var_txt_con +','+ str(parametros.location_existencias_intermedia.id)+ """}') 
+			where ( ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+			or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	for ii in self.env['stock.location'].search([('usage','=','customer')]):
-		# 		if i[2] == ii.id or i[3] == ii.id :
-		# 			rep += i[0]
+		for i in self.env.cr.fetchall():
+			for ii in self.env['stock.location'].search([('usage','=','customer')]):
+				if i[2] == ii.id or i[3] == ii.id :
+					rep += i[0]
 
-		self.piedra_ven_ton = 63215
+		self.piedra_ven_ton = rep
 
 	@api.one
 	def get_piedra_ven_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# var_txt_con = """ 
-		# select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
-		# 	select fecha, (salida - ingreso) as ingreso,(credit-debit) as credit, ubicacion_destino, ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
-		# 	'{"""
+		var_txt_con = """ 
+		select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
+			select fecha, (salida - ingreso) as ingreso,(credit-debit) as credit, ubicacion_destino, ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_intermedia.id) + """}',
+			'{"""
 
-		# flag_c = 0
-		# for i in self.env['stock.location'].search([('usage','=','customer')]):
-		# 	if flag_c == 0:
-		# 		var_txt_con += str(i.id)
-		# 	else:
-		# 		var_txt_con += ',' + str(i.id)
-		# 	flag_c += 1
+		flag_c = 0
+		for i in self.env['stock.location'].search([('usage','=','customer')]):
+			if flag_c == 0:
+				var_txt_con += str(i.id)
+			else:
+				var_txt_con += ',' + str(i.id)
+			flag_c += 1
 
-		# self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_intermedia.id)+ """}') 
-		# 	where ( ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_intermedia.id)+ """}') 
+			where ( ubicacion_destino = """ + str(parametros.location_existencias_intermedia.id) + """)
+			or ( ubicacion_origen = """ + str(parametros.location_existencias_intermedia.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
 
-		# for i in self.env.cr.fetchall():
-		# 	for ii in self.env['stock.location'].search([('usage','=','customer')]):
-		# 		if i[2] == ii.id or i[3] == ii.id :
-		# 			rep += i[1]
+		for i in self.env.cr.fetchall():
+			for ii in self.env['stock.location'].search([('usage','=','customer')]):
+				if i[2] == ii.id or i[3] == ii.id :
+					rep += i[1]
 
-		self.piedra_ven_imp = 23156
+		self.piedra_ven_imp = rep
 
 	@api.one
 	def get_piedra_ven_cp(self):
@@ -2701,58 +2701,58 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_calci_pro_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.calci_pro_ton = 35126
+		self.calci_pro_ton = rep
 
 
 	@api.one
 	def get_calci_pro_imp(self):
-		# """
-		# t = self.env['costos.produccion.lineas'].search([('centro_costo','=','923: Total Calcinación'),('costos_id','=',self.id)])
-		# if t and t[0]:
-		# 	t = t[0]
-		# 	self.calci_pro_imp=t.monto + self.piedra_tt_imp
-		# else:
-		# 	self.calci_pro_imp= 0 + self.piedra_tt_imp"""
+		"""
+		t = self.env['costos.produccion.lineas'].search([('centro_costo','=','923: Total Calcinación'),('costos_id','=',self.id)])
+		if t and t[0]:
+			t = t[0]
+			self.calci_pro_imp=t.monto + self.piedra_tt_imp
+		else:
+			self.calci_pro_imp= 0 + self.piedra_tt_imp"""
 
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.calci_pro_imp = 36215
+		self.calci_pro_imp = rep
 
 	@api.one
 	def get_calci_pro_cp(self):
@@ -2765,48 +2765,48 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_calci_tt_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, salida as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, salida as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.calci_tt_ton = 27654
+		self.calci_tt_ton = rep
 
 	@api.one
 	def get_calci_tt_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 	where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+			where (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.calci_tt_imp = 63215
+		self.calci_tt_imp = rep
 
 	@api.one
 	def get_calci_tt_cp(self):
@@ -2818,72 +2818,72 @@ class costos_produccion(models.Model):
 
 	@api.one
 	def get_calci_salida_ton(self):
-		# parametros = self.env['main.parameter'].search([])[0]
+		parametros = self.env['main.parameter'].search([])[0]
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# #producto no conforme
-		# self.env.cr.execute(""" 
-		#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}')  as T
-		#    inner join stock_move sm on sm.id = T.stock_moveid
-		#    inner join stock_picking sp on sp.id = sm.picking_id
-		#    where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		#    or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-		#    and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
-		#    and sp.motivo_guia = '16'
-		# """)
+		#producto no conforme
+		self.env.cr.execute(""" 
+		   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+		   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}')  as T
+		   inner join stock_move sm on sm.id = T.stock_moveid
+		   inner join stock_picking sp on sp.id = sm.picking_id
+		   where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+		   or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		   and sp.motivo_guia = '16'
+		""")
 
-		# tonex = 0
-		# preciox = 0
-		# for w in self.env.cr.fetchall():
-		# 	if w[0]:
-		# 		tonex += w[0]
-		# 		preciox += w[1]
+		tonex = 0
+		preciox = 0
+		for w in self.env.cr.fetchall():
+			if w[0]:
+				tonex += w[0]
+				preciox += w[1]
 		
-		# if tonex == None:
-		# 	tonex = 0
-		# if preciox == None:
-		# 	preciox = 0
-		# #fin de prod. no conforme
-		self.calci_salida_ton = 22366
+		if tonex == None:
+			tonex = 0
+		if preciox == None:
+			preciox = 0
+		#fin de prod. no conforme
+		self.calci_salida_ton = tonex
 
 
 	@api.one
 	def get_calci_salida_imp(self):
-		# parametros = self.env['main.parameter'].search([])[0]
+		parametros = self.env['main.parameter'].search([])[0]
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# #producto no conforme
-		# self.env.cr.execute(""" 
-		#    select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		#    '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}')  as T
-		#    inner join stock_move sm on sm.id = T.stock_moveid
-		#    inner join stock_picking sp on sp.id = sm.picking_id
-		#    where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		#    or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
-		#    and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
-		#    and sp.motivo_guia = '16'
-		# """)
+		#producto no conforme
+		self.env.cr.execute(""" 
+		   select sum(salida) as ingreso,sum(round(credit,2)) as debit from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+		   '{""" + str(parametros.location_existencias_calcinacion.id) + """,""" + str(parametros.location_perdidas_mermas.id) + """}')  as T
+		   inner join stock_move sm on sm.id = T.stock_moveid
+		   inner join stock_picking sp on sp.id = sm.picking_id
+		   where ((ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+		   or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """))
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		   and sp.motivo_guia = '16'
+		""")
 
-		# tonex = 0
-		# preciox = 0
-		# for w in self.env.cr.fetchall():
-		# 	if w[0]:
-		# 		tonex += w[0]
-		# 		preciox += w[1]
+		tonex = 0
+		preciox = 0
+		for w in self.env.cr.fetchall():
+			if w[0]:
+				tonex += w[0]
+				preciox += w[1]
 		
-		# if tonex == None:
-		# 	tonex = 0
-		# if preciox == None:
-		# 	preciox = 0
-		# #fin de prod. no conforme
-		self.calci_salida_imp = 36215
+		if tonex == None:
+			tonex = 0
+		if preciox == None:
+			preciox = 0
+		#fin de prod. no conforme
+		self.calci_salida_imp = preciox
 
 
 	@api.one
@@ -2981,29 +2981,29 @@ class costos_produccion(models.Model):
 
 	@api.one
 	def get_calci_tranf_impo_recib(self):
-		# parametros = self.env['main.parameter'].search([])[0]
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
-		# self.env.cr.execute(""" 
-		#    select round(SUM(round(credit,6)),2) as total
-		#    from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
-		#    '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		#    '{""" + str(parametros.location_existencias_calcinacion.id) +"""}') as T
-		#    inner join stock_move sm on sm.id = T.stock_moveid
-		#    inner join stock_picking sp on sp.id = sm.picking_id
-		#    where ubicacion_destino = """+str(parametros.location_existencias_calcinacion.id) + """
-		#    and operation_type = '06'
-		#    and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
-		# """)
-		# result = self.env.cr.dictfetchall()
-		# if len(result) == 1:
-		# 	if result[0]['total'] != None:
-		# 		self.calci_tranf_impo_recib = float(result[0]['total'])
-		# 	else:
-		# 		self.calci_tranf_impo_recib = 0
-		# else:
-		self.calci_tranf_impo_recib = 35233
+		parametros = self.env['main.parameter'].search([])[0]
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
+		self.env.cr.execute(""" 
+		   select round(SUM(round(credit,6)),2) as total
+		   from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+		   '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+		   '{""" + str(parametros.location_existencias_calcinacion.id) +"""}') as T
+		   inner join stock_move sm on sm.id = T.stock_moveid
+		   inner join stock_picking sp on sp.id = sm.picking_id
+		   where ubicacion_destino = """+str(parametros.location_existencias_calcinacion.id) + """
+		   and operation_type = '06'
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.calci_tranf_impo_recib = float(result[0]['total'])
+			else:
+				self.calci_tranf_impo_recib = 0
+		else:
+			self.calci_tranf_impo_recib = 0
 
 	@api.one
 	@api.depends('calci_tranf_impo_recib','calci_trans_recib')
@@ -3046,26 +3046,26 @@ class costos_produccion(models.Model):
 
 	@api.one
 	def get_calci_tranf_impo_real(self):
-		# parametros = self.env['main.parameter'].search([])[0]
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
-		# self.env.cr.execute(""" 
-		#    select round(SUM(round(credit,6)),2) as total
-		#    from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
-		#    '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		#    '{""" + str(parametros.location_existencias_calcinacion.id) +"""}') as T
-		#    where operation_type = '06'
-		#    and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
-		# """)
-		# result = self.env.cr.dictfetchall()
-		# if len(result) == 1:
-		# 	if result[0]['total'] != None:
-		# 		self.calci_tranf_impo_real = float(result[0]['total'])
-		# 	else:
-		# 		self.calci_tranf_impo_real = 0
-		# else:
-		self.calci_tranf_impo_real = 36215
+		parametros = self.env['main.parameter'].search([])[0]
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
+		self.env.cr.execute(""" 
+		   select round(SUM(round(credit,6)),2) as total
+		   from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+		   '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+		   '{""" + str(parametros.location_existencias_calcinacion.id) +"""}') as T
+		   where operation_type = '06'
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.calci_tranf_impo_real = float(result[0]['total'])
+			else:
+				self.calci_tranf_impo_real = 0
+		else:
+			self.calci_tranf_impo_real = 0
 
 	@api.one
 	@api.depends('calci_tranf_impo_real','calci_trans_reali')
@@ -3109,29 +3109,29 @@ class costos_produccion(models.Model):
 
 	@api.one
 	def get_micro_tranf_impo_recib(self):
-		# parametros = self.env['main.parameter'].search([])[0]
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
-		# self.env.cr.execute(""" 
-		#    select round(SUM(round(credit,6)),2) as total
-		#    from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
-		#    '{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		#    '{""" + str(parametros.location_existencias_micronizado.id) +"""}') as T
-		#    inner join stock_move sm on sm.id = T.stock_moveid
-		#    inner join stock_picking sp on sp.id = sm.picking_id
-		#    where ubicacion_destino = """+str(parametros.location_existencias_micronizado.id) + """
-		#    and operation_type = '06'
-		#    and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
-		# """)
-		# result = self.env.cr.dictfetchall()
-		# if len(result) == 1:
-		# 	if result[0]['total'] != None:
-		# 		self.micro_tranf_impo_recib = float(result[0]['total'])
-		# 	else:
-		# 		self.micro_tranf_impo_recib = 0
-		# else:
-		self.micro_tranf_impo_recib = 42136
+		parametros = self.env['main.parameter'].search([])[0]
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
+		self.env.cr.execute(""" 
+		   select round(SUM(round(credit,6)),2) as total
+		   from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+		   '{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+		   '{""" + str(parametros.location_existencias_micronizado.id) +"""}') as T
+		   inner join stock_move sm on sm.id = T.stock_moveid
+		   inner join stock_picking sp on sp.id = sm.picking_id
+		   where ubicacion_destino = """+str(parametros.location_existencias_micronizado.id) + """
+		   and operation_type = '06'
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.micro_tranf_impo_recib = float(result[0]['total'])
+			else:
+				self.micro_tranf_impo_recib = 0
+		else:
+			self.micro_tranf_impo_recib = 0
 
 	@api.one
 	@api.depends('micro_tranf_impo_recib','micro_trans_recib')
@@ -3177,26 +3177,26 @@ class costos_produccion(models.Model):
 
 	@api.one
 	def get_micro_tranf_impo_real(self):
-		# parametros = self.env['main.parameter'].search([])[0]
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
-		# self.env.cr.execute(""" 
-		#    select round(SUM(round(credit,6)),2) as total
-		#    from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
-		#    '{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		#    '{""" + str(parametros.location_existencias_micronizado.id) +"""}') as T
-		#    where operation_type = '06'
-		#    and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
-		# """)
-		# result = self.env.cr.dictfetchall()
-		# if len(result) == 1:
-		# 	if result[0]['total'] != None:
-		# 		self.micro_tranf_impo_real = float(result[0]['total'])
-		# 	else:
-		# 		self.micro_tranf_impo_real = 0
-		# else:
-		self.micro_tranf_impo_real = 36268
+		parametros = self.env['main.parameter'].search([])[0]
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
+		self.env.cr.execute(""" 
+		   select round(SUM(round(credit,6)),2) as total
+		   from get_kardex_v("""+str(fecha_inianio)+""","""+str(fechafin)+""",
+		   '{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+		   '{""" + str(parametros.location_existencias_micronizado.id) +"""}') as T
+		   where operation_type = '06'
+		   and fecha >= '"""+ str(self.periodo.date_start) +"""' and fecha <= '"""+ str(self.periodo.date_stop)+"""'
+		""")
+		result = self.env.cr.dictfetchall()
+		if len(result) == 1:
+			if result[0]['total'] != None:
+				self.micro_tranf_impo_real = float(result[0]['total'])
+			else:
+				self.micro_tranf_impo_real = 0
+		else:
+			self.micro_tranf_impo_real = 0
 
 	@api.one
 	@api.depends('micro_tranf_impo_real','micro_trans_reali')
@@ -3212,116 +3212,116 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_calci_ini_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
-		# if mes == 12:
+		if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			for i in self.env.cr.fetchall():
+				rep = i[0]
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 		where ( ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 		) T""")
+				self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+				where ( ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				) T""")
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.calci_ini_ton = 32165
+		self.calci_ini_ton = rep
 
 	@api.one
 	def get_calci_ini_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
 
-		# if mes == 12:
+		if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			for i in self.env.cr.fetchall():
+				rep = i[0]
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
-		# 			where (ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 			or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 			) T """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_calcinacion.id) + """}') 
+					where (ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+					or (ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+					) T """)
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.calci_ini_imp = 26156
+		self.calci_ini_imp = rep
 
 	@api.one
 	def get_calci_ini_cp(self):
@@ -3354,78 +3354,79 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_calci_ven_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# var_txt_con = """ 
-		# select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
-		# 	select fecha, (salida - ingreso) as ingreso,(credit) as credit,
-		# 	 ubicacion_destino, ubicacion_origen 
-		# 	 from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",
-		# 	 '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 	'{"""
+		var_txt_con = """ 
+		select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
+			select fecha, (salida - ingreso) as ingreso,(credit) as credit,
+			 ubicacion_destino, ubicacion_origen 
+			 from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",
+			 '{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			'{"""
 
-		# flag_c = 0
-		# for i in self.env['stock.location'].search([('usage','=','customer')]):
-		# 	if flag_c == 0:
-		# 		var_txt_con += str(i.id)
-		# 	else:
-		# 		var_txt_con += ',' + str(i.id)
-		# 	flag_c += 1
+		flag_c = 0
+		for i in self.env['stock.location'].search([('usage','=','customer')]):
+			if flag_c == 0:
+				var_txt_con += str(i.id)
+			else:
+				var_txt_con += ',' + str(i.id)
+			flag_c += 1
 
-		# self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_calcinacion.id)+ """}') 
-		# 	where ( ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_calcinacion.id)+ """}') 
+			where ( ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	for ii in self.env['stock.location'].search([('usage','=','customer')]):
-		# 		if (i[2] == ii.id and i[3] == parametros.location_existencias_calcinacion.id ) or ( i[2] == parametros.location_existencias_calcinacion.id and i[3] == ii.id  ):
-		# 			rep += i[0]
+		for i in self.env.cr.fetchall():
+			for ii in self.env['stock.location'].search([('usage','=','customer')]):
+				if (i[2] == ii.id and i[3] == parametros.location_existencias_calcinacion.id ) or ( i[2] == parametros.location_existencias_calcinacion.id and i[3] == ii.id  ):
+					rep += i[0]
 
-		self.calci_ven_ton = 32165
+		self.calci_ven_ton = rep
+
 	@api.one
 	def get_calci_ven_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# var_txt_con = """ 
-		# select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
-		# 	select fecha, (salida - ingreso) as ingreso,(credit-debit) as credit, ubicacion_destino, ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
-		# 	'{"""
+		var_txt_con = """ 
+		select (ingreso) as ingreso,(credit) as credit, ubicacion_destino, ubicacion_origen from (
+			select fecha, (salida - ingreso) as ingreso,(credit-debit) as credit, ubicacion_destino, ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_calcinacion.id) + """}',
+			'{"""
 
-		# flag_c = 0
-		# for i in self.env['stock.location'].search([('usage','=','customer')]):
-		# 	if flag_c == 0:
-		# 		var_txt_con += str(i.id)
-		# 	else:
-		# 		var_txt_con += ',' + str(i.id)
-		# 	flag_c += 1
+		flag_c = 0
+		for i in self.env['stock.location'].search([('usage','=','customer')]):
+			if flag_c == 0:
+				var_txt_con += str(i.id)
+			else:
+				var_txt_con += ',' + str(i.id)
+			flag_c += 1
 
-		# self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_calcinacion.id)+ """}') 
-		# 	where ( ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
-
-
-		# for i in self.env.cr.fetchall():
-		# 	for ii in self.env['stock.location'].search([('usage','=','customer')]):
-		# 		if i[2] == ii.id  or i[3] == ii.id  :
-		# 			rep += i[1]
+		self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_calcinacion.id)+ """}') 
+			where ( ubicacion_destino = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			or ( ubicacion_origen = """ + str(parametros.location_existencias_calcinacion.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
 
-		self.calci_ven_imp = 58469
+		for i in self.env.cr.fetchall():
+			for ii in self.env['stock.location'].search([('usage','=','customer')]):
+				if i[2] == ii.id  or i[3] == ii.id  :
+					rep += i[1]
+
+
+		self.calci_ven_imp = rep
 
 	@api.one
 	def get_calci_ven_cp(self):
@@ -3488,113 +3489,113 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_micro_merc_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 	where ( (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """) )
-		# 	and coalesce(operation_type,'00') = '10'
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+			where ( (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """) )
+			and coalesce(operation_type,'00') = '10'
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.micro_merc_ton = 46135
+		self.micro_merc_ton = rep
 
 
 	@api.one
 	def get_micro_merc_imp(self):
-		# """
-		# t = self.env['costos.produccion.lineas'].search([('centro_costo','=','924: Total Micronizado'),('costos_id','=',self.id)])
-		# if t and t[0]:
-		# 	t = t[0]
-		# 	self.micro_pro_imp=t.monto + self.calci_tt_imp
-		# else:
-		# 	self.micro_pro_imp= 0 + self.calci_tt_imp"""
+		"""
+		t = self.env['costos.produccion.lineas'].search([('centro_costo','=','924: Total Micronizado'),('costos_id','=',self.id)])
+		if t and t[0]:
+			t = t[0]
+			self.micro_pro_imp=t.monto + self.calci_tt_imp
+		else:
+			self.micro_pro_imp= 0 + self.calci_tt_imp"""
 
 
-		# parametros = self.env['main.parameter'].search([])[0]
+		parametros = self.env['main.parameter'].search([])[0]
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
-
-
-		# actualizaciones = self.env['mrp.production'].search([('date_planned','>=',self.periodo.date_start),('date_planned','<=',self.periodo.date_stop),('is_mercaderia','=',True)])
-		# for i in actualizaciones:
-		# 	calc = 0
-		# 	if i.move_lines2 and i.move_lines2[0].id:
-		# 		lst_products  = []
-		# 		lst_locations = []
-		# 		productos='{'
-		# 		almacenes='{'
-		# 		date_ini= fechaini.replace('-','')
-		# 		date_fin= fechafin.replace('-','')
-
-		# 		lst_products = self.env['product.product'].search([]).ids
-		# 		lst_locations = self.env['stock.location'].search([]).ids
-
-		# 		for producto in lst_products:
-		# 			productos=productos+str(producto)+','
-		# 		productos=productos[:-1]+'}'
-		# 		for location in lst_locations:
-		# 			almacenes=almacenes+str(location)+','
-		# 		almacenes=almacenes[:-1]+'}'
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
 
+		actualizaciones = self.env['mrp.production'].search([('date_planned','>=',self.periodo.date_start),('date_planned','<=',self.periodo.date_stop),('is_mercaderia','=',True)])
+		for i in actualizaciones:
+			calc = 0
+			if i.move_lines2 and i.move_lines2[0].id:
+				lst_products  = []
+				lst_locations = []
+				productos='{'
+				almacenes='{'
+				date_ini= fechaini.replace('-','')
+				date_fin= fechafin.replace('-','')
+
+				lst_products = self.env['product.product'].search([]).ids
+				lst_locations = self.env['stock.location'].search([]).ids
+
+				for producto in lst_products:
+					productos=productos+str(producto)+','
+				productos=productos[:-1]+'}'
+				for location in lst_locations:
+					almacenes=almacenes+str(location)+','
+				almacenes=almacenes[:-1]+'}'
 
 
-		# 		self.env.cr.execute(""" 
-		# 						 select 
-		# 						cadquiere
-		# 						from get_kardex_v("""+ fecha_inianio + "," + fechafin + ",'" + productos + """'::INT[], '""" + almacenes + """'::INT[]) 
-		# 						where stock_moveid = """ + str(i.move_lines2[0].id)  + """
-		# 					""")
 
-		# 		for wakanda in self.env.cr.fetchall():
-		# 			calc = wakanda[0] if wakanda[0] else 0
+
+				self.env.cr.execute(""" 
+								 select 
+								cadquiere
+								from get_kardex_v("""+ fecha_inianio + "," + fechafin + ",'" + productos + """'::INT[], '""" + almacenes + """'::INT[]) 
+								where stock_moveid = """ + str(i.move_lines2[0].id)  + """
+							""")
+
+				for wakanda in self.env.cr.fetchall():
+					calc = wakanda[0] if wakanda[0] else 0
 					
 
-		# 	if i.move_created_ids2 and i.move_created_ids2[0].id:
-		# 		i.move_created_ids2[0].precio_unitario_manual = calc
-		# 		i.move_created_ids2[0].price_unit = calc
-		# 		self.env.cr.execute("""
-		# 			update stock_move set precio_unitario_manual = """ +str(calc)+ """ , price_unit = """ +str(calc)+ """ 
-		# 			where id = """+str(i.move_created_ids2[0].id)+"""
-		# 			""")
+			if i.move_created_ids2 and i.move_created_ids2[0].id:
+				i.move_created_ids2[0].precio_unitario_manual = calc
+				i.move_created_ids2[0].price_unit = calc
+				self.env.cr.execute("""
+					update stock_move set precio_unitario_manual = """ +str(calc)+ """ , price_unit = """ +str(calc)+ """ 
+					where id = """+str(i.move_created_ids2[0].id)+"""
+					""")
 				
 
 
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 	where ( (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """) )
-		# 	and coalesce(operation_type,'00') = '10'
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+			where ( (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """) )
+			and coalesce(operation_type,'00') = '10'
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 			
-		self.micro_merc_imp = 35620
+		self.micro_merc_imp = rep
 
 
 		
@@ -3610,60 +3611,60 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_micro_pro_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 	where ( (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """) )
-		# 	and coalesce(operation_type,'00') != '10'
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, credit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+			where ( (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """) )
+			and coalesce(operation_type,'00') != '10'
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[0]
+		for i in self.env.cr.fetchall():
+			rep = i[0]
 
-		self.micro_pro_ton = 32156
+		self.micro_pro_ton = rep
 
 
 	@api.one
 	def get_micro_pro_imp(self):
-		# """
-		# t = self.env['costos.produccion.lineas'].search([('centro_costo','=','924: Total Micronizado'),('costos_id','=',self.id)])
-		# if t and t[0]:
-		# 	t = t[0]
-		# 	self.micro_pro_imp=t.monto + self.calci_tt_imp
-		# else:
-		# 	self.micro_pro_imp= 0 + self.calci_tt_imp"""
+		"""
+		t = self.env['costos.produccion.lineas'].search([('centro_costo','=','924: Total Micronizado'),('costos_id','=',self.id)])
+		if t and t[0]:
+			t = t[0]
+			self.micro_pro_imp=t.monto + self.calci_tt_imp
+		else:
+			self.micro_pro_imp= 0 + self.calci_tt_imp"""
 
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# self.env.cr.execute(""" 
-		# 	select sum(ingreso) as ingreso,sum(credit) as credit from (
-		# 	select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 	'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 	where ( (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 	or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """) )
-		# 	and coalesce(operation_type,'00') != '10'
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute(""" 
+			select sum(ingreso) as ingreso,sum(credit) as credit from (
+			select fecha, ingreso as ingreso, debit as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+			where ( (ubicacion_origen = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+			or (ubicacion_destino = """ + str(parametros.location_virtual_produccion.id) + """ and ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """) )
+			and coalesce(operation_type,'00') != '10'
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	rep = i[1]
+		for i in self.env.cr.fetchall():
+			rep = i[1]
 
-		self.micro_pro_imp = 25164
+		self.micro_pro_imp = rep
 
 
 
@@ -3738,118 +3739,118 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_micro_ini_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
 
-		# if mes == 12:
+		if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			for i in self.env.cr.fetchall():
+				rep = i[0]
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 			where ( ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 			or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 			) T """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha, saldof as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+					where ( ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+					or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """)
+					) T """)
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.micro_ini_ton = 41263
+		self.micro_ini_ton = rep
 
 	@api.one
 	def get_micro_ini_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
-		# code_ant = self.periodo.code.split('/')
-		# mes = int(code_ant[0])
-		# anio = int(code_ant[1])
+		code_ant = self.periodo.code.split('/')
+		mes = int(code_ant[0])
+		anio = int(code_ant[1])
 
-		# if mes == 1:
-		# 	mes = 12
-		# 	anio -= 1
-		# else:
-		# 	mes -= 1
+		if mes == 1:
+			mes = 12
+			anio -= 1
+		else:
+			mes -= 1
 
-		# code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
+		code_ant = ("%2d"%mes).replace(' ','0') + '/' + str(anio)
 
-		# periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
+		periodo_anterior = self.env['account.period'].search( [('code','=',code_ant)] )
 
 
 
-		# if mes == 12:
+		if mes == 12:
 
-		# 	fechaini = str(self.periodo.date_start).replace('-','')
-		# 	fechafin = str(self.periodo.date_stop).replace('-','')
+			fechaini = str(self.periodo.date_start).replace('-','')
+			fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# 	self.env.cr.execute(""" 
-		# 		select ingreso as ingreso,(credit) as credit from (
-		# 		select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 		'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 		where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 		or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
-		# 		) T""")
+			self.env.cr.execute(""" 
+				select ingreso as ingreso,(credit) as credit from (
+				select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fechaini+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+				'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+				where ( ubicacion_origen = """ + str(parametros.location_virtual_saldoinicial.id) + """ and ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+				or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """ and ubicacion_destino = """ + str(parametros.location_virtual_saldoinicial.id) + """)
+				) T""")
 
-		# 	for i in self.env.cr.fetchall():
-		# 		rep = i[0]
+			for i in self.env.cr.fetchall():
+				rep = i[0]
 
-		# else:
-		# 	if len(periodo_anterior )>0:
+		else:
+			if len(periodo_anterior )>0:
 				
-		# 		fechaini = str(periodo_anterior.date_start).replace('-','')
-		# 		fecha_inianio = fechaini[:4] + '0101'
-		# 		fechafin = str(periodo_anterior.date_stop).replace('-','')
+				fechaini = str(periodo_anterior.date_start).replace('-','')
+				fecha_inianio = fechaini[:4] + '0101'
+				fechafin = str(periodo_anterior.date_stop).replace('-','')
 
-		# 		self.env.cr.execute(""" 
-		# 			select ingreso as ingreso,(credit) as credit from (
-		# 			select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 			'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
-		# 			where ( ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 			or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 			) T  """)
+				self.env.cr.execute(""" 
+					select ingreso as ingreso,(credit) as credit from (
+					select fecha, saldov as ingreso,(credit) as credit from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+					'{""" + str(parametros.location_virtual_produccion.id) + """,""" + str(parametros.location_existencias_micronizado.id) + """}') 
+					where ( ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+					or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """)
+					) T  """)
 
-		# 		for i in self.env.cr.fetchall():
-		# 			rep = i[0]
+				for i in self.env.cr.fetchall():
+					rep = i[0]
 
-		self.micro_ini_imp = 42632
+		self.micro_ini_imp = rep
 
 	@api.one
 	def get_micro_ini_cp(self):
@@ -3880,75 +3881,75 @@ class costos_produccion(models.Model):
 	@api.one
 	def get_micro_ven_ton(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# var_txt_con = """ 
-		# select (ingreso) as ingreso,(credit) as credit, ubicacion_destino,ubicacion_origen from (
-		# 	select fecha, (salida - ingreso) as ingreso,(credit) as credit, ubicacion_destino,ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 	'{"""
+		var_txt_con = """ 
+		select (ingreso) as ingreso,(credit) as credit, ubicacion_destino,ubicacion_origen from (
+			select fecha, (salida - ingreso) as ingreso,(credit) as credit, ubicacion_destino,ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+			'{"""
 
-		# flag_c = 0
-		# for i in self.env['stock.location'].search([('usage','=','customer')]):
-		# 	if flag_c == 0:
-		# 		var_txt_con += str(i.id)
-		# 	else:
-		# 		var_txt_con += ',' + str(i.id)
-		# 	flag_c += 1
+		flag_c = 0
+		for i in self.env['stock.location'].search([('usage','=','customer')]):
+			if flag_c == 0:
+				var_txt_con += str(i.id)
+			else:
+				var_txt_con += ',' + str(i.id)
+			flag_c += 1
 
-		# self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_micronizado.id)+ """}') 
-		# 	where ( ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 	or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_micronizado.id)+ """}') 
+			where ( ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+			or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
-		# for i in self.env.cr.fetchall():
-		# 	for ii in self.env['stock.location'].search([('usage','=','customer')]):
-		# 		if i[2] == ii.id or i[3] == ii.id :
-		# 			rep += i[0]
+		for i in self.env.cr.fetchall():
+			for ii in self.env['stock.location'].search([('usage','=','customer')]):
+				if i[2] == ii.id or i[3] == ii.id :
+					rep += i[0]
 
-		self.micro_ven_ton = 45893
+		self.micro_ven_ton = rep
 
 	@api.one
 	def get_micro_ven_imp(self):
 		self.verificador()
-		# parametros = self.env['main.parameter'].search([])[0]
-		# rep = 0
+		parametros = self.env['main.parameter'].search([])[0]
+		rep = 0
 
 
-		# fechaini = str(self.periodo.date_start).replace('-','')
-		# fecha_inianio = fechaini[:4] + '0101'
-		# fechafin = str(self.periodo.date_stop).replace('-','')
+		fechaini = str(self.periodo.date_start).replace('-','')
+		fecha_inianio = fechaini[:4] + '0101'
+		fechafin = str(self.periodo.date_stop).replace('-','')
 
-		# var_txt_con = """ 
-		# select (ingreso) as ingreso,(credit) as credit,ubicacion_destino,ubicacion_origen from (
-		# 	select fecha, (salida - ingreso) as ingreso,(credit-debit) as credit,ubicacion_destino,ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
-		# 	'{"""
+		var_txt_con = """ 
+		select (ingreso) as ingreso,(credit) as credit,ubicacion_destino,ubicacion_origen from (
+			select fecha, (salida - ingreso) as ingreso,(credit-debit) as credit,ubicacion_destino,ubicacion_origen from get_kardex_v("""+fecha_inianio+""","""+fechafin+""",'{""" + str(parametros.pproduct_costos_micronizado.id) + """}',
+			'{"""
 
-		# flag_c = 0
-		# for i in self.env['stock.location'].search([('usage','=','customer')]):
-		# 	if flag_c == 0:
-		# 		var_txt_con += str(i.id)
-		# 	else:
-		# 		var_txt_con += ',' + str(i.id)
-		# 	flag_c += 1
+		flag_c = 0
+		for i in self.env['stock.location'].search([('usage','=','customer')]):
+			if flag_c == 0:
+				var_txt_con += str(i.id)
+			else:
+				var_txt_con += ',' + str(i.id)
+			flag_c += 1
 
-		# self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_micronizado.id)+ """}') 
-		# 	where ( ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 	or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """)
-		# 	) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
+		self.env.cr.execute( var_txt_con +','+str(parametros.location_existencias_micronizado.id)+ """}') 
+			where ( ubicacion_destino = """ + str(parametros.location_existencias_micronizado.id) + """)
+			or ( ubicacion_origen = """ + str(parametros.location_existencias_micronizado.id) + """)
+			) T where fecha >= '"""+str(self.periodo.date_start)+"""' and fecha <= '"""+str(self.periodo.date_stop)+"""' """)
 
 
-		# for i in self.env.cr.fetchall():
-		# 	for ii in self.env['stock.location'].search([('usage','=','customer')]):
-		# 		if i[2] == ii.id or i[3] == ii.id :
-		# 			rep += i[1]
+		for i in self.env.cr.fetchall():
+			for ii in self.env['stock.location'].search([('usage','=','customer')]):
+				if i[2] == ii.id or i[3] == ii.id :
+					rep += i[1]
 
-		self.micro_ven_imp = 47126
+		self.micro_ven_imp = rep
 
 	@api.one
 	def get_micro_ven_cp(self):
@@ -4008,6 +4009,7 @@ class costos_produccion(models.Model):
 		view_ref = mod_obj.get_object_reference('account_contable_book_it', 'export_file_save_action')
 		view_id = view_ref and view_ref[1] or False
 		result = act_obj.read( [view_id] )
+		print sfs_id
 		return {
 			"type": "ir.actions.act_window",
 			"res_model": "export.file.save",
@@ -5169,11 +5171,15 @@ class costos_produccion(models.Model):
 		view_ref = mod_obj.get_object_reference('account_contable_book_it', 'export_file_save_action')
 		view_id = view_ref and view_ref[1] or False
 		result = act_obj.read( [view_id] )
+		print sfs_id
+
+		#import os
+		#os.system('c:\\eSpeak2\\command_line\\espeak.exe -ves-f1 -s 170 -p 100 "Se Realizo La exportación exitosamente Y A EDWARD NO LE GUSTA XDXDXDXDDDDDDDDDDDD" ')
 
 		return {
-			"type": "ir.actions.act_window",
-			"res_model": "export.file.save",
-			"views": [[False, "form"]],
-			"res_id": sfs_id.id,
-			"target": "new",
-			}
+		    "type": "ir.actions.act_window",
+		    "res_model": "export.file.save",
+		    "views": [[False, "form"]],
+		    "res_id": sfs_id.id,
+		    "target": "new",
+		}
