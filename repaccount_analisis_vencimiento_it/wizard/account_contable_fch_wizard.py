@@ -67,8 +67,12 @@ aml.nro_comprobante as nro_comprobante,
 abs(T.saldo) as saldo,
 rc.name as divisa,
 abs(saldo_me) as saldo_me,
-CASE WHEN ft.date_reception is not null 
-THEN '"""+ str(self.date) +"""'::date - ft.date_reception 
+-- esto queda asi nomas
+--CASE WHEN ft.date_reception is not null 
+--THEN '"""+ str(self.date) +"""'::date - ft.date_reception 
+--else '"""+ str(self.date) +"""'::date - aml.date_maturity END as atraso,
+CASE WHEN ft.date_due is not null
+THEN '"""+ str(self.date) +"""'::date - ft.date_due 
 else '"""+ str(self.date) +"""'::date - aml.date_maturity END as atraso,
 am.state as estado
 
@@ -244,7 +248,6 @@ order by empresa, code, nro_comprobante)T
 			view_ref = mod_obj.get_object_reference('account_contable_book_it', 'export_file_save_action')
 			view_id = view_ref and view_ref[1] or False
 			result = act_obj.read( [view_id] )
-			print sfs_id
 			return {
 			    "type": "ir.actions.act_window",
 			    "res_model": "export.file.save",
@@ -319,8 +322,12 @@ aml.nro_comprobante as nro_comprobante,
 abs(T.saldo) as saldo,
 rc.name as divisa,
 abs(saldo_me) as saldo_me,
-CASE WHEN ft.date_reception is not null 
-THEN '"""+ str(self.date) +"""'::date - ft.date_reception 
+-- queda asi nomas
+--CASE WHEN ft.date_reception is not null 
+--THEN '"""+ str(self.date) +"""'::date - ft.date_reception 
+--else '"""+ str(self.date) +"""'::date - aml.date_maturity END as atraso,
+CASE WHEN ft.date_due is not null 
+THEN '"""+ str(self.date) +"""'::date - ft.date_due 
 else '"""+ str(self.date) +"""'::date - aml.date_maturity END as atraso,
 am.state as estado
 
@@ -497,7 +504,6 @@ order by empresa, code, nro_comprobante
 			view_ref = mod_obj.get_object_reference('account_contable_book_it', 'export_file_save_action')
 			view_id = view_ref and view_ref[1] or False
 			result = act_obj.read( [view_id] )
-			print sfs_id
 			return {
 			    "type": "ir.actions.act_window",
 			    "res_model": "export.file.save",

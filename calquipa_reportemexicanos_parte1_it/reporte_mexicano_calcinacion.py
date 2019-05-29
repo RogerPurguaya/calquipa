@@ -18,7 +18,6 @@ from reportlab.platypus import Paragraph, Table
 from reportlab.lib.units import  cm,mm
 from reportlab.lib.utils import simpleSplit
 from cgi import escape
-
 import decimal
 import calendar
 

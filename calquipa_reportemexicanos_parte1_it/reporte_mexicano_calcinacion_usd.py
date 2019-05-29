@@ -3,7 +3,7 @@
 from openerp import models, fields, api
 import base64
 from openerp.osv import osv
-
+from functools import reduce
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -25,8 +25,88 @@ import calendar
 def dig_5(n):
 	return ("%5d" % n).replace(' ','0')
 
+class rm_report_calcinacion_line(models.Model):
+	_inherit = 'rm.report.calcinacion.line'
+
+	@api.one
+	def get_acumulado_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_calcinacion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		exchange = {
+			1:ex.filtered(lambda x:x.periodo_id.name[:3] == '01/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '01/'))==1 else 1 ,
+			2:ex.filtered(lambda x:x.periodo_id.name[:3] == '02/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '02/'))==1 else 1 ,
+			3:ex.filtered(lambda x:x.periodo_id.name[:3] == '03/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '03/'))==1 else 1 ,
+			4:ex.filtered(lambda x:x.periodo_id.name[:3] == '04/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '04/'))==1 else 1 ,
+			5:ex.filtered(lambda x:x.periodo_id.name[:3] == '05/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '05/'))==1 else 1 ,
+			6:ex.filtered(lambda x:x.periodo_id.name[:3] == '06/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '06/'))==1 else 1 ,
+			7:ex.filtered(lambda x:x.periodo_id.name[:3] == '07/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '07/'))==1 else 1 ,
+			8:ex.filtered(lambda x:x.periodo_id.name[:3] == '08/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '08/'))==1 else 1 ,
+			9:ex.filtered(lambda x:x.periodo_id.name[:3] == '09/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '09/'))==1 else 1 ,
+			10:ex.filtered(lambda x:x.periodo_id.name[:3] == '10/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '10/'))==1 else 1 ,
+			11:ex.filtered(lambda x:x.periodo_id.name[:3] == '11/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '11/'))==1 else 1 ,
+			12:ex.filtered(lambda x:x.periodo_id.name[:3] == '12/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '12/'))==1 else 1 ,
+		}
+
+		enero   = self.enero/exchange[1]
+		febrero = self.febrero/exchange[2]
+		marzo   = self.marzo/exchange[3]
+		abril   = self.abril/exchange[4]
+		mayo    = self.mayo/exchange[5]
+		junio   = self.junio/exchange[6]
+		julio   = self.julio/exchange[7]
+		agosto  = self.agosto/exchange[8]
+		septiembre = self.septiembre/exchange[9]
+		octubre   = self.octubre/exchange[10]
+		noviembre = self.noviembre/exchange[11]
+		diciembre = self.diciembre/exchange[12]
+
+		self.acumulado_usd = enero + febrero + marzo + abril + mayo + junio + julio + agosto + septiembre + octubre + noviembre + diciembre
+	acumulado_usd = fields.Float('Acumulado USD', readonly=True, default=0, compute="get_acumulado_usd")
+
+	@api.one
+	def get_acumulado_pciento_usd(self):
+		if self.acumulado_usd != 0:
+			self.acumulado_pciento_usd = self.acumulado_usd / self.rm_report_calcinacion_id.total_general_usd
+		else:
+			self.acumulado_pciento_usd = 0
+	acumulado_pciento_usd = fields.Float('%  ACUM', readonly=True, compute="get_acumulado_pciento_usd")
+
+	@api.one
+	def get_promedio_usd(self):
+		if self.acumulado_usd != 0:
+			self.promedio_usd = self.acumulado_usd / 1
+		else:
+			self.promedio_usd = 0
+	promedio_usd = fields.Float('Promedio', readonly=True, compute="get_promedio_usd")
+
+	@api.one
+	def get_promedio_pciento_usd(self):
+		if self.acumulado_usd != 0:
+			self.promedio_pciento_usd = self.promedio_usd / self.rm_report_calcinacion_id.total_promedio_general_usd
+		else:
+			self.promedio_pciento_usd = 0
+	promedio_pciento_usd = fields.Float('%  PROM', readonly=True, compute="get_promedio_pciento_usd")
+
 class rm_report_calcinacion(models.Model):
 	_inherit= 'rm.report.calcinacion'
+
+	@api.one
+	def get_total_general_usd(self):
+		if len(self.conf_line_ids) > 0:
+			self.total_general_usd = reduce(lambda x,y:x+y,self.conf_line_ids.mapped('acumulado_usd'))
+		else:
+			self.total_general_usd = 0
+	total_general_usd = fields.Float('Total general USD', compute="get_total_general_usd")
+
+
+	@api.one
+	def get_total_promedio_general_usd(self):
+		if len(self.conf_line_ids) > 0:
+			self.total_promedio_general_usd = reduce(lambda x,y:x+y,self.conf_line_ids.mapped('promedio_usd'))
+		else:
+			self.total_promedio_general_usd = 0
+	total_promedio_general_usd = fields.Float(compute="get_total_promedio_general_usd")
+
 
 	""" ----------------------------- REPORTE EXCEL ----------------------------- """
 
@@ -248,7 +328,7 @@ class rm_report_calcinacion(models.Model):
 				x += 1
 				worksheet.write(x,0, u'{0}'.format(i.grupo.titulo), bold)
 				x += 1
-				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)
+				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)				
 				worksheet.write(x,1, ((i.enero)/exchange[1]), numberdoscon)
 				worksheet.write(x,2, ((i.febrero)/exchange[2]), numberdoscon)
 				worksheet.write(x,3, ((i.marzo)/exchange[3]), numberdoscon)
@@ -261,10 +341,10 @@ class rm_report_calcinacion(models.Model):
 				worksheet.write(x,10, ((i.octubre)/exchange[10]), numberdoscon)
 				worksheet.write(x,11, ((i.noviembre)/exchange[11]), numberdoscon)
 				worksheet.write(x,12, ((i.diciembre)/exchange[12]), numberdoscon)
-				worksheet.write(x,13, ((i.acumulado)), numberdoscon)
-				worksheet.write(x,14, ((i.acumulado_pciento)), numberdoscon)
-				worksheet.write(x,15, ((i.promedio)), numberdoscon)
-				worksheet.write(x,16, ((i.promedio_pciento)), numberdoscon)
+				worksheet.write(x,13, i.acumulado_usd, numberdoscon)
+				worksheet.write(x,14, i.acumulado_pciento_usd, numberdoscon)
+				worksheet.write(x,15, i.promedio_usd, numberdoscon)
+				worksheet.write(x,16, i.promedio_pciento_usd, numberdoscon)
 				sub_tot[0] += i.enero / exchange[1]
 				sub_tot[1] += i.febrero / exchange[2]
 				sub_tot[2] += i.marzo / exchange[3]
@@ -277,10 +357,10 @@ class rm_report_calcinacion(models.Model):
 				sub_tot[9] += i.octubre / exchange[10]
 				sub_tot[10] += i.noviembre / exchange[11]
 				sub_tot[11] += i.diciembre / exchange[12]
-				sub_tot[12] += i.acumulado
-				sub_tot[13] += i.acumulado_pciento
-				sub_tot[14] += i.promedio
-				sub_tot[15] += i.promedio_pciento
+				sub_tot[12] += i.acumulado_usd
+				sub_tot[13] += i.acumulado_pciento_usd
+				sub_tot[14] += i.promedio_usd
+				sub_tot[15] += i.promedio_pciento_usd
 				x += 1
 				n_grupo = i.grupo
 				n_tipo = i.tipo
@@ -336,10 +416,10 @@ class rm_report_calcinacion(models.Model):
 				worksheet.write(x,10, ((i.octubre)/exchange[10]), numberdoscon)
 				worksheet.write(x,11, ((i.noviembre)/exchange[11]), numberdoscon)
 				worksheet.write(x,12, ((i.diciembre)/exchange[12]), numberdoscon)
-				worksheet.write(x,13, ((i.acumulado)), numberdoscon)
-				worksheet.write(x,14, ((i.acumulado_pciento)), numberdoscon)
-				worksheet.write(x,15, ((i.promedio)), numberdoscon)
-				worksheet.write(x,16, ((i.promedio_pciento)), numberdoscon)
+				worksheet.write(x,13, i.acumulado_usd, numberdoscon)
+				worksheet.write(x,14, i.acumulado_pciento_usd, numberdoscon)
+				worksheet.write(x,15, i.promedio_usd, numberdoscon)
+				worksheet.write(x,16, i.promedio_pciento_usd, numberdoscon)
 				sub_tot[0] += i.enero / exchange[1]
 				sub_tot[1] += i.febrero / exchange[2]
 				sub_tot[2] += i.marzo / exchange[3]
@@ -352,14 +432,13 @@ class rm_report_calcinacion(models.Model):
 				sub_tot[9] += i.octubre / exchange[10]
 				sub_tot[10] += i.noviembre / exchange[11]
 				sub_tot[11] += i.diciembre / exchange[12]
-				sub_tot[12] += i.acumulado
-				sub_tot[13] += i.acumulado_pciento
-				sub_tot[14] += i.promedio
-				sub_tot[15] += i.promedio_pciento
+				sub_tot[12] += i.acumulado_usd
+				sub_tot[13] += i.acumulado_pciento_usd
+				sub_tot[14] += i.promedio_usd
+				sub_tot[15] += i.promedio_pciento_usd
 				x += 1
 				n_grupo = i.grupo
 			else:
-				
 				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)
 				worksheet.write(x,1, ((i.enero)/exchange[1]), numberdoscon)
 				worksheet.write(x,2, ((i.febrero)/exchange[2]), numberdoscon)
@@ -373,10 +452,10 @@ class rm_report_calcinacion(models.Model):
 				worksheet.write(x,10, ((i.octubre)/exchange[10]), numberdoscon)
 				worksheet.write(x,11, ((i.noviembre)/exchange[11]), numberdoscon)
 				worksheet.write(x,12, ((i.diciembre)/exchange[12]), numberdoscon)
-				worksheet.write(x,13, ((i.acumulado)), numberdoscon)
-				worksheet.write(x,14, ((i.acumulado_pciento)), numberdoscon)
-				worksheet.write(x,15, ((i.promedio)), numberdoscon)
-				worksheet.write(x,16, ((i.promedio_pciento)), numberdoscon)
+				worksheet.write(x,13, i.acumulado_usd, numberdoscon)
+				worksheet.write(x,14, i.acumulado_pciento_usd, numberdoscon)
+				worksheet.write(x,15, i.promedio_usd, numberdoscon)
+				worksheet.write(x,16, i.promedio_pciento_usd, numberdoscon)
 				sub_tot[0] += i.enero / exchange[1]
 				sub_tot[1] += i.febrero / exchange[2]
 				sub_tot[2] += i.marzo / exchange[3]
@@ -389,10 +468,10 @@ class rm_report_calcinacion(models.Model):
 				sub_tot[9] += i.octubre / exchange[10]
 				sub_tot[10] += i.noviembre / exchange[11]
 				sub_tot[11] += i.diciembre / exchange[12]
-				sub_tot[12] += i.acumulado
-				sub_tot[13] += i.acumulado_pciento
-				sub_tot[14] += i.promedio
-				sub_tot[15] += i.promedio_pciento
+				sub_tot[12] += i.acumulado_usd
+				sub_tot[13] += i.acumulado_pciento_usd
+				sub_tot[14] += i.promedio_usd
+				sub_tot[15] += i.promedio_pciento_usd
 				x += 1
 
 			ultimo_elem = i

@@ -17,15 +17,185 @@ from reportlab.platypus import Paragraph, Table
 from reportlab.lib.units import  cm,mm
 from reportlab.lib.utils import simpleSplit
 from cgi import escape
-
+from functools import reduce
 import decimal
 import calendar
 
 def dig_5(n):
 	return ("%5d" % n).replace(' ','0')
 
+class rm_report_extraccion_line(models.Model):
+	_inherit = 'rm.report.extraccion.line'
+
+	enero_usd = fields.Float('Enero',digits=(12,2),compute='get_enero_usd')
+	febrero_usd = fields.Float('Febrero',digits=(12,2),compute='get_febrero_usd')
+	marzo_usd = fields.Float('Marzo',digits=(12,2),compute='get_marzo_usd')
+	abril_usd = fields.Float('Abril',digits=(12,2),compute='get_abril_usd')
+	mayo_usd = fields.Float('Mayo',digits=(12,2),compute='get_mayo_usd')
+	junio_usd = fields.Float('Junio',digits=(12,2),compute='get_junio_usd')
+	julio_usd = fields.Float('Julio',digits=(12,2),compute='get_julio_usd')
+	agosto_usd = fields.Float('Agosto',digits=(12,2),compute='get_agosto_usd')
+	septiembre_usd = fields.Float('Septiembre',digits=(12,2),compute='get_septiembre_usd')
+	octubre_usd = fields.Float('Octubre',digits=(12,2),compute='get_octubre_usd')
+	noviembre_usd = fields.Float('Noviembre',digits=(12,2),compute='get_noviembre_usd')
+	diciembre_usd = fields.Float('Diciembre',digits=(12,2),compute='get_diciembre_usd')
+
+	@api.one
+	def get_enero_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '01/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '01/'))==1 else 1 
+		self.enero_usd = self.enero/ex
+
+	@api.one
+	def get_febrero_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '02/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '02/'))==1 else 1 
+		self.febrero_usd = self.febrero/ex
+
+	@api.one
+	def get_marzo_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '03/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '03/'))==1 else 1 
+		self.marzo_usd = self.marzo/ex
+
+	@api.one
+	def get_abril_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '04/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '04/'))==1 else 1 
+		self.abril_usd = self.abril/ex
+
+	@api.one
+	def get_mayo_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '05/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '05/'))==1 else 1 
+		self.mayo_usd = self.mayo/ex
+	@api.one
+	def get_junio_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '06/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '06/'))==1 else 1 
+		self.junio_usd = self.junio/ex
+
+	@api.one
+	def get_julio_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '07/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '07/'))==1 else 1 
+		self.julio_usd = self.julio/ex
+
+	@api.one
+	def get_agosto_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '08/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '08/'))==1 else 1 
+		self.agosto_usd = self.agosto/ex
+
+	@api.one
+	def get_septiembre_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '09/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '09/'))==1 else 1 
+		self.septiembre_usd = self.septiembre/ex
+
+	@api.one
+	def get_octubre_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '10/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '10/'))==1 else 1 
+		self.octubre_usd = self.octubre/ex
+
+	@api.one
+	def get_noviembre_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '11/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '11/'))==1 else 1 
+		self.noviembre_usd = self.noviembre/ex
+
+	@api.one
+	def get_diciembre_usd(self):
+		periodos = self.env['account.period'].search([('fiscalyear_id','=',self.rm_report_extraccion_id.fiscal.id)])
+		ex = self.env['tipo.cambio.mexicano'].search([('periodo_id','in',periodos.ids)])
+		ex = ex.filtered(lambda x:x.periodo_id.name[:3] == '12/')[0].t_cambio_venta if len(ex.filtered(lambda x:x.periodo_id.name[:3] == '12/'))==1 else 1 
+		self.diciembre_usd = self.diciembre/ex
+
+	@api.one
+	def get_acumulado_usd(self):
+		self.acumulado_usd = self.enero_usd + self.febrero_usd + self.marzo_usd + self.abril_usd + self.mayo_usd + self.junio_usd + self.julio_usd + self.agosto_usd + self.septiembre_usd + self.octubre_usd + self.noviembre_usd + self.diciembre_usd
+	acumulado_usd = fields.Float('Acumulado USD', readonly=True, default=0, compute="get_acumulado_usd")
+
+	@api.one
+	def get_acumulado_pciento_usd(self):
+		if self.acumulado_usd != 0:
+			self.acumulado_pciento_usd = self.acumulado_usd / self.rm_report_extraccion_id.total_general_usd
+		else:
+			self.acumulado_pciento_usd = 0
+	acumulado_pciento_usd = fields.Float('%  ACUM', readonly=True, compute="get_acumulado_pciento_usd")
+
+	@api.one
+	def get_promedio_usd(self):
+		values = []
+		if self.enero_usd != 0:
+			values.append(self.enero_usd)
+		if self.febrero_usd != 0:
+			values.append(self.febrero_usd)
+		if self.marzo_usd != 0:
+			values.append(self.marzo_usd)
+		if self.abril_usd != 0:
+			values.append(self.abril_usd)
+		if self.mayo_usd != 0:
+			values.append(self.mayo_usd)
+		if self.junio_usd != 0:
+			values.append(self.junio_usd)
+		if self.julio_usd != 0:
+			values.append(self.julio_usd)
+		if self.agosto_usd != 0:
+			values.append(self.agosto_usd)
+		if self.septiembre_usd != 0:
+			values.append(self.septiembre_usd)
+		if self.octubre_usd != 0:
+			values.append(self.octubre_usd)
+		if self.noviembre_usd != 0:
+			values.append(self.noviembre_usd)
+		if self.diciembre_usd != 0:
+			values.append(self.diciembre_usd)
+		if len(values) > 0:
+			self.promedio_usd = reduce(lambda x,y:x+y,values)/len(values)
+		else:
+			self.promedio_usd = 0
+	promedio_usd = fields.Float('Promedio', readonly=True, compute="get_promedio_usd")
+
+	@api.one
+	def get_promedio_pciento_usd(self):
+		if self.acumulado_usd != 0:
+			self.promedio_pciento_usd = self.promedio_usd / self.rm_report_extraccion_id.total_promedio_general_usd
+		else:
+			self.promedio_pciento_usd = 0
+	promedio_pciento_usd = fields.Float('%  PROM', readonly=True, compute="get_promedio_pciento_usd")
+
 class rm_report_extraccion(models.Model):
 	_inherit= 'rm.report.extraccion'
+
+	@api.one
+	def get_total_general_usd(self):
+		if len(self.conf_line_ids) > 0:
+			self.total_general_usd = reduce(lambda x,y:x+y,self.conf_line_ids.mapped('acumulado_usd'))
+		else:
+			self.total_general_usd = 0
+	total_general_usd = fields.Float('Total general USD', compute="get_total_general_usd")
+
+
+	@api.one
+	def get_total_promedio_general_usd(self):
+		if len(self.conf_line_ids) > 0:
+			self.total_promedio_general_usd = reduce(lambda x,y:x+y,self.conf_line_ids.mapped('promedio_usd'))
+		else:
+			self.total_promedio_general_usd = 0
+	total_promedio_general_usd = fields.Float(compute="get_total_promedio_general_usd")
 
 	""" ----------------------------- REPORTE EXCEL USD----------------------------- """
 
@@ -245,18 +415,18 @@ class rm_report_extraccion(models.Model):
 				x += 1
 				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)
 				mon_m = {
-					0: i.enero / exchange[1],
-					1: i.febrero / exchange[2],
-					2: i.marzo / exchange[3],
-					3: i.abril / exchange[4],
-					4: i.mayo / exchange[5],
-					5: i.junio / exchange[6],
-					6: i.julio / exchange[7],
-					7: i.agosto / exchange[8],
-					8: i.septiembre / exchange[9],
-					9: i.octubre / exchange[10],
-					10: i.noviembre / exchange[11],
-					11: i.diciembre / exchange[12],
+					0: i.enero_usd,
+					1: i.febrero_usd,
+					2: i.marzo_usd,
+					3: i.abril_usd,
+					4: i.mayo_usd,
+					5: i.junio_usd,
+					6: i.julio_usd,
+					7: i.agosto_usd,
+					8: i.septiembre_usd,
+					9: i.octubre_usd,
+					10: i.noviembre_usd,
+					11: i.diciembre_usd,
 				}
 				col = 1
 				mon = 0
@@ -264,30 +434,30 @@ class rm_report_extraccion(models.Model):
 					worksheet.write(x,col, ((mon_m[mon])), numberdoscon)
 					col += 1
 					mon += 1
-				worksheet.write(x,col, ((i.acumulado)), numberdoscon)
+				worksheet.write(x,col, ((i.acumulado_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.acumulado_pciento)), numberdoscon)
+				worksheet.write(x,col, ((i.acumulado_pciento_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.promedio)), numberdoscon)
+				worksheet.write(x,col, ((i.promedio_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.promedio_pciento)), numberdoscon)
+				worksheet.write(x,col, ((i.promedio_pciento_usd)), numberdoscon)
 
-				sub_tot[0] += i.enero / exchange[1]
-				sub_tot[1] += i.febrero / exchange[2]
-				sub_tot[2] += i.marzo / exchange[3]
-				sub_tot[3] += i.abril / exchange[4]
-				sub_tot[4] += i.mayo / exchange[5]
-				sub_tot[5] += i.junio / exchange[6]
-				sub_tot[6] += i.julio / exchange[7]
-				sub_tot[7] += i.agosto / exchange[8]
-				sub_tot[8] += i.septiembre / exchange[9]
-				sub_tot[9] += i.octubre / exchange[10]
-				sub_tot[10] += i.noviembre / exchange[11]
-				sub_tot[11] += i.diciembre / exchange[12]
-				sub_tot[12] += i.acumulado
-				sub_tot[13] += i.acumulado_pciento
-				sub_tot[14] += i.promedio
-				sub_tot[15] += i.promedio_pciento
+				sub_tot[0] += i.enero_usd
+				sub_tot[1] += i.febrero_usd
+				sub_tot[2] += i.marzo_usd
+				sub_tot[3] += i.abril_usd
+				sub_tot[4] += i.mayo_usd
+				sub_tot[5] += i.junio_usd
+				sub_tot[6] += i.julio_usd
+				sub_tot[7] += i.agosto_usd
+				sub_tot[8] += i.septiembre_usd
+				sub_tot[9] += i.octubre_usd
+				sub_tot[10] += i.noviembre_usd
+				sub_tot[11] += i.diciembre_usd
+				sub_tot[12] += i.acumulado_usd
+				sub_tot[13] += i.acumulado_pciento_usd
+				sub_tot[14] += i.promedio_usd
+				sub_tot[15] += i.promedio_pciento_usd
 				x += 1
 				n_grupo = i.grupo
 				n_tipo = i.tipo
@@ -330,18 +500,18 @@ class rm_report_extraccion(models.Model):
 				
 				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)
 				mon_m = {
-					0: i.enero / exchange[1],
-					1: i.febrero / exchange[2],
-					2: i.marzo / exchange[3],
-					3: i.abril / exchange[4],
-					4: i.mayo / exchange[5],
-					5: i.junio / exchange[6],
-					6: i.julio / exchange[7],
-					7: i.agosto / exchange[8],
-					8: i.septiembre / exchange[9],
-					9: i.octubre / exchange[10],
-					10: i.noviembre / exchange[11],
-					11: i.diciembre / exchange[12],
+					0: i.enero_usd,
+					1: i.febrero_usd,
+					2: i.marzo_usd,
+					3: i.abril_usd,
+					4: i.mayo_usd,
+					5: i.junio_usd,
+					6: i.julio_usd,
+					7: i.agosto_usd,
+					8: i.septiembre_usd,
+					9: i.octubre_usd,
+					10: i.noviembre_usd,
+					11: i.diciembre_usd,
 				}
 				col = 1
 				mon = 0
@@ -349,48 +519,48 @@ class rm_report_extraccion(models.Model):
 					worksheet.write(x,col, ((mon_m[mon])), numberdoscon)
 					col += 1
 					mon += 1
-				worksheet.write(x,col, ((i.acumulado)), numberdoscon)
+				worksheet.write(x,col, ((i.acumulado_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.acumulado_pciento)), numberdoscon)
+				worksheet.write(x,col, ((i.acumulado_pciento_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.promedio)), numberdoscon)
+				worksheet.write(x,col, ((i.promedio_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.promedio_pciento)), numberdoscon)
+				worksheet.write(x,col, ((i.promedio_pciento_usd)), numberdoscon)
 				
-				sub_tot[0] += i.enero / exchange[1]
-				sub_tot[1] += i.febrero / exchange[2]
-				sub_tot[2] += i.marzo / exchange[3]
-				sub_tot[3] += i.abril / exchange[4]
-				sub_tot[4] += i.mayo / exchange[5]
-				sub_tot[5] += i.junio / exchange[6]
-				sub_tot[6] += i.julio / exchange[7]
-				sub_tot[7] += i.agosto / exchange[8]
-				sub_tot[8] += i.septiembre / exchange[9]
-				sub_tot[9] += i.octubre / exchange[10]
-				sub_tot[10] += i.noviembre / exchange[11]
-				sub_tot[11] += i.diciembre / exchange[12]
-				sub_tot[12] += i.acumulado
-				sub_tot[13] += i.acumulado_pciento
-				sub_tot[14] += i.promedio
-				sub_tot[15] += i.promedio_pciento
+				sub_tot[0] += i.enero_usd
+				sub_tot[1] += i.febrero_usd
+				sub_tot[2] += i.marzo_usd
+				sub_tot[3] += i.abril_usd
+				sub_tot[4] += i.mayo_usd
+				sub_tot[5] += i.junio_usd
+				sub_tot[6] += i.julio_usd
+				sub_tot[7] += i.agosto_usd
+				sub_tot[8] += i.septiembre_usd
+				sub_tot[9] += i.octubre_usd
+				sub_tot[10] += i.noviembre_usd
+				sub_tot[11] += i.diciembre_usd
+				sub_tot[12] += i.acumulado_usd
+				sub_tot[13] += i.acumulado_pciento_usd
+				sub_tot[14] += i.promedio_usd
+				sub_tot[15] += i.promedio_pciento_usd
 				x += 1
 				n_grupo = i.grupo
 			else:
 				
 				worksheet.write(x,0, u'{0}'.format(i.concepto), normal)
 				mon_m = {
-					0: i.enero / exchange[1],
-					1: i.febrero / exchange[2],
-					2: i.marzo / exchange[3],
-					3: i.abril / exchange[4],
-					4: i.mayo / exchange[5],
-					5: i.junio / exchange[6],
-					6: i.julio / exchange[7],
-					7: i.agosto / exchange[8],
-					8: i.septiembre / exchange[9],
-					9: i.octubre / exchange[10],
-					10: i.noviembre / exchange[11],
-					11: i.diciembre / exchange[12],
+					0: i.enero_usd,
+					1: i.febrero_usd,
+					2: i.marzo_usd,
+					3: i.abril_usd,
+					4: i.mayo_usd,
+					5: i.junio_usd,
+					6: i.julio_usd,
+					7: i.agosto_usd,
+					8: i.septiembre_usd,
+					9: i.octubre_usd,
+					10: i.noviembre_usd,
+					11: i.diciembre_usd,
 				}
 				col = 1
 				mon = 0
@@ -398,30 +568,30 @@ class rm_report_extraccion(models.Model):
 					worksheet.write(x,col, ((mon_m[mon])), numberdoscon)
 					col += 1
 					mon += 1
-				worksheet.write(x,col, ((i.acumulado)), numberdoscon)
+				worksheet.write(x,col, ((i.acumulado_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.acumulado_pciento)), numberdoscon)
+				worksheet.write(x,col, ((i.acumulado_pciento_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.promedio)), numberdoscon)
+				worksheet.write(x,col, ((i.promedio_usd)), numberdoscon)
 				col += 1
-				worksheet.write(x,col, ((i.promedio_pciento)), numberdoscon)
+				worksheet.write(x,col, ((i.promedio_pciento_usd)), numberdoscon)
 				
-				sub_tot[0] += i.enero / exchange[1]
-				sub_tot[1] += i.febrero / exchange[2]
-				sub_tot[2] += i.marzo / exchange[3]
-				sub_tot[3] += i.abril / exchange[4]
-				sub_tot[4] += i.mayo / exchange[5]
-				sub_tot[5] += i.junio / exchange[6]
-				sub_tot[6] += i.julio / exchange[7]
-				sub_tot[7] += i.agosto / exchange[8]
-				sub_tot[8] += i.septiembre / exchange[9]
-				sub_tot[9] += i.octubre / exchange[10]
-				sub_tot[10] += i.noviembre / exchange[11]
-				sub_tot[11] += i.diciembre / exchange[12]
-				sub_tot[12] += i.acumulado
-				sub_tot[13] += i.acumulado_pciento
-				sub_tot[14] += i.promedio
-				sub_tot[15] += i.promedio_pciento
+				sub_tot[0] += i.enero_usd
+				sub_tot[1] += i.febrero_usd
+				sub_tot[2] += i.marzo_usd
+				sub_tot[3] += i.abril_usd
+				sub_tot[4] += i.mayo_usd
+				sub_tot[5] += i.junio_usd
+				sub_tot[6] += i.julio_usd
+				sub_tot[7] += i.agosto_usd
+				sub_tot[8] += i.septiembre_usd
+				sub_tot[9] += i.octubre_usd
+				sub_tot[10] += i.noviembre_usd
+				sub_tot[11] += i.diciembre_usd
+				sub_tot[12] += i.acumulado_usd
+				sub_tot[13] += i.acumulado_pciento_usd
+				sub_tot[14] += i.promedio_usd
+				sub_tot[15] += i.promedio_pciento_usd
 				x += 1
 
 			ultimo_elem = i
@@ -559,29 +729,29 @@ class rm_report_extraccion(models.Model):
 				if len(explosivo) >0:
 					explosivo = explosivo[0]
 					if k == 0:
-						explosivo_val = explosivo.enero / exchange[1]
+						explosivo_val = explosivo.enero_usd
 					elif k== 1:
-						explosivo_val = explosivo.febrero / exchange[2]
+						explosivo_val = explosivo.febrero_usd
 					elif k== 2:
-						explosivo_val = explosivo.marzo / exchange[3]
+						explosivo_val = explosivo.marzo_usd
 					elif k== 3:
-						explosivo_val = explosivo.abril / exchange[4]
+						explosivo_val = explosivo.abril_usd
 					elif k== 4:
-						explosivo_val = explosivo.mayo / exchange[5]
+						explosivo_val = explosivo.mayo_usd
 					elif k== 5:
-						explosivo_val = explosivo.junio / exchange[6]
+						explosivo_val = explosivo.junio_usd
 					elif k== 6:
-						explosivo_val = explosivo.julio / exchange[7]
+						explosivo_val = explosivo.julio_usd
 					elif k== 7:
-						explosivo_val = explosivo.agosto / exchange[8]
+						explosivo_val = explosivo.agosto_usd
 					elif k== 8:
-						explosivo_val = explosivo.septiembre / exchange[9]
+						explosivo_val = explosivo.septiembre_usd
 					elif k== 9:
-						explosivo_val = explosivo.octubre / exchange[10]
+						explosivo_val = explosivo.octubre_usd
 					elif k== 10:
-						explosivo_val = explosivo.noviembre / exchange[11]
+						explosivo_val = explosivo.noviembre_usd
 					elif k== 11:
-						explosivo_val = explosivo.diciembre / exchange[12]
+						explosivo_val = explosivo.diciembre_usd
 
 
 				laboratorio = self.env['rm.report.extraccion.line'].search( [('rm_report_extraccion_id','=',self.id),('pie_pagina','=','laboratorio')] )
@@ -589,58 +759,58 @@ class rm_report_extraccion(models.Model):
 				if len(laboratorio) >0:
 					laboratorio = laboratorio[0]
 					if k == 0:
-						laboratorio_val = laboratorio.enero / exchange[1]
+						laboratorio_val = laboratorio.enero_usd
 					elif k== 1:
-						laboratorio_val = laboratorio.febrero / exchange[2]
+						laboratorio_val = laboratorio.febrero_usd
 					elif k== 2:
-						laboratorio_val = laboratorio.marzo / exchange[3]
+						laboratorio_val = laboratorio.marzo_usd
 					elif k== 3:
-						laboratorio_val = laboratorio.abril / exchange[4]
+						laboratorio_val = laboratorio.abril_usd
 					elif k== 4:
-						laboratorio_val = laboratorio.mayo / exchange[5]
+						laboratorio_val = laboratorio.mayo_usd
 					elif k== 5:
-						laboratorio_val = laboratorio.junio / exchange[6]
+						laboratorio_val = laboratorio.junio_usd
 					elif k== 6:
-						laboratorio_val = laboratorio.julio / exchange[7]
+						laboratorio_val = laboratorio.julio_usd
 					elif k== 7:
-						laboratorio_val = laboratorio.agosto / exchange[8]
+						laboratorio_val = laboratorio.agosto_usd
 					elif k== 8:
-						laboratorio_val = laboratorio.septiembre / exchange[9]
+						laboratorio_val = laboratorio.septiembre_usd
 					elif k== 9:
-						laboratorio_val = laboratorio.octubre / exchange[10]
+						laboratorio_val = laboratorio.octubre_usd
 					elif k== 10:
-						laboratorio_val = laboratorio.noviembre / exchange[11]
+						laboratorio_val = laboratorio.noviembre_usd
 					elif k== 11:
-						laboratorio_val = laboratorio.diciembre / exchange[12]
+						laboratorio_val = laboratorio.diciembre_usd
 
 
 				depreciacion = self.env['rm.report.extraccion.line'].search( [('rm_report_extraccion_id','=',self.id),('pie_pagina','=','depreciacion')] )
 				depreciacion_val = 0
 				for dep in depreciacion:
 					if k == 0:
-						depreciacion_val += dep.enero / exchange[1]
+						depreciacion_val += dep.enero_usd
 					elif k== 1:
-						depreciacion_val += dep.febrero / exchange[2]
+						depreciacion_val += dep.febrero_usd
 					elif k== 2:
-						depreciacion_val += dep.marzo / exchange[3]
+						depreciacion_val += dep.marzo_usd
 					elif k== 3:
-						depreciacion_val += dep.abril / exchange[4]
+						depreciacion_val += dep.abril_usd
 					elif k== 4:
-						depreciacion_val += dep.mayo / exchange[5]
+						depreciacion_val += dep.mayo_usd
 					elif k== 5:
-						depreciacion_val += dep.junio / exchange[6]
+						depreciacion_val += dep.junio_usd
 					elif k== 6:
-						depreciacion_val += dep.julio / exchange[7]
+						depreciacion_val += dep.julio_usd
 					elif k== 7:
-						depreciacion_val += dep.agosto / exchange[8]
+						depreciacion_val += dep.agosto_usd
 					elif k== 8:
-						depreciacion_val += dep.septiembre / exchange[9]
+						depreciacion_val += dep.septiembre_usd
 					elif k== 9:
-						depreciacion_val += dep.octubre / exchange[10]
+						depreciacion_val += dep.octubre_usd
 					elif k== 10:
-						depreciacion_val += dep.noviembre / exchange[11]
+						depreciacion_val += dep.noviembre_usd
 					elif k== 11:
-						depreciacion_val += dep.diciembre / exchange[12]
+						depreciacion_val += dep.diciembre_usd
 
 				valores[1][k] = tot_tot_tot[k] / valores[0][k]
 				valores[2][k] = (tot_tot_tot[k] - explosivo_val )/valores[0][k]
