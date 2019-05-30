@@ -2202,7 +2202,7 @@ class hr_tareo(models.Model):
 				['Tipo',u'Número','Nombre y Apellidos','','','','',''],
 				[tdoc,tareo_line.dni,tareo_line.apellido_paterno+' '+tareo_line.apellido_materno+', '+tareo_line.nombre,'','','',empl.situacion,''],
 				['Ingreso','Código',u'Título del Trabajo','','Régimen Pensionario','','CUSPP',''],
-				[empl.fecha_ingreso,empl.codigo_trabajador,empl.job_id.name[:22],'',empl.afiliacion.name,'',empl.cusspp if empl.cusspp else '',''],
+				[empl.fecha_ingreso,empl.codigo_trabajador,empl.job_id.name[:22] if empl.job_id.name else '','',empl.afiliacion.name if empl.afiliacion.name else '','',empl.cusspp if empl.cusspp else '',''],
 				['Días \nlaborados','Días no \nLaborados','Días \nSubsidiados','Condición','Jornada Ordinaria','','Sobretiempo',''],
 				['','','','','Total Horas','Minutos','Total Horas','Descansos Med.'],
 				[tareo_line.dias_trabajador-tareo_line.descansos_medicos_permisos,tareo_line.dias_suspension_perfecta,tareo_line.num_days_subs,empl.condicion if empl.condicion else '' ,tareo_line.horas_ordinarias_trabajadas,'',tareo_line.total_horas_extras_horas,tareo_line.descansos_medicos_permisos],
