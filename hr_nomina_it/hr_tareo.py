@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-from openerp     import models, fields, api
+from openerp     import models, fields, api,exceptions
 from openerp.osv import osv, expression
 from datetime    import datetime, timedelta
 from calendar    import monthrange
@@ -2191,7 +2191,10 @@ class hr_tareo(models.Model):
 			di = [[I,'',I2]]
 			ti=Table(di, colWidths=[50,244,50])		
 			elements.append(ti)
-
+			if not empl.job_id.name:
+				raise exceptions.Warning('El empleado '+empl.name_related+ ' no tiene un cargo asignado!')
+			if not empl.afiliacion.name:
+				raise exceptions.Warning('El empleado '+empl.name_related+ ' una afiliacion asignada!')
 			data=[
 				['RUC: '+company.partner_id.type_number,'','','','','','',''],
 				['Empleador: '+company.partner_id.name,'','','','','','',''],
@@ -2202,7 +2205,7 @@ class hr_tareo(models.Model):
 				['Tipo',u'Número','Nombre y Apellidos','','','','',''],
 				[tdoc,tareo_line.dni,tareo_line.apellido_paterno+' '+tareo_line.apellido_materno+', '+tareo_line.nombre,'','','',empl.situacion,''],
 				['Ingreso','Código',u'Título del Trabajo','','Régimen Pensionario','','CUSPP',''],
-				[empl.fecha_ingreso,empl.codigo_trabajador,empl.job_id.name[:22] if empl.job_id.name else '','',empl.afiliacion.name if empl.afiliacion.name else '','',empl.cusspp if empl.cusspp else '',''],
+				[empl.fecha_ingreso,empl.codigo_trabajador,empl.job_id.name[:22],'',empl.afiliacion.name,'',empl.cusspp if empl.cusspp else '',''],
 				['Días \nlaborados','Días no \nLaborados','Días \nSubsidiados','Condición','Jornada Ordinaria','','Sobretiempo',''],
 				['','','','','Total Horas','Minutos','Total Horas','Descansos Med.'],
 				[tareo_line.dias_trabajador-tareo_line.descansos_medicos_permisos,tareo_line.dias_suspension_perfecta,tareo_line.num_days_subs,empl.condicion if empl.condicion else '' ,tareo_line.horas_ordinarias_trabajadas,'',tareo_line.total_horas_extras_horas,tareo_line.descansos_medicos_permisos],
