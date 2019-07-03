@@ -10,7 +10,7 @@
                     <field name="transportista_id"
                            domain="[('transportista','=',True)]"
                            attrs="{'invisible':[('order_transporte','=',False)]}" />
-                    <field name="guia_remision" attrs="{'invisible': [('order_transporte','=',False)]}"  />
+                    <field name="guia_remision" attrs="{'invisible': [('order_transporte','=',False)]}"/>
                 </field>
             </field>
         </record>

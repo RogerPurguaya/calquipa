@@ -7,3 +7,6 @@
 /backups_it/static/*
 /*.vscode
 *.vscode
+*.bak.py
+/*.bak.py
+/hr_nomina_it/bak.py

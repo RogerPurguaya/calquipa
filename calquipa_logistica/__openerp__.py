@@ -33,6 +33,7 @@
         'views/stock_picking.xml',
         'views/logistica_pedidos.xml',
         'wizard/purchase_wizard.xml',
+        'reports/report_sale_volume.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

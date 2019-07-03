@@ -1797,39 +1797,47 @@ class hr_tareo(models.Model):
 
 	@api.one
 	def make_account_move2_asiento2(self,period_pla):
-		# hlc = self.env['hr.lista.conceptos'].search([('account_debe_id','=',False),('account_haber_id','=',False)])
-		# if len(hlc) > 0:
-		# 	raise osv.except_osv("Alerta!", u"Todos los conceptos deben tener una cuenta debe o haber.")
-
 		dis_d_dict = {}
 		dis_h_dict = {}
-
 		error_msg = ""
-
+		recs = []
+		amounts_d = []
+		amounts_h = []
 		for line in self.detalle:
 			#PARA LA COLUMNA DEBE DEL ASIENTO CONTABLE
 			hlc_d = self.env['hr.lista.conceptos'].search([('account_debe_id','!=',False)])
 			hcl_d = self.env['hr.concepto.line'].search([('tareo_line_id','=',line.id),('concepto_id','in',hlc_d.ids)])
+			employee = line.employee_id.id
 			for con in hcl_d:
 				#ASIENTO DISTRIBUIDO
 				for analytic in line.employee_id.dist_c.distribucion_lines:
 					encontrado = False
 					for con_analytic in con.concepto_id.cuentas_line:
 						if analytic.analitica.id == con_analytic.analytic_id.id:
+							amount = 0
 							if con_analytic.account_id.id not in dis_d_dict:
 								if con.concepto_id.payroll_group in ['1','4']:
-									dis_d_dict[con_analytic.account_id.id] = con.monto*analytic.porcentaje/100.00
+									amount=con.monto*analytic.porcentaje/100.00
+									dis_d_dict[con_analytic.account_id.id]={}
+									dis_d_dict[con_analytic.account_id.id]['amount']=amount
+									dis_d_dict[con_analytic.account_id.id]['records']=[{'emp':employee,'amount2':amount}]
 								elif con.concepto_id.payroll_group == '2':
-									dis_d_dict[con_analytic.account_id.id] = con.monto*analytic.porcentaje/100.00*-1
+									amount=con.monto*analytic.porcentaje/100.00*-1
+									dis_d_dict[con_analytic.account_id.id]={}
+									dis_d_dict[con_analytic.account_id.id]['amount']=amount
+									dis_d_dict[con_analytic.account_id.id]['records']=[{'emp':employee,'amount2':amount}]
 							else:
 								if con.concepto_id.payroll_group in ['1','4']:
-									dis_d_dict[con_analytic.account_id.id] += con.monto*analytic.porcentaje/100.00
+									amount=con.monto*analytic.porcentaje/100.00
+									dis_d_dict[con_analytic.account_id.id]['amount']+=amount
+									dis_d_dict[con_analytic.account_id.id]['records'].append({'emp':employee,'amount2':amount})
 								elif con.concepto_id.payroll_group == '2':
-									dis_d_dict[con_analytic.account_id.id] -= con.monto*analytic.porcentaje/100.00
+									amount=con.monto*analytic.porcentaje/100.00
+									dis_d_dict[con_analytic.account_id.id]['amount']-=amount
+									dis_d_dict[con_analytic.account_id.id]['records'].append({'emp':employee,'amount2':amount})
 							encontrado = True
 					if not encontrado:
 						error_msg += (analytic.analitica.name if analytic.analitica.name else '') + "->" + con.concepto_id.name + "\n"
-
 			#PARA LA COLUMNA HABER DEL ASIENTO CONTABLE
 			hlc_h = self.env['hr.lista.conceptos'].search([('account_haber_id','!=',False)])
 			hcl_h = self.env['hr.concepto.line'].search([('tareo_line_id','=',line.id),('concepto_id','in',hlc_h.ids),('concepto_id.code','not in',['028','029','030','031','045','046'])])
@@ -1843,9 +1851,12 @@ class hr_tareo(models.Model):
 				for pr_line in hpl:
 					if pr_line.prestamo_id.prestamo_id.account_id.id:
 						if pr_line.prestamo_id.prestamo_id.account_id.id not in dis_h_dict:
-							dis_h_dict[pr_line.prestamo_id.prestamo_id.account_id.id] = pr_line.monto
+							dis_h_dict[pr_line.prestamo_id.prestamo_id.account_id.id]={}
+							dis_h_dict[pr_line.prestamo_id.prestamo_id.account_id.id]['amount'] = pr_line.monto
+							dis_h_dict[pr_line.prestamo_id.prestamo_id.account_id.id]['records'] = [{'emp':employee,'amount2':pr_line.monto}]
 						else:
 							dis_h_dict[pr_line.prestamo_id.prestamo_id.account_id.id] += pr_line.monto
+							dis_h_dict[pr_line.prestamo_id.prestamo_id.account_id.id]['records'].append({'emp':employee,'amount2':pr_line.monto})
 			for con in ad_hcl_h:
 				#ASIENTO CONTABLE
 				#CONDICION ESPECIAL PARA ADELANTOS
@@ -1853,9 +1864,12 @@ class hr_tareo(models.Model):
 				for adelanto in hta:
 					if adelanto.adelanto_id.account_id.id:
 						if adelanto.adelanto_id.account_id.id not in dis_h_dict:
-							dis_h_dict[adelanto.adelanto_id.account_id.id] = adelanto.monto
+							dis_h_dict[adelanto.adelanto_id.account_id.id]={}
+							dis_h_dict[adelanto.adelanto_id.account_id.id]['amount']=adelanto.monto
+							dis_h_dict[adelanto.adelanto_id.account_id.id]['records']=[{'emp':employee,'amount2':adelanto.monto}]
 						else:
-							dis_h_dict[adelanto.adelanto_id.account_id.id] += adelanto.monto
+							dis_h_dict[adelanto.adelanto_id.account_id.id]['amount']+=adelanto.monto
+							dis_h_dict[adelanto.adelanto_id.account_id.id]['records'].append({'emp':employee,'amount2':adelanto.monto})
 			for con in c_hcl_h:
 				#ASIENTO CONTABLE 
 				#CONDICION ESPECIAL PARA AFILIACIONES
@@ -1864,19 +1878,25 @@ class hr_tareo(models.Model):
 					htm = htm[0]
 					if htm.account_id.id:
 						if htm.account_id.id not in dis_h_dict:
-							dis_h_dict[htm.account_id.id] = con.monto
+							dis_h_dict[htm.account_id.id]={}
+							dis_h_dict[htm.account_id.id]['amount']=con.monto
+							dis_h_dict[htm.account_id.id]['records']=[{'emp':employee,'amount2':con.monto}]
 						else:
-							dis_h_dict[htm.account_id.id] += con.monto
+							dis_h_dict[htm.account_id.id]['amount']+=con.monto
+							dis_h_dict[htm.account_id.id]['records'].append({'emp':employee,'amount2':con.monto})
 
 			for con in hcl_h:
 				#ASIENTO DISTRIBUIDO
 				if con.concepto_id.account_haber_id.id not in dis_h_dict:
 					if con.concepto_id.payroll_group in ['1','3','4','5','6']:
-						dis_h_dict[con.concepto_id.account_haber_id.id] = con.monto
+						dis_h_dict[con.concepto_id.account_haber_id.id]={}
+						dis_h_dict[con.concepto_id.account_haber_id.id]['amount']=con.monto
+						dis_h_dict[con.concepto_id.account_haber_id.id]['records']=[{'emp':employee,'amount2':con.monto}]
 				else:
 					if con.concepto_id.payroll_group in ['1','3','4','5','6']:
-						dis_h_dict[con.concepto_id.account_haber_id.id] += con.monto
-
+						dis_h_dict[con.concepto_id.account_haber_id.id]['amount'] += con.monto
+						dis_h_dict[con.concepto_id.account_haber_id.id]['records'].append({'emp':employee,'amount2':con.monto})
+		
 		if len(error_msg) > 0:
 				raise osv.except_osv("Alerta!", u"No existen las cuentas analíticas en los siguientes conceptos:\n         Cta. Analítica -> Concepto\n"+error_msg)
 
@@ -1898,22 +1918,45 @@ class hr_tareo(models.Model):
 				nl_vals = {
 					'move_id'   : n_am.id,
 					'account_id': k,
-					'debit'     : float(decimal.Decimal(str( v )).quantize(decimal.Decimal('1.111111'),rounding=decimal.ROUND_HALF_UP)),
+					'debit'     : float(decimal.Decimal(str( v['amount'] )).quantize(decimal.Decimal('1.111111'),rounding=decimal.ROUND_HALF_UP)),
 					'credit'    : 0,
 					'name'      : 'Planilla '+self.periodo.code,
 				}
 				n_aml = self.env['account.move.line'].create(nl_vals)
+
+				records = v.get('records',[])
+				if any(records):
+					employees = list(map(lambda x: x['emp'],records))
+					employees = list(set(employees))
+					for emp in employees:
+						filt = list(filter(lambda x: x['emp']==emp,records))
+						self.env['employee.amount.record'].create({
+							'account_move_line_id':n_aml.id,
+							'employee_id':emp,
+							'amount':sum(map(lambda x: x['amount2'],filt)),
+						})
 
 			for k,v in dis_h_dict.items():
 				nl_vals = {
 					'move_id'   : n_am.id,
 					'account_id': k,
 					'debit'     : 0,
-					'credit'    : float(decimal.Decimal(str( v )).quantize(decimal.Decimal('1.111111'),rounding=decimal.ROUND_HALF_UP)),
+					'credit'    : float(decimal.Decimal(str( v['amount'] )).quantize(decimal.Decimal('1.111111'),rounding=decimal.ROUND_HALF_UP)),
 					'name'      : 'Planilla '+self.periodo.code,
 				}
 				n_aml = self.env['account.move.line'].create(nl_vals)
 
+				records = v.get('records',[])
+				if any(records):
+					employees = list(map(lambda x: x['emp'],records))
+					employees = list(set(employees))
+					for emp in employees:
+						filt = list(filter(lambda x: x['emp']==emp,records))
+						self.env['employee.amount.record'].create({
+							'account_move_line_id':n_aml.id,
+							'employee_id':emp,
+							'amount':sum(map(lambda x: x['amount2'],filt)),
+						})
 			self.d_asiento = n_am.id
 
 		else:
@@ -1932,21 +1975,45 @@ class hr_tareo(models.Model):
 				nl_vals = {
 					'move_id'   : self.d_asiento.id,
 					'account_id': k,
-					'debit'     : float(decimal.Decimal(str( v )).quantize(decimal.Decimal('1.111111'),rounding=decimal.ROUND_HALF_UP)),
+					'debit'     : float(decimal.Decimal(str( v['amount'] )).quantize(decimal.Decimal('1.111111'),rounding=decimal.ROUND_HALF_UP)),
 					'credit'    : 0,
 					'name'      : 'Planilla '+self.periodo.code,
 				}
 				n_aml = self.env['account.move.line'].create(nl_vals)
+
+				records = v.get('records',[])
+				if any(records):
+					employees = list(map(lambda x: x['emp'],records))
+					employees = list(set(employees))
+					for emp in employees:
+						filt = list(filter(lambda x: x['emp']==emp,records))
+						self.env['employee.amount.record'].create({
+							'account_move_line_id':n_aml.id,
+							'employee_id':emp,
+							'amount':sum(map(lambda x: x['amount2'],filt)),
+						})
 
 			for k,v in dis_h_dict.items():
 				nl_vals = {
 					'move_id'   : self.d_asiento.id,
 					'account_id': k,
 					'debit'     : 0,
-					'credit'    : float(decimal.Decimal(str( v )).quantize(decimal.Decimal('1.111111'),rounding=decimal.ROUND_HALF_UP)),
+					'credit'    : float(decimal.Decimal(str( v['amount'] )).quantize(decimal.Decimal('1.111111'),rounding=decimal.ROUND_HALF_UP)),
 					'name'      : 'Planilla '+self.periodo.code,
 				}
 				n_aml = self.env['account.move.line'].create(nl_vals)
+
+				records = v.get('records',[])
+				if any(records):
+					employees = list(map(lambda x: x['emp'],records))
+					employees = list(set(employees))
+					for emp in employees:
+						filt = list(filter(lambda x: x['emp']==emp,records))
+						self.env['employee.amount.record'].create({
+							'account_move_line_id':n_aml.id,
+							'employee_id':emp,
+							'amount':sum(map(lambda x: x['amount2'],filt)),
+						})
 
 	@api.multi
 	def make_plame(self):
@@ -2768,3 +2835,30 @@ class hr_tareo(models.Model):
 			i = self.env['hr.tareo.line'].create(vals)
 			i.with_context({'active_id':i.id}).onchange_all()
 			i.save_data()
+
+
+
+class AccountMoveLine(models.Model):
+	_inherit = 'account.move.line'
+	employees_src_ids = fields.One2many('employee.amount.record','account_move_line_id')
+
+	@api.multi
+	def get_employees_src_ids(self):
+		module = __name__.split('addons.')[1].split('.')[0]
+		view = self.env.ref('%s.employee_amount_record_tree_view' % module)
+		return {
+				'name':'Empleados',
+				'view_id': view.id,
+				'view_mode':'tree',
+				'res_model':'employee.amount.record',
+				'type':'ir.actions.act_window',
+				'domain': [['id', 'in', self.employees_src_ids.ids]],
+				'target':'new',
+				}
+
+		
+class EmployeAmountRecord(models.Model):
+	_name = 'employee.amount.record'
+	account_move_line_id = fields.Many2one('account.move.line')
+	employee_id = fields.Many2one('hr.employee')
+	amount = fields.Float('Monto',digits=(10,2))

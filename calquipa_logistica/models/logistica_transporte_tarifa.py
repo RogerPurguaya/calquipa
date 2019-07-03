@@ -52,9 +52,7 @@ class TarifaTransporte(models.Model):
         if vals.get('transporte_linea_ids', False) or vals.get('exportacion_linea_ids', False):
             lineas = []
             operaciones = []
-            print "lo que hay en el env", vals.get('transporte_linea_ids', [])
             for (a, b, linea) in vals.get('transporte_linea_ids', []):
-                print "la linea como esta",b ,linea 
                 if linea:
                     if b: 
                         lineas.append((0, 0, self.procesar_precios2(b,linea)))

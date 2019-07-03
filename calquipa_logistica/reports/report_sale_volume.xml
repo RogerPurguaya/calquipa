@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<openerp>
+    <data>
+        <!-- report.sale.volume.wizard form view -->
+        <record id="report_sale_volume_wizard_view_form" model="ir.ui.view">
+            <field name="name">report.sale.volume.wizard.view.form</field>
+            <field name="model">report.sale.volume.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reporte por Volumen de Venta">
+                    <sheet>
+                        <group>
+                            <field name="start_date" required="1"/>
+                        </group>
+                        <group>
+                            <field name="end_date" required="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Exportar a Excel" name="do_rebuild" type="object" class="oe_highlight"/>
+                        <button string="Cancelar" name="cancel" special="cancel" class="oe_link oe_inline"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- report.sale.volume.wizard action window -->
+        <record id="report_sale_volume_wizard_action" model="ir.actions.act_window">
+            <field name="name">Reporte Venta por Volúmenes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.sale.volume.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+             <field name="target">new</field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="report_sale_volume_menu_act" name="Reporte Venta por Volúmenes" parent="menu_logistica_configuracion" action="report_sale_volume_wizard_action" sequence="3"/>
+
+    </data>
+</openerp>

@@ -27,5 +27,7 @@
              'hr_distribucion_gasto_view.xml',
              'wizard/hr_export_employee_view.xml',
              'wizard/boleta_empleado_wizard_view.xml',
-             'res_company_view.xml'],
+             'res_company_view.xml',
+             'employee_record_amount.xml',
+             ],
 }
