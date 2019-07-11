@@ -19,7 +19,7 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale', 'kardex', 'sale_stock', 'purchase', 'account', 'calquipa_personalizacion_it',
-                'stock_picking_partner'],
+                'stock_picking_partner','calquipa_reportemexicanos_parte1_it'],
 
     # always loaded
     'data': [

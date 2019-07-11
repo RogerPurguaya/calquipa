@@ -33,8 +33,8 @@
              <field name="target">new</field>
         </record>
 
-        <!-- This Menu Item must have a parent and an action -->
-        <menuitem id="report_sale_volume_menu_act" name="Reporte Venta por Volúmenes" parent="menu_logistica_configuracion" action="report_sale_volume_wizard_action" sequence="3"/>
+        <menuitem id="report_sale_volume_menu_act" name="Reporte Venta por Volúmenes" parent="calquipa_reportemexicanos_parte1_it.reportes_mexicanos_reportes_menu" sequence="110" action="report_sale_volume_wizard_action" />
+
 
     </data>
 </openerp>
