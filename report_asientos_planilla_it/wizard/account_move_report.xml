@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="print_account_planilla_report_action_view" model="ir.actions.server">
+			<field name="name">Imprimir Reporte de Asiento</field>
+			<field name="model_id" ref='report_asientos_planilla_it.model_hr_tareo'/>
+			<field name="state">code</field>
+			<field name="code">action=env['hr.tareo'].browse(context['active_ids']).print_account_report()</field>
+		</record>
+
+		<record model="ir.values" id="print_account_move_report_act">
+			<field name="name">Imprimir Reporte de Asiento</field>
+			<field name="key">action</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value" eval="'ir.actions.server,%d'%print_account_planilla_report_action_view" />
+			<field name="model">hr.tareo</field>
+		</record>
+	</data>
+</openerp>
