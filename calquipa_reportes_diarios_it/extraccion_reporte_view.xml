@@ -91,6 +91,8 @@
                     <field name="costo_volqv5"          attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="hrs_volq07"            attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="costo_volq07"          attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="hrs_volq08"            attrs="{'readonly':[('check_period','=',True)]}"/>
+                    <field name="costo_volq08"          attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="hrs_d7r"               attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="costo_d7r"             attrs="{'readonly':[('check_period','=',True)]}"/>
                     <field name="hrs_rodillo"           attrs="{'readonly':[('check_period','=',True)]}"/>
